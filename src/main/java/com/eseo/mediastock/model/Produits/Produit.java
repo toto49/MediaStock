@@ -67,6 +67,9 @@ abstract class  Produit {
     }
 
     // Méthodes de classes
+    public String getInfos(){
+        return "id : " + id + "titre : " + "description : " + description + "editeur : " + editeur +  "anneeSortie : " + anneeSortie + "exemplaires : " + exemplaires;
+    }
 
 
 }

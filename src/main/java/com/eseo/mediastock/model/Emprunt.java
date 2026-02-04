@@ -2,14 +2,14 @@ package com.eseo.mediastock.model;
 
 import com.eseo.mediastock.model.Produits.Exemplaire;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Emprunt {
     private int id;
     private Adherent emprunteur;
     private Exemplaire exemplaireConcerne;
-    private Date dateDebut;
-    private Date dateRetour;
+    private LocalDate dateDebut;
+    private LocalDate dateRetour;
 
     public int getId() {
         return id;
@@ -23,12 +23,17 @@ public class Emprunt {
         return exemplaireConcerne;
     }
 
-    public Date getDateDebut() {
+    public LocalDate getDateDebut() {
         return dateDebut;
     }
 
-    public Date getDateRetour() {
+    public LocalDate getDateRetour() {
         return dateRetour;
+    }
+
+    //Méthodes
+    public boolean estEnRetard(){
+        return dateRetour.isBefore(LocalDate.now());
     }
 
 }

@@ -5,6 +5,8 @@ import com.eseo.mediastock.model.Produits.Exemplaire;
 import java.util.List;
 
 public class Adherent {
+
+    // Déclarations Variables
     private String numAdherent;
     private String nom;
     private String prenom;
@@ -13,6 +15,7 @@ public class Adherent {
     private List<Emprunt> empruntsEnCours;
     private List<Emprunt> historique;
 
+    // Getter/Setter
     public String getNumAdherent() {
         return numAdherent;
     }
@@ -55,6 +58,11 @@ public class Adherent {
 
     public List<Emprunt> getHistorique() {
         return historique;
+    }
+
+    //Methodes
+    public int getNombreEmpunts(){
+        return empruntsEnCours.size();
     }
 
 }
