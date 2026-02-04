@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            xmlns="http://javafx.com/javafx"
+            fx:controller="com.eseo.mediastock.controller.ConnexionController"
+            prefHeight="400.0" prefWidth="600.0"
+            style="-fx-background-color: linear-gradient(to bottom, #323232, #2b2b2b);">
+
+    <VBox alignment="CENTER"
+          spacing="20" fillWidth="false"
+          AnchorPane.topAnchor="0"
+          AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0"
+          AnchorPane.rightAnchor="0"
+
+    >
+        <Label fx:id="labelconnexion" style="-fx-text-fill: #ffcc00; -fx-font-size: 18px; -fx-font-weight: bold;">Entrez
+            vos informations de connexion
+        </Label>
+        <VBox spacing="5">
+            <Label style="-fx-text-fill: #ffcc00; -fx-font-size: 13px; -fx-font-weight: bold;">Email :</Label>
+            <TextField fx:id="field_mail_co"/>
+        </VBox>
+        <VBox spacing="5">
+            <Label style="-fx-text-fill: #ffcc00; -fx-font-size: 13px; -fx-font-weight: bold;">Mot de passe :</Label>
+            <PasswordField fx:id="field_password_co"/>
+        </VBox>
+
+        <Button text="connexion" onAction="#Buttonsend"
+                style="-fx-background-color: #ffcc00; -fx-text-fill: #2b2b2b; -fx-font-weight: bold; -fx-background-radius: 20px; -fx-cursor: hand; -fx-padding: 10 30;"/>
+        <Button text="Retour" onAction="#Buttonreturnco"
+                style="-fx-background-color: transparent; -fx-text-fill: #ffcc00; -fx-border-color: #ffcc00; -fx-border-radius: 20px; -fx-border-width: 2px; -fx-cursor: hand; -fx-padding: 8 28;"/>
+        <Label style="--body-text-color: red" fx:id="error_label"/>
+
+
+    </VBox>
+    <Label AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0">Version : 0</Label>
+</AnchorPane>
