@@ -2,10 +2,12 @@ package com.eseo.mediastock.model;
 
 import com.eseo.mediastock.model.Produits.Exemplaire;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Adherent {
-
+    //
+    public static int nbrAdherent;
     // Déclarations Variables
     private String numAdherent;
     private String nom;
@@ -14,6 +16,16 @@ public class Adherent {
     private String numTel;
     private List<Emprunt> empruntsEnCours;
     private List<Emprunt> historique;
+
+    public Adherent(String numAdherent, String nom, String prenom, String emailContact, String numTel) {
+        this.numAdherent = numAdherent;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.emailContact = emailContact;
+        this.numTel = numTel;
+        this.empruntsEnCours = new ArrayList<>();
+        this.historique = new ArrayList<>();
+    }
 
     // Getter/Setter
     public String getNumAdherent() {

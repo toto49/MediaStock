@@ -5,11 +5,19 @@ import com.eseo.mediastock.model.Produits.Exemplaire;
 import java.time.LocalDate;
 
 public class Emprunt {
-    private int id;
+    private final int id;
     private Adherent emprunteur;
     private Exemplaire exemplaireConcerne;
     private LocalDate dateDebut;
     private LocalDate dateRetour;
+
+    public Emprunt(int id, Adherent emprunteur, Exemplaire exemplaireConcerne) {
+        this.id = id;
+        this.emprunteur = emprunteur;
+        this.exemplaireConcerne = exemplaireConcerne;
+        this.dateDebut = LocalDate.now();
+        this.dateRetour = LocalDate.now().plusMonths(2);
+    }
 
     public int getId() {
         return id;

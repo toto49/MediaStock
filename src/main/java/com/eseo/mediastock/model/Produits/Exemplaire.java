@@ -9,10 +9,20 @@ public class Exemplaire {
     // Déclaration des variables
     private int id;
     private Produit produit;
-    private String codeBare;
+    private String codeBarre;
     private Date dateAcquisition;
     private EnumEtat etatPhysique;
     private EnumDispo statusDispo;
+    // Constructeur
+    public Exemplaire(int id, Produit produit, String codeBarre, Date dateAcquisition, EnumEtat etatPhysique, EnumDispo statusDispo) {
+        this.id = id;
+        this.produit = produit;
+        this.codeBarre = codeBarre;
+        this.dateAcquisition = dateAcquisition;
+        this.etatPhysique = etatPhysique;
+        this.statusDispo = statusDispo;
+    }
+
     // Getter/Setter
     public int getId() {
         return id;
@@ -22,8 +32,8 @@ public class Exemplaire {
         return produit;
     }
 
-    public String getCodeBare() {
-        return codeBare;
+    public String getCodeBarre() {
+        return codeBarre;
     }
 
     public Date getDateAcquisition() {
