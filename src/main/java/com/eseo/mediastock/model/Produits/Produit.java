@@ -1,5 +1,7 @@
 package com.eseo.mediastock.model.Produits;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 abstract class  Produit {
     // Variables de classes
@@ -66,10 +68,7 @@ abstract class  Produit {
         this.exemplaires = exemplaires;
     }
 
-    // Méthodes de classes
-    public String getInfos(){
-        return "id : " + id + "titre : " + "description : " + description + "editeur : " + editeur +  "anneeSortie : " + anneeSortie + "exemplaires : " + exemplaires;
-    }
+    // Méthodes de classe
 
 
 }
