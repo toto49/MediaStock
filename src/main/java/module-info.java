@@ -1,9 +1,12 @@
 module com.eseo.mediastock {
     requires javafx.controls;
     requires javafx.fxml;
-    // ... tes autres requires ...
+
+    requires org.controlsfx.controls;
+    requires com.dlsc.formsfx;
+    requires org.kordamp.bootstrapfx.core;
+    requires java.sql;
 
     opens com.eseo.mediastock to javafx.fxml;
-    opens com.eseo.mediastock.controller to javafx.fxml; // Indispensable pour tes contrôleurs
     exports com.eseo.mediastock;
 }
