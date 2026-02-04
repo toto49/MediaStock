@@ -1,9 +1,10 @@
 package com.eseo.mediastock.model.Produits;
-
 import java.util.List;
 
 abstract class  Produit {
-    // Variables communes accessibles aux enfants
+    // Variables de classes
+    private static int NbrReference;
+    // Variables d'instance accessibles aux enfants
     protected int id;
     protected String titre;
     protected String description;
@@ -23,10 +24,6 @@ abstract class  Produit {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getTitre() {
@@ -68,4 +65,11 @@ abstract class  Produit {
     public void setExemplaires(List<Exemplaire> exemplaires) {
         this.exemplaires = exemplaires;
     }
+
+    // Méthodes de classes
+    public String getInfos(){
+        return "id : " + id + "titre : " + "description : " + description + "editeur : " + editeur +  "anneeSortie : " + anneeSortie + "exemplaires : " + exemplaires;
+    }
+
+
 }
