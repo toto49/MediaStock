@@ -55,5 +55,9 @@
         <Label style="--body-text-color: red" fx:id="error_label"/>
     </VBox>
 
-    <Label AnchorPane.bottomAnchor="0" AnchorPane.rightAnchor="0" text="Version : 0"/>
+    <Label AnchorPane.bottomAnchor="15"
+           AnchorPane.rightAnchor="15"
+           style="-fx-text-fill: derive(#2b2b2b, 50%); -fx-font-size: 12px;">
+        Version : 1.0
+    </Label>
 </AnchorPane>
