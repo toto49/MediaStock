@@ -12,10 +12,6 @@ import java.util.Objects;
 
 public class Launcher extends Application {
 
-    static void main(String[] args) {
-        launch(args);
-    }
-
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(

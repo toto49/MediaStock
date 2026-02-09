@@ -1,0 +1,9 @@
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            xmlns="http://javafx.com/javafx"
+            style="-fx-background-color: #404040;">
+    <Label text="Réglages de l'application" textFill="white" layoutX="20" layoutY="20"/>
+    <CheckBox text="Mode nuit" textFill="white" layoutX="20" layoutY="60"/>
+</AnchorPane>
