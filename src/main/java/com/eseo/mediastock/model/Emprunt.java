@@ -1,35 +1,46 @@
 package com.eseo.mediastock.model;
 
+import com.eseo.mediastock.model.Enum.EnumDispo;
 import com.eseo.mediastock.model.Produits.Exemplaire;
 
 import java.time.LocalDate;
 
 public class Emprunt {
-    private final int id;
+    private int id;
     private Adherent emprunteur;
-    private Exemplaire exemplaireConcerne;
+    private Exemplaire exemplaire;
     private LocalDate dateDebut;
     private LocalDate dateRetour;
+    private EnumDispo statusDispo;
 
-    public Emprunt(int id, Adherent emprunteur, Exemplaire exemplaireConcerne) {
-        this.id = id;
-        this.emprunteur = emprunteur;
-        this.exemplaireConcerne = exemplaireConcerne;
+    public Emprunt(){
         this.dateDebut = LocalDate.now();
         this.dateRetour = LocalDate.now().plusMonths(2);
+        this.statusDispo = EnumDispo.EMPRUNTE;
     }
 
-    public int getId() {
-        return id;
+    public Emprunt(int id, Adherent emprunteur, Exemplaire exemplaire,LocalDate dateDebut,LocalDate dateRetour) {
+        this.id = id;
+        this.emprunteur = emprunteur;
+        this.exemplaire = exemplaire;
+        this.dateDebut = dateDebut;
+        this.dateRetour = dateRetour;
+        this.statusDispo = EnumDispo.EMPRUNTE;
     }
 
-    public Adherent getEmprunteur() {
-        return emprunteur;
+    public void setEmprunteur(Adherent emprunteur) {
+        this.emprunteur = emprunteur;
     }
 
-    public Exemplaire getExemplaireConcerne() {
-        return exemplaireConcerne;
+    public void setExemplaire(Exemplaire exemplaire) {
+        this.exemplaire = exemplaire;
     }
+
+    public int getId() {return id;}
+
+    public Adherent getEmprunteur() {return emprunteur;}
+
+    public Exemplaire getExemplaire() {return exemplaire;}
 
     public LocalDate getDateDebut() {
         return dateDebut;
@@ -39,9 +50,15 @@ public class Emprunt {
         return dateRetour;
     }
 
+    public  EnumDispo getStatusDispo() {return statusDispo;}
+
+    public void setStatusDispo(EnumDispo statusDispo) {
+        this.statusDispo = statusDispo;
+    }
+
     //Méthodes
     public boolean estEnRetard(){
-        return dateRetour.isBefore(LocalDate.now());
+        return dateRetour.isBefore(LocalDate.now()) && this.statusDispo == EnumDispo.EMPRUNTE;
     }
 
 }

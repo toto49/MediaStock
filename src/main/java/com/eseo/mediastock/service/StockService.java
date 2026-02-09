@@ -10,12 +10,13 @@ public class StockService {
 
     // --- AJOUT DES PRODUITS ---
 
-    public void ajouterLivre(String titre, String editeur, int annee, String isbn, String auteur, int nbPages, String format) {
+    public void ajouterLivre(String titre, String description, String editeur, int annee, String isbn, String auteur, int nbPages, String format) {
         if (titre == null || titre.trim().isEmpty()) throw new IllegalArgumentException("Le titre est obligatoire");
 
         Livre livre = new Livre();
         // Champs parents (Produit)
         livre.setTitre(titre);
+        livre.setDescription(description);
         livre.setEditeur(editeur);
         livre.setAnneeSortie(annee);
         // Champs enfants (Livre)
@@ -27,12 +28,13 @@ public class StockService {
         // TODO : produitDao.save(livre);
     }
 
-    public void ajouterDVD(String titre, String editeur, int annee, String realisateur, int duree, List<String> audio,List<String> sousTitres) {
+    public void ajouterDVD(String titre, String description,String editeur, int annee, String realisateur, int duree, List<String> audio,List<String> sousTitres) {
         if (titre == null || titre.trim().isEmpty()) throw new IllegalArgumentException("Le titre est obligatoire");
 
         DVD dvd = new DVD();
         // Champs parents
         dvd.setTitre(titre);
+        dvd.setDescription(description);
         dvd.setEditeur(editeur);
         dvd.setAnneeSortie(annee);
         // Champs enfants
@@ -70,7 +72,7 @@ public class StockService {
         return 9;
     }
 
-    // --- CODE BARRE (Logique Corrigée) ---
+    // --- CODE BARRE ---
 
     private int calculerCleEAN13(String code12) {
         int somme = 0;
@@ -120,4 +122,6 @@ public class StockService {
         exemplaire.setStatusDispo(newStatus);
         // TODO : Update en BDD
     }
+
+    // --- RECHERCHER PRODUITS ---
 }
