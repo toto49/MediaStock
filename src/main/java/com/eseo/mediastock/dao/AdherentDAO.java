@@ -3,6 +3,8 @@ package com.eseo.mediastock.dao;
 import com.eseo.mediastock.model.Adherent;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdherentDAO {
 /**
@@ -23,13 +25,13 @@ public class AdherentDAO {
         // recupere le id genere par sql
         try (ResultSet rs = stmt.getGeneratedKeys()){
             if (rs.next()){
-                int generatedId = rs.getInt(1);
+               adherent.setId(rs.getInt(1));
 
             }
         }
         }
     }
-}
+
 /**
  * MÉTHODE READ (findById) - Récupère un adhérent par son ID
  * @param id - L'identifiant de l'adhérent dans la base
@@ -37,7 +39,7 @@ public class AdherentDAO {
  * @throws SQLException - Si la requête échoue**/
 
 public Adherent findById (int id) throws SQLException {
-    String sql = "SELECT * FROM ADHRENT WHERE id = ?";
+    String sql = "SELECT * FROM ADHERENT WHERE id = ?";
 
     try (Connection conn = DatabaseConnection.getConnection();
     PreparedStatement stmt = conn.prepareStatement(sql)){
@@ -45,7 +47,7 @@ public Adherent findById (int id) throws SQLException {
      //resultat de la requete
      try (ResultSet rs = stmt.executeQuery()){
          if (rs.next()){
-             return new Adherent(String.valueOf(rs.getInt("id")),
+             return new Adherent(rs.getInt("id"),
                      rs.getString("nom"),
                      rs.getString("prenom"),
                      rs.getString("email"),
@@ -72,8 +74,7 @@ public List<Adherent> findAll() throws SQLException{
 
         //parcour et créer les lignes du resultat
         while (rs.next()){
-            Adherent adherent = new Adherent(
-                    String.valueOf(rs.getInt("id")),
+            Adherent adherent = new Adherent(rs.getInt("id"),
                     rs.getString("nom"),
                     rs.getString("prenom"),
                     rs.getString("email"),
@@ -100,7 +101,7 @@ public void update (Adherent adherent) throws SQLException{
         stmt.setString(2, adherent.getNom());
         stmt.setString(3, adherent.getPrenom());
         stmt.setString(4, adherent.getEmailContact());
-        stmt.setInt(5, Integer.parseInt(adherent.getNumAdherent())); //id pour la clause where
+        stmt.setInt(5, adherent.getId()); //id pour la clause where
 
         //execute la mise a jour
         int rowsAffected = stmt.executeUpdate();
@@ -129,4 +130,5 @@ public void delete (int id) throws SQLException{
             System.out.println("adherent supprimé " + rowsAffected);
         }
     }
+}
 }
