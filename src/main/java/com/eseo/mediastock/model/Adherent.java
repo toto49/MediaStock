@@ -1,7 +1,5 @@
 package com.eseo.mediastock.model;
 
-import com.eseo.mediastock.model.Produits.Exemplaire;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,8 +71,17 @@ public class Adherent {
     }
 
     //Methodes
-    public int getNombreEmpunts(){
+    public int getNombreEmprunts(){
         return empruntsEnCours.size();
+    }
+
+    public void ajouterEmprunt(Emprunt emprunt) {
+        this.empruntsEnCours.add(emprunt);
+        this.historique.add(emprunt);
+    }
+
+    public void cloturerEmprunt(Emprunt emprunt) {
+        this.empruntsEnCours.remove(emprunt);
     }
 
 }

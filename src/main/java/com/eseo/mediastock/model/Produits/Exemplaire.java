@@ -3,6 +3,7 @@ package com.eseo.mediastock.model.Produits;
 import com.eseo.mediastock.model.Enum.EnumDispo;
 import com.eseo.mediastock.model.Enum.EnumEtat;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Exemplaire {
@@ -10,7 +11,7 @@ public class Exemplaire {
     private int id;
     private Produit produit;
     private String codeBarre;
-    private Date dateAcquisition;
+    private LocalDate dateAcquisition;
     private EnumEtat etatPhysique;
     private EnumDispo statusDispo;
 
@@ -18,7 +19,7 @@ public class Exemplaire {
     public Exemplaire(){
     }
 
-    public Exemplaire(int id, Produit produit, String codeBarre, Date dateAcquisition, EnumEtat etatPhysique, EnumDispo statusDispo) {
+    public Exemplaire(int id, Produit produit, String codeBarre, LocalDate dateAcquisition, EnumEtat etatPhysique, EnumDispo statusDispo) {
         this.id = id;
         this.produit = produit;
         this.codeBarre = codeBarre;
@@ -60,15 +61,9 @@ public class Exemplaire {
         this.statusDispo = statusDispo;
     }
 
-    public boolean estEmpruntable(){
-        return (statusDispo == EnumDispo.DISPONIBLE);
-    }
+    public void setProduit(Produit produit) {this.produit = produit;}
 
-    public void setProduit(Produit produit) {
-    }
-
-    public void setCodeBarre(String codeBarre) {
-    }
+    public void setCodeBarre(String codeBarre) {this.codeBarre = codeBarre;}
 
     // Méthodes
     public boolean estDispo(){
