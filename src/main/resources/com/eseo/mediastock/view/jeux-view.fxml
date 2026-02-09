@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            xmlns="http://javafx.com/javafx"
+            fx:controller="com.eseo.mediastock.controller.JeuxController"
+            prefHeight="400.0" prefWidth="600.0">
+    <Button
+            text="Retour"
+            onAction="#ButtonReturn"
+            AnchorPane.leftAnchor="15"
+            AnchorPane.topAnchor="15"
+            style="
+            -fx-cursor: hand;
+            -fx-border-radius: 25;
+            -fx-border-color: #ffcc00;
+            -fx-text-fill: #ffcc00;
+            -fx-background-color: transparent;
+            -fx-border-width: 2;
+        "/>
+    <Label mouseTransparent="true" alignment="CENTER" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+           AnchorPane.topAnchor="15" style="-fx-font-size: 30;-fx-text-fill: #ffcc00">
+        Liste des DVD
+    </Label>
+    <HBox mouseTransparent="true" alignment="CENTER" AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0"
+          AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0">
+        <TableView fx:id="tableJeux" style="-fx-background-color: #383838;" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn text="#" fx:id="colId" prefWidth="40">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="id"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Titre" fx:id="colTitre" prefWidth="150">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="titre"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Éditeur" fx:id="colEditeur" prefWidth="100">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="editeur"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Année" fx:id="colAnnee" prefWidth="60">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="anneeSortie"/>
+                    </cellValueFactory>
+                </TableColumn>
+
+                <TableColumn text="Joueurs Min" fx:id="colJMin" prefWidth="50">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="nbJoueursMin"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Joueurs Max" fx:id="colJMax" prefWidth="50">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="nbJoueursMax"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Age Min" fx:id="colAge" prefWidth="50">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="ageMin"/>
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Durée (min)" fx:id="colDureePartie" prefWidth="80">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="dureePartie"/>
+                    </cellValueFactory>
+                </TableColumn>
+            </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+    </HBox>
+
+    <Label AnchorPane.bottomAnchor="15"
+           AnchorPane.rightAnchor="15"
+           style="-fx-text-fill: derive(#2b2b2b, 50%); -fx-font-size: 12px;">
+        Version : 1.0
+    </Label>
+</AnchorPane>
