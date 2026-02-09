@@ -3,7 +3,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-abstract class  Produit {
+public abstract class  Produit {
     // Variables de classes
     private static int NbrReference;
     // Variables d'instance accessibles aux enfants
@@ -14,6 +14,11 @@ abstract class  Produit {
     protected int anneeSortie;
     // Listes des exemplaires
     private List<Exemplaire> exemplaires;
+
+    // Constructeurs
+
+    public Produit(){
+    }
 
     public Produit(int id, String titre, String description, String editeur, int anneeSortie, List<Exemplaire> exemplaires) {
         this.id = id;

@@ -10,7 +10,10 @@ public class Livre extends Produit {
     private int nbPages;
     private String format;
 
-    // Constructeur
+    // Constructeurs
+    public Livre(){
+    }
+
     public Livre(int id, String titre, String description, String editeur, int anneeSortie, List<Exemplaire> exemplaires, String isbn, String auteur, int nbPages, String format) {
         super(id, titre, description, editeur, anneeSortie, exemplaires);
         this.isbn = isbn;
@@ -46,6 +49,9 @@ public class Livre extends Produit {
 
     public void setFormat(String format) {
         this.format = format;
+    }
+
+    public void setIsbn(String isbn) {
     }
 
     // Methodes

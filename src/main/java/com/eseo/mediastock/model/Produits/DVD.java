@@ -8,6 +8,11 @@ public class DVD extends Produit {
     private List<String> audioLangues;
     private List<String> sousTitres;
 
+    // Constructeurs
+
+    public DVD(){
+    }
+
     public DVD(int id, String titre, String description, String editeur, int anneeSortie, List<Exemplaire> exemplaires, String realisateur, int dureeMinutes, List<String> audioLangues, List<String> sousTitres) {
         super(id, titre, description, editeur, anneeSortie, exemplaires);
         this.realisateur = realisateur;
