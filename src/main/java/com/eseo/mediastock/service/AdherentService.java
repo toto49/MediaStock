@@ -14,12 +14,12 @@ public class AdherentService {
     public String createNumAdherent(){
         int annee = LocalDate.now().getYear();
         int abonnes = ajouterNbrAdherent();
-        return "ADH-" + annee + "-" + abonnes;
+        return String.format("ADH-%d-%03d",annee,abonnes);
     }
 
     public void inscrireAdherent(String nom, String prenom, String adresse, String telephone){
         String numAdherent = createNumAdherent();
-
+        // TODO : dans le DAO, ajouter un adherent a la BDD
     }
 
 }

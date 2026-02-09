@@ -13,7 +13,11 @@ public class Exemplaire {
     private Date dateAcquisition;
     private EnumEtat etatPhysique;
     private EnumDispo statusDispo;
-    // Constructeur
+
+    // Constructeurs
+    public Exemplaire(){
+    }
+
     public Exemplaire(int id, Produit produit, String codeBarre, Date dateAcquisition, EnumEtat etatPhysique, EnumDispo statusDispo) {
         this.id = id;
         this.produit = produit;
@@ -58,5 +62,11 @@ public class Exemplaire {
 
     public boolean estEmpruntable(){
         return (statusDispo == EnumDispo.DISPONIBLE);
+    }
+
+    public void setProduit(Produit produit) {
+    }
+
+    public void setCodeBarre(String codeBarre) {
     }
 }

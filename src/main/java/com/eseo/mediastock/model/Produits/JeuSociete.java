@@ -8,6 +8,10 @@ public class JeuSociete extends Produit {
     private int ageMin;
     private int dureePartie;
 
+    // Constructeurs
+    public JeuSociete(){
+    }
+
     public JeuSociete(int id, String titre, String description, String editeur, int anneeSortie, List<Exemplaire> exemplaires, int nbJoueursMin, int nbJoueursMax, int ageMin, int dureePartie) {
         super(id, titre, description, editeur, anneeSortie, exemplaires);
         this.nbJoueursMin = nbJoueursMin;

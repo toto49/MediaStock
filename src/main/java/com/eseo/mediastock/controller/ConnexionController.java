@@ -30,7 +30,7 @@ public class ConnexionController {
 
     }
 
-    public void Buttonsend(ActionEvent actionEvent) {
+    public void Buttonsend(ActionEvent actionEvent) throws IOException {
         if (field_mail_co.getText().isEmpty() || field_password_co.getText().isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setHeaderText("Erreur");
@@ -44,6 +44,15 @@ public class ConnexionController {
             alert.showAndWait();
 
 
+        } else {
+            FXMLLoader fxmlLoader = new FXMLLoader(Launcher.class.getResource("view/menu-view.fxml"));
+            Parent root = fxmlLoader.load();
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.setTitle("Menu");
+            Scene currentScene = stage.getScene();
+            currentScene.setRoot(root);
+
         }
+
     }
 }
