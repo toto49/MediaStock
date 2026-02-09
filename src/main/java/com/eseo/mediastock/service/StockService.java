@@ -72,7 +72,7 @@ public class StockService {
         return 9;
     }
 
-    // --- CODE BARRE (Logique Corrigée) ---
+    // --- CODE BARRE ---
 
     private int calculerCleEAN13(String code12) {
         int somme = 0;

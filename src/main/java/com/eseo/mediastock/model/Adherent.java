@@ -7,7 +7,7 @@ public class Adherent {
     //
     public static int nbrAdherent;
     // Déclarations Variables
-    private int id;
+    private String id;
     private String nom;
     private String prenom;
     private String emailContact;
@@ -15,7 +15,7 @@ public class Adherent {
     private List<Emprunt> empruntsEnCours;
     private List<Emprunt> historique;
 
-    public Adherent(int id, String nom, String prenom, String emailContact, String numTel) {
+    public Adherent(String id, String nom, String prenom, String emailContact, String numTel) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -26,10 +26,9 @@ public class Adherent {
     }
 
     // Getter/Setter
-    public int getId() {
-        return id;
-    }
-    public void setId(int id){this.id = id;}
+    public String getId() {return id;}
+
+    public void setId(String id){this.id = id;}
 
     public String getNom() {
         return nom;
