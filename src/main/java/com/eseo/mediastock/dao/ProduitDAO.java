@@ -1,4 +1,4 @@
 package com.eseo.mediastock.dao;
 
-public class IProduitDAO {
+public class ProduitDAO {
 }
