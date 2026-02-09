@@ -9,14 +9,13 @@ import java.util.List;
 
 public class EmpruntService {
 
-    private static int MAX_EMPRUNTS = 5 ;
+    private static final int MAX_EMPRUNTS = 5 ;
 
     public boolean peutEmprunter(Adherent adherent, Exemplaire exemplaire){
         if (adherent.getNombreEmprunts() >= MAX_EMPRUNTS){return false;}
         for (Emprunt emprunt : adherent.getEmpruntsEnCours()){if (emprunt.estEnRetard()){return false;}}
         if (!exemplaire.estDispo()){return false;}
-        if (!exemplaire.estBonEtat()){return false;}
-        return true;
+        return exemplaire.estBonEtat();
     }
 
     public void enregistrerEmprunt(Adherent adherent, Exemplaire exemplaire){
@@ -42,6 +41,7 @@ public class EmpruntService {
 
     public List<Emprunt> getEmpruntsEnRetards(){
         // TODO : empruntDao.trouverRetards(LocalDate.now()); stp morgiane
+        return List.of();
     }
 
 }
