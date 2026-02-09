@@ -6,7 +6,7 @@
             xmlns="http://javafx.com/javafx"
             fx:controller="com.eseo.mediastock.controller.ConnexionController"
             prefHeight="400.0" prefWidth="600.0"
-            style="-fx-background-color: linear-gradient(to bottom, #323232, #2b2b2b);">
+            style="-fx-background-color: #2b2b2b;">
 
     <VBox alignment="CENTER"
           spacing="20" fillWidth="false"
