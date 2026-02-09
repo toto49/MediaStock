@@ -41,7 +41,7 @@ public class Exemplaire {
         return codeBarre;
     }
 
-    public Date getDateAcquisition() {
+    public LocalDate getDateAcquisition() {
         return dateAcquisition;
     }
 
