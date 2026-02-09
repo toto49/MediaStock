@@ -69,4 +69,13 @@ public class Exemplaire {
 
     public void setCodeBarre(String codeBarre) {
     }
+
+    // Méthodes
+    public boolean estDispo(){
+        return (statusDispo == EnumDispo.DISPONIBLE);
+    }
+
+    public boolean estBonEtat(){
+        return (etatPhysique != EnumEtat.ABIME);
+    }
 }
