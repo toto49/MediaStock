@@ -14,6 +14,7 @@ public class MenuController {
 
     private static MenuController instance;
 
+
     @FXML
     private BorderPane mainPane;
     @FXML
@@ -22,6 +23,8 @@ public class MenuController {
     private Button btnParametres;
     @FXML
     public Button btnListView;
+    @FXML
+    private Button btnAddProduit;
 
     public static MenuController getInstance() {
         return instance;
@@ -69,6 +72,13 @@ public class MenuController {
     }
 
     @FXML
+    void afficherAddProduit(ActionEvent event) {
+        chargerPage("ajouter-produit");
+        updateButtonStyles(btnAddProduit);
+        changerTitre("ajouter Produit");
+    }
+
+    @FXML
     void afficherParametres(ActionEvent event) {
         chargerPage("parametre");
         updateButtonStyles(btnParametres);
@@ -91,6 +101,7 @@ public class MenuController {
         if (btnAccueil != null) btnAccueil.setStyle(STYLE_INACTIF);
         if (btnParametres != null) btnParametres.setStyle(STYLE_INACTIF);
         if (btnListView != null) btnListView.setStyle(STYLE_INACTIF);
+        if (btnAddProduit != null) btnAddProduit.setStyle(STYLE_INACTIF);
 
         if (boutonActif != null) boutonActif.setStyle(STYLE_ACTIF);
     }
