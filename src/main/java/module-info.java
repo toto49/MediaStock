@@ -3,6 +3,7 @@ module com.eseo.mediastock {
     requires javafx.fxml;
     requires java.dotenv;
     requires java.sql;
+    requires java.desktop;
     // ... tes autres requires ...
 
     opens com.eseo.mediastock to javafx.fxml;

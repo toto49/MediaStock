@@ -40,7 +40,6 @@ public class MenuController {
         try {
 
             String chemin = "/com/eseo/mediastock/view/" + nomFichier + "-view.fxml";
-            System.out.println("Chargement de : " + chemin);
             FXMLLoader loader = new FXMLLoader(getClass().getResource(chemin));
             Parent vue = loader.load();
             Object controller = loader.getController();
