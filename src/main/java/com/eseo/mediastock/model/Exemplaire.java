@@ -1,10 +1,10 @@
-package com.eseo.mediastock.model.Produits;
+package com.eseo.mediastock.model;
 
 import com.eseo.mediastock.model.Enum.EnumDispo;
 import com.eseo.mediastock.model.Enum.EnumEtat;
+import com.eseo.mediastock.model.Produits.Produit;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class Exemplaire {
     // Déclaration des variables

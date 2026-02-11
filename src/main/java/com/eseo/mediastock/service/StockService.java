@@ -2,6 +2,7 @@ package com.eseo.mediastock.service;
 
 import com.eseo.mediastock.model.Enum.EnumDispo;
 import com.eseo.mediastock.model.Enum.EnumEtat; // Pensez à l'importer
+import com.eseo.mediastock.model.Exemplaire;
 import com.eseo.mediastock.model.Produits.*;
 
 import java.util.ArrayList;

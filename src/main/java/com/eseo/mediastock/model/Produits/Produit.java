@@ -1,7 +1,7 @@
 package com.eseo.mediastock.model.Produits;
-import java.util.LinkedHashMap;
+import com.eseo.mediastock.model.Exemplaire;
+
 import java.util.List;
-import java.util.Map;
 
 public abstract class  Produit {
     // Variables de classes
