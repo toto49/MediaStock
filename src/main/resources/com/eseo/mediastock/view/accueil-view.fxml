@@ -89,7 +89,11 @@
 
         </HBox>
     </VBox>
-
+    <Label AnchorPane.topAnchor="15"
+           AnchorPane.rightAnchor="15"
+           style="-fx-text-fill: #ffcc00; -fx-font-size: 25px;">
+        Bonjour
+    </Label>
     <Label AnchorPane.bottomAnchor="15"
            AnchorPane.rightAnchor="15"
            style="-fx-text-fill: derive(#2b2b2b, 50%); -fx-font-size: 12px;">
