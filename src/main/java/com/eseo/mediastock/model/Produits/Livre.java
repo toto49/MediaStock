@@ -23,7 +23,7 @@ public class Livre extends Produit {
     }
 
     // Getters/Setters
-    public String getIsbn() {
+    public int getIsbn() {
         return isbn;
     }
 
