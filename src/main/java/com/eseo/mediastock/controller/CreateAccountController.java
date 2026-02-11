@@ -26,9 +26,9 @@ public class CreateAccountController {
     public PasswordField field_copassword_co;
     @FXML
     private Label error_label;
-//service
+//service c'est mon ajout de code : morgiane
     private AdherentService adherentService = new AdherentService();
-//bouton retour
+//bouton retour de tom
     public void Buttonreturnco(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(
                 Launcher.class.getResource("view/bienvenue-view.fxml"));
@@ -41,7 +41,7 @@ public class CreateAccountController {
         currentScene.setRoot(root);
 
     }
-//bouton envoyer incription
+//bouton envoyer inscription
     public void Buttonsend(ActionEvent actionEvent) throws IOException {
         if (field_prenom_co.getText().isEmpty() || field_telephone_co.getText().isEmpty() || field_email_co.getText().isEmpty() || field_nom_co.getText().isEmpty() || field_copassword_co.getText().isEmpty() || field_password_co.getText().isEmpty()) {
             showErrorAlert("Erreur", "Veuillez remplir tous les champs ");
@@ -60,7 +60,7 @@ public class CreateAccountController {
             return;
         }
 
-        //appel service inscire adherent
+        //appel service inscrire adherent
         try {
             adherentService.inscrireAdherent(
                     field_nom_co.getText(),
@@ -84,7 +84,7 @@ public class CreateAccountController {
         }
     }
 
-    // MÉTHODES UTILITAIRES (inchangées)
+    // Methode utilitaire (inchangées c'est celle de tom)
     private void showErrorAlert(String titre, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(titre);
