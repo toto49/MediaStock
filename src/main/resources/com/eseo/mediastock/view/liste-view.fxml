@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            xmlns="http://javafx.com/javafx"
+            fx:controller="com.eseo.mediastock.controller.ListeViewController"
+            stylesheets="@../../../../style/button.css"
+            prefHeight="400.0" prefWidth="600.0"
+            style="-fx-background-color: transparent;">
+
+    <VBox alignment="CENTER" spacing="10" AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+          AnchorPane.bottomAnchor="0">
+        <Label style="-fx-text-fill: #ffcc00; -fx-font-size: 28px; -fx-font-weight: bold;">Choisissez votre média
+        </Label>
+        <HBox alignment="CENTER"
+              spacing="20"
+              AnchorPane.leftAnchor="0"
+              AnchorPane.rightAnchor="0"
+              AnchorPane.topAnchor="0"
+              AnchorPane.bottomAnchor="0">
+
+            <Button onAction="#ButtonViewLivre" styleClass="buttonlist">LIVRES</Button>
+            <Button onAction="#ButtonViewDVD" styleClass="buttonlist">DVD</Button>
+            <Button onAction="#ButtonViewJeux" styleClass="buttonlist">JEUX</Button>
+
+        </HBox>
+
+
+    </VBox>
+    <Label AnchorPane.bottomAnchor="15"
+           AnchorPane.rightAnchor="15"
+           style="-fx-text-fill: derive(#2b2b2b, 50%); -fx-font-size: 12px;">
+        Version : 1.0
+    </Label>
+</AnchorPane>

@@ -5,18 +5,17 @@ import com.eseo.mediastock.model.Emprunt;
 import com.eseo.mediastock.model.Enum.EnumDispo;
 import com.eseo.mediastock.model.Produits.Exemplaire;
 
-import java.time.LocalDate;
+import java.util.List;
 
 public class EmpruntService {
 
-    private static int MAX_EMPRUNTS = 5 ;
+    private static final int MAX_EMPRUNTS = 5 ;
 
     public boolean peutEmprunter(Adherent adherent, Exemplaire exemplaire){
-        if (adherent.getNombreEmpunts() == MAX_EMPRUNTS){return false;}
+        if (adherent.getNombreEmprunts() >= MAX_EMPRUNTS){return false;}
         for (Emprunt emprunt : adherent.getEmpruntsEnCours()){if (emprunt.estEnRetard()){return false;}}
         if (!exemplaire.estDispo()){return false;}
-        if (!exemplaire.estBonEtat()){return false;}
-        return true;
+        return exemplaire.estBonEtat();
     }
 
     public void enregistrerEmprunt(Adherent adherent, Exemplaire exemplaire){
@@ -24,11 +23,25 @@ public class EmpruntService {
             Emprunt emprunt = new Emprunt();
             emprunt.setEmprunteur(adherent);
             emprunt.setExemplaire(exemplaire);
+            adherent.ajouterEmprunt(emprunt);
             exemplaire.setStatusDispo(EnumDispo.EMPRUNTE);
-            adherent.getEmpruntsEnCours().add(emprunt);
-            // TODO : Ajouter avec DAO
+            // TODO : Enregistrer dans le DAO stp Morgiane (fait juste la fonction dans tes fichiers je m'occupe de l'appeler)
         }
     }
 
+    public void enregistrerRetour(Adherent adherent, Emprunt emprunt){
+        if (adherent.getEmpruntsEnCours().contains(emprunt)){
+            adherent.cloturerEmprunt(emprunt);
+            emprunt.setStatusDispo(EnumDispo.RENDU);
+            emprunt.getExemplaire().setStatusDispo(EnumDispo.DISPONIBLE);
+            // TODO : Enregistrer dans le DAO stp Morgiane (fait juste la fonction dans tes fichiers je m'occupe de l'appeler)
+        }
+    }
+
+
+    public List<Emprunt> getEmpruntsEnRetards(){
+        // TODO : empruntDao.trouverRetards(LocalDate.now()); stp morgiane (fait juste la fonction dans tes fichiers je m'occupe de l'appeler)
+        return List.of();
+    }
 
 }

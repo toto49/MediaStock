@@ -1,0 +1,66 @@
+/* Fond général du tableau */
+.table-view {
+    -fx-base: #383838;
+    -fx-control-inner-background: #383838;
+    -fx-background-color: transparent;
+    -fx-table-cell-border-color: transparent;
+    -fx-table-header-border-color: transparent;
+}
+
+/* En-têtes de colonnes (Headers) */
+.table-view .column-header-background {
+    -fx-background-color: #2b2b2b; /* La couleur gris foncé de votre fond */
+    -fx-background-radius: 10 10 0 0; /* Garder les coins arrondis */
+}
+
+.table-view .filler {
+    -fx-background-color: transparent; /* Il prendra la couleur du parent défini juste au-dessus */
+    -fx-border-color: transparent; /* Enlève les bordures parasites */
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-size: 40px; /* Hauteur de l'en-tête */
+    -fx-border-color: #444;
+    -fx-border-width: 0 0 2 0;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #ffcc00; /* Texte jaune */
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+/* Les cellules (Lignes) */
+.table-row-cell {
+    -fx-background-color: #383838;
+    -fx-border-color: transparent;
+}
+
+/* Une ligne sur deux légèrement plus claire */
+.table-row-cell:odd {
+    -fx-background-color: #3e3e3e;
+}
+
+/* Couleur du texte dans les cellules */
+.table-cell {
+    -fx-text-fill: white;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 0 0 0 10;
+}
+
+/* Ligne sélectionnée (Au survol ou au clic) */
+.table-row-cell:hover, .table-row-cell:selected {
+    -fx-background-color: #505050;
+    -fx-text-fill: #ffcc00;
+}
+
+/* Ascenseur (Scrollbar) invisible ou discret */
+.table-view .scroll-bar:horizontal, .table-view .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.table-view .scroll-bar .thumb {
+    -fx-background-color: #555;
+    -fx-background-radius: 5;
+}

@@ -13,23 +13,33 @@ public class AdherentService {
         this.adherentDAO = new AdherentDAO();
     }
 
-    public int ajouterNbrAdherent(){
+    public int nbrAdherent(){
         Adherent.nbrAdherent += 1;
         return Adherent.nbrAdherent;
     }
 
-    public String createNumAdherent(){
+    public String createNumAdherent() {
         int annee = LocalDate.now().getYear();
-        int abonnes = ajouterNbrAdherent();
-        return String.format("ADH-%d-%03d",annee,abonnes);
+        int totalAdherents = 0;
+
+        try {
+            totalAdherents = adherentDAO.count(annee);
+        } catch (SQLException e) {
+            System.err.println("Erreur lors du comptage : " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        int numeroSequence = totalAdherents + 1;
+
+        return String.format("ADH-%d-%03d", annee, numeroSequence);
     }
 
     public void inscrireAdherent(String nom, String prenom, String email, String telephone){
-        //crée un adherent
-        Adherent nouvelAdherent = new Adherent(0, nom, prenom, email, telephone);
-        // utiliser le dao pour sauvegarder dans la db
+        String numAdherent = createNumAdherent();
+        Adherent nouvelAdherent = new Adherent(numAdherent, nom, prenom, email, telephone);
+
         try {
-            adherentDAO.create (nouvelAdherent);
+            adherentDAO.create(nouvelAdherent);
             System.out.println("Adhérent créé avec succès !");
             System.out.println("ID attribué: " + nouvelAdherent.getId());
 

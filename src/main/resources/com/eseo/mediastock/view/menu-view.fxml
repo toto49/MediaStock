@@ -40,6 +40,16 @@
                     text="Paramètres"
                     prefWidth="180"
                     style="-fx-cursor: hand; -fx-background-color: transparent; -fx-text-fill: white;"/>
+            <Button fx:id="btnListView"
+                    onAction="#afficherListeView"
+                    text="Inventaire"
+                    prefWidth="180"
+                    style="-fx-cursor: hand; -fx-background-color: transparent; -fx-text-fill: white;"/>
+            <Button fx:id="btnAddProduit"
+                    onAction="#afficherAddProduit"
+                    text="Ajouter Produit"
+                    prefWidth="180"
+                    style="-fx-cursor: hand; -fx-background-color: transparent; -fx-text-fill: white;"/>
         </VBox>
     </left>
 

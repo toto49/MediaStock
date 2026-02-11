@@ -1,0 +1,10 @@
+.buttonlist {
+    -fx-cursor: hand;
+    -fx-text-fill: #ffcc00;
+    -fx-background-color: black;
+    -fx-font-size: 20;
+}
+
+.buttonlist:hover {
+    -fx-background-color: grey;
+}

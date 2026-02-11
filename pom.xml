@@ -17,27 +17,24 @@
 
     <dependencies>
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.33</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
             <classifier>win</classifier>
         </dependency>
+
         <dependency>
             <groupId>io.github.cdimascio</groupId>
             <artifactId>java-dotenv</artifactId>
-            <version>5.2.2</version>
+            <version>3.0.0</version>
         </dependency>
+
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <version>8.3.0</version>
         </dependency>
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
@@ -87,15 +84,6 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.1</version>
-                <configuration>
-                    <outputDirectory>${project.build.directory}/modules</outputDirectory>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>3.6.1</version>
                 <executions>
@@ -108,10 +96,18 @@
                         <configuration>
                             <outputDirectory>${project.build.directory}/modules</outputDirectory>
                             <includeScope>runtime</includeScope>
-                            <excludeGroupIds>org.openjfx</excludeGroupIds>
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.1</version>
+                <configuration>
+                    <outputDirectory>${project.build.directory}/modules</outputDirectory>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -133,13 +129,18 @@
                     <vendor>ESEO</vendor>
                     <destination>target/dist</destination>
                     <type>APP_IMAGE</type>
-                    <module>com.eseo.mediastock/com.eseo.mediastock.Launcher</module>
 
-                    <modulePaths>
-                        <modulePath>${project.build.directory}/modules</modulePath>
-                    </modulePaths>
+                    <input>${project.build.directory}/modules</input>
+
+                    <mainJar>MediaStock-${project.version}.jar</mainJar>
+
+                    <mainClass>com.eseo.mediastock.Launcher</mainClass>
 
                     <winConsole>false</winConsole>
+
+                    <javaOptions>
+                        <option>-Dfile.encoding=UTF-8</option>
+                    </javaOptions>
                 </configuration>
             </plugin>
         </plugins>

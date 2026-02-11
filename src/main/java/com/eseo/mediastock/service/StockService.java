@@ -4,6 +4,7 @@ import com.eseo.mediastock.model.Enum.EnumDispo;
 import com.eseo.mediastock.model.Enum.EnumEtat; // Pensez à l'importer
 import com.eseo.mediastock.model.Produits.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StockService {
@@ -25,7 +26,7 @@ public class StockService {
         livre.setNbPages(nbPages);
         livre.setFormat(format);
 
-        // TODO : produitDao.save(livre);
+        // TODO : produitDao.save(livre); stp morgiane (fait juste la fonction dans tes fichiers je m'occupe de l'appeler)
     }
 
     public void ajouterDVD(String titre, String description,String editeur, int annee, String realisateur, int duree, List<String> audio,List<String> sousTitres) {
@@ -42,7 +43,7 @@ public class StockService {
         dvd.setDureeMinutes(duree);
         dvd.setAudioLangues(audio);
 
-        // TODO : produitDao.save(dvd);
+        // TODO : produitDao.save(dvd); stp morgiane (fait juste la fonction dans tes fichiers je m'occupe de l'appeler)
     }
 
     public void ajouterJeuSociete(String titre, String description,String editeur, int annee, int nbJoueursMin, int nbJoueursMax, int ageMin, int dureePartie) {
@@ -60,7 +61,7 @@ public class StockService {
         jeu.setAgeMin(ageMin);
         jeu.setDureePartie(dureePartie);
 
-        // TODO : produitDao.save(jeu);
+        // TODO : produitDao.save(jeu); stp morgiane (fait juste la fonction dans tes fichiers je m'occupe de l'appeler)
     }
 
     // --- GESTION DES TYPES ---
@@ -72,7 +73,7 @@ public class StockService {
         return 9;
     }
 
-    // --- CODE BARRE (Logique Corrigée) ---
+    // --- CODE BARRE ---
 
     private int calculerCleEAN13(String code12) {
         int somme = 0;
@@ -115,13 +116,32 @@ public class StockService {
         ex.setEtatPhysique(EnumEtat.NEUF);
         ex.setStatusDispo(EnumDispo.DISPONIBLE);
 
-        // TODO : Sauvegarder dans la BDD via ExemplaireDAO
+        // TODO : Sauvegarder dans la BDD via ExemplaireDAO stp morgiane (fait juste la fonction dans tes fichiers je m'occupe de l'appeler)
     }
 
     public void changerStatus(Exemplaire exemplaire, EnumDispo newStatus){
         exemplaire.setStatusDispo(newStatus);
-        // TODO : Update en BDD
+        // TODO : Update en BDD stp morgiane (fait juste la fonction dans tes fichiers je m'occupe de l'appeler)
     }
 
     // --- RECHERCHER PRODUITS ---
+    public List<Produit> SearchProduit (String searchbar,String typeProduit){
+        List<Produit> produits = new ArrayList<>();
+
+        //  TODO : GetAllProduct pour chaque type produits , stp morgiane (fait juste la fonction dans tes fichiers je m'occupe de l'appeler)
+        if (typeProduit.equals("DVD")){
+            //Allproducts = getAllDVD();
+        }else if (typeProduit.equals("Jeu")){
+            //Allproducts = getAllJeu();
+        }else if (typeProduit.equals("Livre")){
+            //Allproducts = getAllLivres();
+        }
+
+//        for (Produit produit : Allproducts){
+//            if (produit.getTitre().toLowerCase().contains(searchbar.toLowerCase())){
+//                produits.add(produit);
+//            }
+//        }
+        return produits;
+    }
 }

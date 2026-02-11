@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.SVGPath?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml"
+            xmlns="http://javafx.com/javafx"
+            fx:controller="com.eseo.mediastock.controller.DVDController"
+            prefHeight="600.0" prefWidth="900.0"
+            style="-fx-background-color: #2b2b2b;"
+            stylesheets="@../../../../style/tableview.css">
+
+    <HBox alignment="CENTER_LEFT" spacing="20"
+          AnchorPane.topAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+
+        <Button onAction="#ButtonReturn"
+                style="-fx-background-color: transparent; -fx-text-fill: #ffcc00; -fx-border-color: #ffcc00; -fx-border-radius: 30; -fx-border-width: 2; -fx-cursor: hand; -fx-font-weight: bold; -fx-padding: 8 20;">
+            <graphic>
+                <SVGPath content="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="#ffcc00"
+                         scaleX="0.8" scaleY="0.8"/>
+            </graphic>
+            <text>RETOUR</text>
+        </Button>
+
+        <Label text="Collection de DVD"
+               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;">
+            <effect>
+                <DropShadow color="#00000066" radius="10" offsetY="3"/>
+            </effect>
+        </Label>
+    </HBox>
+
+    <VBox AnchorPane.topAnchor="90.0" AnchorPane.bottomAnchor="20.0"
+          AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0"
+          style="-fx-background-color: #383838; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);">
+
+        <TableView fx:id="tableDVD" VBox.vgrow="ALWAYS"
+                   style="-fx-background-color: transparent; -fx-background-radius: 15; -fx-padding: 10;">
+
+            <columns>
+                <TableColumn text="#" fx:id="colId" prefWidth="50" style="-fx-alignment: CENTER;">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="id"/>
+                    </cellValueFactory>
+                </TableColumn>
+
+                <TableColumn text="Titre" fx:id="colTitre" prefWidth="200" style="-fx-font-weight: bold;">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="titre"/>
+                    </cellValueFactory>
+                </TableColumn>
+
+                <TableColumn text="Réalisateur" fx:id="colRealisateur" prefWidth="150">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="realisateur"/>
+                    </cellValueFactory>
+                </TableColumn>
+
+                <TableColumn text="Année" fx:id="colAnnee" prefWidth="80" style="-fx-alignment: CENTER;">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="anneeSortie"/>
+                    </cellValueFactory>
+                </TableColumn>
+
+                <TableColumn text="Durée" fx:id="colDuree" prefWidth="80" style="-fx-alignment: CENTER;">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="dureeMinute"/>
+                    </cellValueFactory>
+                </TableColumn>
+
+                <TableColumn text="Éditeur" fx:id="colEditeur" prefWidth="120">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="editeur"/>
+                    </cellValueFactory>
+                </TableColumn>
+
+                <TableColumn text="Audio" fx:id="colLangues" prefWidth="100">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="audioLangues"/>
+                    </cellValueFactory>
+                </TableColumn>
+
+                <TableColumn text="Sous-titres" fx:id="colSousTitres" prefWidth="100">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="sousTitres"/>
+                    </cellValueFactory>
+                </TableColumn>
+            </columns>
+
+            <placeholder>
+                <Label text="Aucun DVD trouvé dans la bibliothèque" style="-fx-text-fill: #888; -fx-font-size: 14px;"/>
+            </placeholder>
+
+            <columnResizePolicy>
+                <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
+        </TableView>
+
+    </VBox>
+    <Label AnchorPane.bottomAnchor="15"
+           AnchorPane.rightAnchor="15"
+           style="-fx-text-fill: derive(#2b2b2b, 50%); -fx-font-size: 12px;">
+        Version : 1.0
+    </Label>
+</AnchorPane>

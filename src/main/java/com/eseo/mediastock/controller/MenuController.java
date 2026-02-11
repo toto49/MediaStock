@@ -6,53 +6,112 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class MenuController {
+
+    private static MenuController instance;
+
+
     @FXML
     private BorderPane mainPane;
     @FXML
     private Button btnAccueil;
     @FXML
     private Button btnParametres;
+    @FXML
+    public Button btnListView;
+    @FXML
+    private Button btnAddProduit;
+
+    public static MenuController getInstance() {
+        return instance;
+    }
 
     @FXML
     public void initialize() {
+        instance = this;
         chargerPage("accueil");
-        updateButtonStyles(btnAccueil);
+
+        // 3. Style par défaut
+        if (btnAccueil != null) updateButtonStyles(btnAccueil);
+    }
+
+    public void chargerPage(String nomFichier) {
+        try {
+
+            String chemin = "/com/eseo/mediastock/view/" + nomFichier + "-view.fxml";
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(chemin));
+            Parent vue = loader.load();
+            Object controller = loader.getController();
+
+
+            if (controller instanceof ListeViewController) {
+
+            }
+            if (mainPane != null) {
+                mainPane.setCenter(vue);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("ERREUR CRITIQUE : Impossible de charger " + nomFichier);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            System.err.println("ERREUR : Le chemin " + nomFichier + " semble incorrect ou le fichier n'existe pas.");
+        }
     }
 
     @FXML
     void afficherAccueil(ActionEvent event) {
         chargerPage("accueil");
         updateButtonStyles(btnAccueil);
+        changerTitre("Accueil");
+    }
+
+    @FXML
+    void afficherAddProduit(ActionEvent event) {
+        chargerPage("ajouter-produit");
+        updateButtonStyles(btnAddProduit);
+        changerTitre("ajouter Produit");
     }
 
     @FXML
     void afficherParametres(ActionEvent event) {
         chargerPage("parametre");
         updateButtonStyles(btnParametres);
+        changerTitre("Paramètres");
+    }
+
+    @FXML
+    void afficherListeView(ActionEvent event) {
+        chargerPage("liste"); // Charge la liste générique par défaut
+        updateButtonStyles(btnListView);
+        changerTitre("Inventaire");
     }
 
 
     private void updateButtonStyles(Button boutonActif) {
-
         String STYLE_INACTIF = "-fx-cursor: hand; -fx-background-color: transparent; -fx-text-fill: white;";
-        btnAccueil.setStyle(STYLE_INACTIF);
-        btnParametres.setStyle(STYLE_INACTIF);
-        String STYLE_ACTIF = "-fx-cursor: hand; -fx-background-color: #444; -fx-text-fill: #ffcc00; -fx-font-weight: bold;";
-        boutonActif.setStyle(STYLE_ACTIF);
+        String STYLE_ACTIF = "-fx-cursor: hand; -fx-background-color: #444; -fx-text-fill: #ffcc00; -fx-font-weight: bold; -fx-border-width: 0 0 0 5; -fx-border-color: #ffcc00;";
+
+        // Sécurité : on vérifie que les boutons ne sont pas null avant de changer le style
+        if (btnAccueil != null) btnAccueil.setStyle(STYLE_INACTIF);
+        if (btnParametres != null) btnParametres.setStyle(STYLE_INACTIF);
+        if (btnListView != null) btnListView.setStyle(STYLE_INACTIF);
+        if (btnAddProduit != null) btnAddProduit.setStyle(STYLE_INACTIF);
+
+        if (boutonActif != null) boutonActif.setStyle(STYLE_ACTIF);
     }
 
-    private void chargerPage(String nomFichier) {
-        try {
-            String chemin = "/com/eseo/mediastock/view/" + nomFichier + "-view" + ".fxml";
-            Parent vue = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(chemin)));
-            mainPane.setCenter(vue);
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void changerTitre(String nouveauTitre) {
+        // On récupère la fenêtre (Stage) à partir du panneau principal
+        if (mainPane != null && mainPane.getScene() != null) {
+            Stage stage = (Stage) mainPane.getScene().getWindow();
+            stage.setTitle("MediaStock - " + nouveauTitre);
         }
     }
+
 }

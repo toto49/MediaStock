@@ -14,7 +14,7 @@
           AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0">
 
         <Label text="Tableau de Bord"
-               style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+               style="-fx-text-fill: #ffcc00; -fx-font-size: 24px; -fx-font-weight: bold;"/>
         <HBox alignment="CENTER" AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0"
               AnchorPane.leftAnchor="0" spacing="15">
 
@@ -65,7 +65,8 @@
             </VBox>
 
             <VBox prefWidth="200" maxWidth="300" alignment="CENTER_LEFT" spacing="5"
-                  style="-fx-background-color: linear-gradient(to bottom right, #19FF00, #06D608);
+                  style="-fx-background-color: linear-gradient(to bottom right, #06D608, #008019);
+
                      -fx-background-radius: 20;
                      -fx-padding: 25;">
 
@@ -88,7 +89,11 @@
 
         </HBox>
     </VBox>
-
+    <Label AnchorPane.topAnchor="15"
+           AnchorPane.rightAnchor="15"
+           style="-fx-text-fill: #ffcc00; -fx-font-size: 25px;">
+        Bonjour
+    </Label>
     <Label AnchorPane.bottomAnchor="15"
            AnchorPane.rightAnchor="15"
            style="-fx-text-fill: derive(#2b2b2b, 50%); -fx-font-size: 12px;">
