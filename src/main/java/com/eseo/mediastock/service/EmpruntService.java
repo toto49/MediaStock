@@ -25,7 +25,7 @@ public class EmpruntService {
             emprunt.setExemplaire(exemplaire);
             adherent.ajouterEmprunt(emprunt);
             exemplaire.setStatusDispo(EnumDispo.EMPRUNTE);
-            // TODO : Enregistrer dans le DAO stp Morgiane
+            // TODO : Enregistrer dans le DAO stp Morgiane (fait juste la fonction dans tes fichiers je m'occupe de l'appeler)
         }
     }
 
@@ -34,13 +34,13 @@ public class EmpruntService {
             adherent.cloturerEmprunt(emprunt);
             emprunt.setStatusDispo(EnumDispo.RENDU);
             emprunt.getExemplaire().setStatusDispo(EnumDispo.DISPONIBLE);
-            // TODO : Enregistrer dans le DAO stp Morgiane
+            // TODO : Enregistrer dans le DAO stp Morgiane (fait juste la fonction dans tes fichiers je m'occupe de l'appeler)
         }
     }
 
 
     public List<Emprunt> getEmpruntsEnRetards(){
-        // TODO : empruntDao.trouverRetards(LocalDate.now()); stp morgiane
+        // TODO : empruntDao.trouverRetards(LocalDate.now()); stp morgiane (fait juste la fonction dans tes fichiers je m'occupe de l'appeler)
         return List.of();
     }
 
