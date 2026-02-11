@@ -1,7 +1,6 @@
 package com.eseo.mediastock.model;
 
 import com.eseo.mediastock.model.Enum.EnumDispo;
-import com.eseo.mediastock.model.Produits.Exemplaire;
 
 import java.time.LocalDate;
 
@@ -11,12 +10,12 @@ public class Emprunt {
     private Exemplaire exemplaire;
     private LocalDate dateDebut;
     private LocalDate dateRetour;
-    private EnumDispo statusDispo;
+    private EnumDispo status;
 
     public Emprunt(){
         this.dateDebut = LocalDate.now();
         this.dateRetour = LocalDate.now().plusMonths(2);
-        this.statusDispo = EnumDispo.EMPRUNTE;
+        this.status = EnumDispo.EMPRUNTE;
     }
 
     public Emprunt(int id, Adherent emprunteur, Exemplaire exemplaire,LocalDate dateDebut,LocalDate dateRetour) {
@@ -25,7 +24,7 @@ public class Emprunt {
         this.exemplaire = exemplaire;
         this.dateDebut = dateDebut;
         this.dateRetour = dateRetour;
-        this.statusDispo = EnumDispo.EMPRUNTE;
+        this.status = EnumDispo.EMPRUNTE;
     }
 
     public void setEmprunteur(Adherent emprunteur) {
@@ -50,15 +49,15 @@ public class Emprunt {
         return dateRetour;
     }
 
-    public  EnumDispo getStatusDispo() {return statusDispo;}
+    public  EnumDispo getStatusDispo() {return status;}
 
     public void setStatusDispo(EnumDispo statusDispo) {
-        this.statusDispo = statusDispo;
+        this.status = statusDispo;
     }
 
     //Méthodes
     public boolean estEnRetard(){
-        return dateRetour.isBefore(LocalDate.now()) && this.statusDispo == EnumDispo.EMPRUNTE;
+        return dateRetour.isBefore(LocalDate.now()) && this.status == EnumDispo.EMPRUNTE;
     }
 
 }

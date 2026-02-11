@@ -23,7 +23,7 @@ public class AdherentService {
         int totalAdherents = 0;
 
         try {
-            totalAdherents = adherentDAO.count(annee);
+            totalAdherents = adherentDAO.countAdherents(annee);
         } catch (SQLException e) {
             System.err.println("Erreur lors du comptage : " + e.getMessage());
             e.printStackTrace();
@@ -39,7 +39,7 @@ public class AdherentService {
         Adherent nouvelAdherent = new Adherent(numAdherent, nom, prenom, email, telephone);
 
         try {
-            adherentDAO.create(nouvelAdherent);
+            adherentDAO.createAdherent(nouvelAdherent);
             System.out.println("Adhérent créé avec succès !");
             System.out.println("ID attribué: " + nouvelAdherent.getId());
 
