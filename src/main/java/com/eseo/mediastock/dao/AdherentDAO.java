@@ -7,12 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AdherentDAO {
+
     /**
-     * MÉTHODE CREATE - Insère un nouvel adhérent avec son ID manuel
+     * MÉTHODE CREATE Adherent - Insère un nouvel adhérent avec son ID manuel
      * @param adherent - L'objet Adherent à sauvegarder
      * @throws SQLException - Si l'insertion échoue
      **/
-    public void create(Adherent adherent) throws SQLException {
+    public void createAdherent (Adherent adherent) throws SQLException {
         String sql = "INSERT INTO ADHERENT (id, num_tel, nom, prenom, email) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -93,7 +94,7 @@ public class AdherentDAO {
      * @throws SQLException - Si la mise à jour échoue
      * **/
 
-    public void update (Adherent adherent) throws SQLException{
+    public void updateAdherent (Adherent adherent) throws SQLException{
         String sql = "UPDATE ADHERENT SET num_tel = ?, nom = ?, prenom =?, email=? WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql)){
@@ -113,7 +114,7 @@ public class AdherentDAO {
      * @return int - Le nombre de lignes dans la table ADHERENT qui répondent a la condition
      * @throws SQLException - Si la requête échoue
      * **/
-    public int count(int annee) throws SQLException {
+    public int countAdherents (int annee) throws SQLException {
         String sql = "SELECT COUNT(*) FROM ADHERENT WHERE id LIKE ?";
 
         try (Connection conn = DatabaseConnection.getConnection();

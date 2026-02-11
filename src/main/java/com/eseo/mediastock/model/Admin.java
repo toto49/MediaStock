@@ -1,7 +1,5 @@
 package com.eseo.mediastock.model;
 
-import com.eseo.mediastock.model.Produits.Exemplaire;
-
 public class Admin {
     private int id;
     private String email;

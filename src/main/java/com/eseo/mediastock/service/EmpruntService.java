@@ -1,14 +1,19 @@
 package com.eseo.mediastock.service;
 
+import com.eseo.mediastock.dao.EmpruntDAO;
+import com.eseo.mediastock.dao.ExemplaireDAO;
 import com.eseo.mediastock.model.Adherent;
 import com.eseo.mediastock.model.Emprunt;
 import com.eseo.mediastock.model.Enum.EnumDispo;
-import com.eseo.mediastock.model.Produits.Exemplaire;
+import com.eseo.mediastock.model.Exemplaire;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class EmpruntService {
 
+    private EmpruntDAO empruntDAO = new EmpruntDAO();
+    private ExemplaireDAO exemplaireDAO = new ExemplaireDAO();
     private static final int MAX_EMPRUNTS = 5 ;
 
     public boolean peutEmprunter(Adherent adherent, Exemplaire exemplaire){
@@ -18,14 +23,21 @@ public class EmpruntService {
         return exemplaire.estBonEtat();
     }
 
-    public void enregistrerEmprunt(Adherent adherent, Exemplaire exemplaire){
+    public void enregistrerEmprunt(Adherent adherent, Exemplaire exemplaire) throws SQLException {
         if (peutEmprunter(adherent, exemplaire)){
             Emprunt emprunt = new Emprunt();
             emprunt.setEmprunteur(adherent);
             emprunt.setExemplaire(exemplaire);
             adherent.ajouterEmprunt(emprunt);
             exemplaire.setStatusDispo(EnumDispo.EMPRUNTE);
-            // TODO : Enregistrer dans le DAO stp Morgiane
+
+            try{
+                empruntDAO.createEmprunt(adherent,exemplaire);
+                exemplaireDAO.updateExemplaire(exemplaire);
+            }
+            catch (SQLException e){
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -34,13 +46,19 @@ public class EmpruntService {
             adherent.cloturerEmprunt(emprunt);
             emprunt.setStatusDispo(EnumDispo.RENDU);
             emprunt.getExemplaire().setStatusDispo(EnumDispo.DISPONIBLE);
-            // TODO : Enregistrer dans le DAO stp Morgiane
+
+            try {
+                empruntDAO.saveRetour(emprunt);
+                exemplaireDAO.updateExemplaire(emprunt.getExemplaire());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
 
     public List<Emprunt> getEmpruntsEnRetards(){
-        // TODO : empruntDao.trouverRetards(LocalDate.now()); stp morgiane
+        // TODO : empruntDao.trouverRetards(LocalDate.now()); stp morgiane (fait juste la fonction dans tes fichiers je m'occupe de l'appeler)
         return List.of();
     }
 

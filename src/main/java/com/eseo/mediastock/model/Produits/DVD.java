@@ -1,5 +1,7 @@
 package com.eseo.mediastock.model.Produits;
 
+import com.eseo.mediastock.model.Exemplaire;
+
 import java.util.List;
 
 public class DVD extends Produit {
