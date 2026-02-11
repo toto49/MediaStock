@@ -8,3 +8,15 @@
 .buttonlist:hover {
     -fx-background-color: grey;
 }
+
+.buttonvalid {
+    -fx-cursor: hand;
+    -fx-text-fill: black;
+    -fx-background-color: #256B25;
+    -fx-border-radius: 15px;
+    -fx-font-size: 20;
+}
+
+.buttonvalid:hover {
+    -fx-background-color: #185018;
+}

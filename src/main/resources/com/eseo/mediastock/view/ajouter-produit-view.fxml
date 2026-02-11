@@ -1,25 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 <?import java.lang.String?>
+<?import java.net.URL?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
             xmlns="http://javafx.com/javafx"
             fx:controller="com.eseo.mediastock.controller.AjouterProduitController"
-            prefHeight="400.0" prefWidth="600.0">
+            prefHeight="500.0" prefWidth="600.0"
+            style="-fx-background-color: #2b2b2b;">
+    <stylesheets>
+        <URL value="@../../../../style/menu-deroulant.css"/>
+        <URL value="@../../../../style/button.css"/>
 
+    </stylesheets>
+    <VBox alignment="TOP_CENTER" spacing="20.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
 
-    <ComboBox fx:id="ChoiceAddProduit" layoutX="15.0" layoutY="33.0" prefWidth="90.0" promptText="Produit">
-        <items>
-            <FXCollections fx:factory="observableArrayList">
-                <String fx:value="LIVRES"/>
-                <String fx:value="DVD"/>
-                <String fx:value="JEUX"/>
-            </FXCollections>
-        </items>
-    </ComboBox>
-    <VBox fx:id="containerFormulaire" layoutX="15.0" layoutY="80.0" spacing="10.0" prefWidth="300.0">
+        <padding>
+            <Insets top="30.0" right="50.0" bottom="30.0" left="50.0"/>
+        </padding>
+
+        <Label text="AJOUTER UN PRODUIT" textFill="#ffcc00">
+            <font>
+                <Font name="System Bold" size="22.0"/>
+            </font>
+        </Label>
+
+        <ComboBox fx:id="ChoiceAddProduit" prefWidth="200.0" promptText="Sélectionnez un type"
+                  style="-fx-font-size: 14px; -fx-background-color: #444444; -fx-text-fill: #ffcc00; -fx-border-color: #ffcc00; -fx-border-radius: 5; -fx-background-radius: 5;">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="LIVRES"/>
+                    <String fx:value="DVD"/>
+                    <String fx:value="JEUX"/>
+                </FXCollections>
+            </items>
+        </ComboBox>
+
+        <VBox fx:id="containerFormulaire" alignment="TOP_CENTER" spacing="15.0"
+              style="-fx-background-color: #383838; -fx-background-radius: 10; -fx-border-color: #555555; -fx-border-radius: 10;">
+
+            <padding>
+                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+            </padding>
+
+            <Label text="Veuillez choisir un type de produit ci-dessus" textFill="#888888"
+                   style="-fx-font-style: italic;"/>
+
+        </VBox>
+
     </VBox>
+
 </AnchorPane>
