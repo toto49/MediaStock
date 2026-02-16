@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 public class JeuxController {
     @FXML
     public void ButtonReturn(ActionEvent actionEvent) {
-        System.out.println("ButtonReturn");
+
         if (MenuController.getInstance() != null) {
 
             MenuController.getInstance().chargerPage("liste");

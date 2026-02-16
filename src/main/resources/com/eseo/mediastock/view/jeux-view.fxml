@@ -2,107 +2,89 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.*?>
-<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.SVGPath?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml"
-            xmlns="http://javafx.com/javafx"
-            fx:controller="com.eseo.mediastock.controller.JeuxController"
-            prefHeight="600.0" prefWidth="900.0"
-            style="-fx-background-color: #2b2b2b;"
-            stylesheets="@../../../../style/tableview.css">
+<?import javafx.scene.shape.*?>
 
-    <HBox alignment="CENTER_LEFT" spacing="20"
-          AnchorPane.topAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+<?import java.net.URL?>
+<AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #2b2b2b;"  xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eseo.mediastock.controller.JeuxController">
+    <stylesheets>
+        <URL value="@../../../../style/menu-deroulant.css"/>
+        <URL value="@../../../../style/tableview.css"/>
+    </stylesheets>
+    <HBox alignment="CENTER_LEFT" spacing="20" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0">
 
-        <Button onAction="#ButtonReturn"
-                style="-fx-background-color: transparent; -fx-text-fill: #ffcc00; -fx-border-color: #ffcc00; -fx-border-radius: 30; -fx-border-width: 2; -fx-cursor: hand; -fx-font-weight: bold; -fx-padding: 8 20;">
+        <Button onAction="#ButtonReturn" style="-fx-background-color: transparent; -fx-text-fill: #ffcc00; -fx-border-color: #ffcc00; -fx-border-radius: 30; -fx-border-width: 2; -fx-cursor: hand; -fx-font-weight: bold; -fx-padding: 8 20;" text="RETOUR">
             <graphic>
-                <SVGPath content="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="#ffcc00"
-                         scaleX="0.8" scaleY="0.8"/>
+                <SVGPath content="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="#ffcc00" scaleX="0.8" scaleY="0.8" />
             </graphic>
-            <text>RETOUR</text>
         </Button>
 
-        <Label text="Ludothèque (Jeux)"
-               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;">
+        <Label style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;" text="Ludothèque (Jeux)">
             <effect>
-                <DropShadow color="#00000066" radius="10" offsetY="3"/>
+                <DropShadow color="#00000066" offsetY="3" radius="10" />
             </effect>
         </Label>
     </HBox>
 
-    <VBox AnchorPane.topAnchor="90.0" AnchorPane.bottomAnchor="20.0"
-          AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0"
-          style="-fx-background-color: #383838; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);">
+    <ScrollPane fitToHeight="true" fitToWidth="true" layoutY="193.0" prefHeight="387.0" prefWidth="626.0" style="-fx-background-color: transparent; -fx-background: #2b2b2b;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="90.0">
 
-        <TableView fx:id="tableJeux" VBox.vgrow="ALWAYS"
-                   style="-fx-background-color: transparent; -fx-background-radius: 15; -fx-padding: 10;">
+        <content>
+            <VBox alignment="TOP_CENTER" minWidth="900" spacing="0" style="-fx-background-color: #2b2b2b; -fx-padding: 0 20 0 20;">
 
-            <columns>
-                <TableColumn text="#" fx:id="colId" prefWidth="50" style="-fx-alignment: CENTER;">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="id"/>
-                    </cellValueFactory>
-                </TableColumn>
+                <VBox style="-fx-background-color: #383838; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 5);" VBox.vgrow="ALWAYS">
 
-                <TableColumn text="Titre" fx:id="colTitre" prefWidth="200" style="-fx-font-weight: bold;">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="titre"/>
-                    </cellValueFactory>
-                </TableColumn>
+                    <TableView fx:id="tableJeux" style="-fx-background-color: transparent; -fx-background-radius: 15; -fx-padding: 10;" VBox.vgrow="ALWAYS">
 
-                <TableColumn text="Éditeur" fx:id="colEditeur" prefWidth="120">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="editeur"/>
-                    </cellValueFactory>
-                </TableColumn>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        </columnResizePolicy>
 
-                <TableColumn text="Année" fx:id="colAnnee" prefWidth="80" style="-fx-alignment: CENTER;">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="anneeSortie"/>
-                    </cellValueFactory>
-                </TableColumn>
+                        <columns>
+                            <TableColumn fx:id="colId" maxWidth="60" minWidth="40" style="-fx-alignment: CENTER;" text="#">
+                                <cellValueFactory><PropertyValueFactory property="id" /></cellValueFactory>
+                            </TableColumn>
 
-                <TableColumn text="J. Min" fx:id="colJMin" prefWidth="60" style="-fx-alignment: CENTER;">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="nbJoueursMin"/>
-                    </cellValueFactory>
-                </TableColumn>
+                            <TableColumn fx:id="colTitre" minWidth="150" style="-fx-font-weight: bold;" text="Titre">
+                                <cellValueFactory><PropertyValueFactory property="titre" /></cellValueFactory>
+                            </TableColumn>
 
-                <TableColumn text="J. Max" fx:id="colJMax" prefWidth="60" style="-fx-alignment: CENTER;">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="nbJoueursMax"/>
-                    </cellValueFactory>
-                </TableColumn>
+                            <TableColumn fx:id="colEditeur" minWidth="100" text="Éditeur">
+                                <cellValueFactory><PropertyValueFactory property="editeur" /></cellValueFactory>
+                            </TableColumn>
 
-                <TableColumn text="Age Min" fx:id="colAge" prefWidth="70" style="-fx-alignment: CENTER;">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="ageMin"/>
-                    </cellValueFactory>
-                </TableColumn>
+                            <TableColumn fx:id="colAnnee" maxWidth="80" minWidth="60" style="-fx-alignment: CENTER;" text="Année">
+                                <cellValueFactory><PropertyValueFactory property="anneeSortie" /></cellValueFactory>
+                            </TableColumn>
 
-                <TableColumn text="Durée" fx:id="colDureePartie" prefWidth="80" style="-fx-alignment: CENTER;">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="dureePartie"/>
-                    </cellValueFactory>
-                </TableColumn>
-            </columns>
+                            <TableColumn fx:id="colJMin" maxWidth="70" minWidth="50" style="-fx-alignment: CENTER;" text="J. Min">
+                                <cellValueFactory><PropertyValueFactory property="nbJoueursMin" /></cellValueFactory>
+                            </TableColumn>
 
-            <placeholder>
-                <Label text="Aucun jeu trouvé dans la ludothèque" style="-fx-text-fill: #888; -fx-font-size: 14px;"/>
-            </placeholder>
+                            <TableColumn fx:id="colJMax" maxWidth="70" minWidth="50" style="-fx-alignment: CENTER;" text="J. Max">
+                                <cellValueFactory><PropertyValueFactory property="nbJoueursMax" /></cellValueFactory>
+                            </TableColumn>
 
-            <columnResizePolicy>
-                <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
-            </columnResizePolicy>
-        </TableView>
+                            <TableColumn fx:id="colAge" maxWidth="80" minWidth="60" style="-fx-alignment: CENTER;" text="Age Min">
+                                <cellValueFactory><PropertyValueFactory property="ageMin" /></cellValueFactory>
+                            </TableColumn>
 
-    </VBox>
+                            <TableColumn fx:id="colDureePartie" maxWidth="100" minWidth="60" style="-fx-alignment: CENTER;" text="Durée">
+                                <cellValueFactory><PropertyValueFactory property="dureePartie" /></cellValueFactory>
+                            </TableColumn>
+                        </columns>
 
-    <Label AnchorPane.bottomAnchor="15"
-           AnchorPane.rightAnchor="15"
-           style="-fx-text-fill: derive(#2b2b2b, 50%); -fx-font-size: 12px;">
+                        <placeholder>
+                            <Label style="-fx-text-fill: #888;" text="Aucun jeu trouvé" />
+                        </placeholder>
+
+                    </TableView>
+                </VBox>
+            </VBox>
+        </content>
+    </ScrollPane>
+
+    <Label style="-fx-text-fill: derive(#2b2b2b, 50%); -fx-font-size: 12px;" AnchorPane.bottomAnchor="15" AnchorPane.rightAnchor="15">
         Version : 1.0
     </Label>
 </AnchorPane>
