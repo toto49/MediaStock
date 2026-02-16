@@ -42,3 +42,15 @@
     -fx-background-color: #ffcc00;
     -fx-text-fill: #2b2b2b;
 }
+
+.scroll-pane > .viewport{
+    -fx-background-color: transparent;
+}
+.scroll-bar:vertical, .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical .thumb, .scroll-bar:horizontal .thumb {
+    -fx-background-color: #555555;
+    -fx-background-radius: 5em;
+}

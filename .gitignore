@@ -10,7 +10,7 @@ target/
 .idea/compiler.xml
 .idea/libraries/
 .idea
-.env
+src/test/resources/.env
 *.iws
 *.iml
 *.ipr

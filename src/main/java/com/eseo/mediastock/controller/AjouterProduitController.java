@@ -53,6 +53,35 @@ public class AjouterProduitController implements Initializable {
             }
         });
     }
+    private void styliserSpinner(Spinner<?> spinner, String promptText) {
+
+        TextField editor = spinner.getEditor();
+        editor.setPromptText(promptText);
+        editor.setStyle("-fx-background-color: transparent; -fx-text-fill: white;");
+        String styleNormal = "-fx-background-color: #383838; " +
+                "-fx-text-fill: white; " +
+                "-fx-background-radius: 10; " +
+                "-fx-border-color: #555; " +
+                "-fx-border-radius: 10; " +
+                "-fx-border-width: 1; " +
+                "-fx-padding: 2 5;";
+
+        String styleFocus = "-fx-background-color: #383838; " +
+                "-fx-text-fill: white; " +
+                "-fx-background-radius: 10; " +
+                "-fx-border-color: #ffcc00; " +
+                "-fx-border-radius: 10; " +
+                "-fx-border-width: 2; " +
+                "-fx-padding: 1 4;";
+        spinner.setStyle(styleNormal);
+        editor.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                spinner.setStyle(styleFocus);
+            } else {
+                spinner.setStyle(styleNormal);
+            }
+        });
+    }
     private void detecterSelection(String choix) {
         if (choix == null) return;
 
@@ -71,7 +100,9 @@ public class AjouterProduitController implements Initializable {
         styliserChamp(txtEditeur, "Ex: Nintendo / Asmodee/ Warnes Bros");
 
         Label lblStock = createLabel("Nombre d'exemplaires (Stock) :");
-        Spinner<Integer> spinStock = createSpinner(0, 1000, 1); // Min 0, Max 1000, Défaut 1
+        Spinner<Integer> spinStock = new Spinner<>(0, 1000, 1); // Min 0, Max 1000, Défaut 1
+        spinStock.setEditable(true);
+        styliserSpinner(spinStock, "Ex: Stock du produit");
 
         Button btnValider = new Button();
         btnValider.getStyleClass().add("buttonvalid"); // Votre classe CSS
@@ -80,34 +111,39 @@ public class AjouterProduitController implements Initializable {
 
         switch (choix) {
             case "LIVRES":
-                System.out.println("Formulaire : LIVRES");
                 btnValider.setText("Ajouter le Livre");
 
-                // --- Champs Spécifiques LIVRES ---
+
+                // 1. Auteur
                 Label lblAuteur = createLabel("Auteur :");
-                TextField txtAuteur = createTextField("Ex: Victor Hugo");
+                TextField txtAuteur = new TextField();
+                styliserChamp(txtAuteur, "Ex: Victor Hugo");
 
+                // 2. Année (Spinner)
                 Label lblAnnee = createLabel("Année de parution :");
-                Spinner<Integer> spinAnnee = createSpinner(1000, 2030, 2020);
+                // Constructeur : min, max, valeur initiale
+                Spinner<Integer> spinAnnee = new Spinner<>(1000, 2030, 2020);
+                spinAnnee.setEditable(true); // Permet d'écrire dedans
+                styliserSpinner(spinAnnee, "Année");
 
+                // 3. Pages (Spinner)
                 Label lblPages = createLabel("Nombre de pages :");
-                Spinner<Integer> spinPages = createSpinner(1, 5000, 200);
+                // Constructeur : min, max, valeur initiale
+                Spinner<Integer> spinPages = new Spinner<>(1, 5000, 200);
+                spinPages.setEditable(true);
+                styliserSpinner(spinPages, "Nb Pages");
 
+                // 4. ISBN
                 Label lblIsbn = createLabel("ISBN :");
-                TextField txtIsbn = createTextField("Ex: 978-2070409228");
+                TextField txtIsbn = new TextField();
+                styliserChamp(txtIsbn, "Ex: 978-2070409228");
 
+                // 5. Format
                 Label lblFormat = createLabel("Format :");
-                TextField txtFormat = createTextField("Ex: Poche, Broché...");
+                TextField txtFormat = new TextField();
+                styliserChamp(txtFormat, "Ex: Poche, Broché...");
 
-                // Action du bouton
-                btnValider.setOnAction(event -> {
-                    String resultat = "LIVRE AJOUTÉ :\n" +
-                            "Titre: " + txtTitre.getText() + "\n" +
-                            "Auteur: " + txtAuteur.getText() + "\n" +
-                            "Stock: " + spinStock.getValue();
-                    lblOutput.setText(resultat);
-                    System.out.println(resultat);
-                });
+
                 containerFormulaire.getChildren().addAll(
                         lblTitre, txtTitre,
                         lblDesc, txtDesc,
@@ -123,24 +159,31 @@ public class AjouterProduitController implements Initializable {
                 break;
 
             case "DVD":
-                System.out.println("Formulaire : DVD");
                 btnValider.setText("Ajouter le DVD");
 
                 // --- Champs Spécifiques DVD ---
                 Label lblReal = createLabel("Réalisateur :");
-                TextField txtReal = createTextField("Ex: Christopher Nolan");
+                TextField txtReal = new TextField();
+                styliserChamp(txtReal, "Ex: Christopher Nolan");
 
                 Label lblAnneeDvd = createLabel("Année de sortie :");
-                Spinner<Integer> spinAnneeDvd = createSpinner(1900, 2030, 2010);
+                Spinner<Integer> spinAnneeDvd = new Spinner<>(1900, 2030, 2010);
+                spinAnneeDvd.setEditable(true);
+                styliserSpinner(spinAnneeDvd, "Année");
 
                 Label lblDuree = createLabel("Durée (minutes) :");
-                Spinner<Integer> spinDuree = createSpinner(1, 500, 120);
+                Spinner<Integer> spinDuree = new Spinner<>(1, 500, 120);
+                spinDuree.setEditable(true);
+                styliserSpinner(spinDuree, "Duree");
 
                 Label lblAudio = createLabel("Pistes Audio :");
-                TextField txtAudio = createTextField("Ex: Français, Anglais 5.1");
+                TextField txtAudio = new TextField();
+                styliserChamp(txtAudio, "Ex: Français, Anglais 5.1");
 
                 Label lblSousTitres = createLabel("Sous-titres :");
-                TextField txtSousTitres = createTextField("Ex: Français, Espagnol");
+                TextField txtSousTitres = new TextField();
+                styliserChamp(txtSousTitres, "Ex: Français, Espagnol");
+
 
                 // Action du bouton
                 btnValider.setOnAction(event -> {
@@ -167,25 +210,34 @@ public class AjouterProduitController implements Initializable {
                 break;
 
             case "JEUX":
-                System.out.println("Formulaire : JEUX");
                 btnValider.setText("Ajouter le Jeu");
 
                 // --- Champs Spécifiques JEUX ---
 
                 Label lblAnneeJeux = createLabel("Année de sortie :");
-                Spinner<Integer> spinAnneeJeux = createSpinner(1980, 2030, 2024);
+                Spinner<Integer> spinAnneeJeux = new Spinner<>(1980, 2030, 2024);
+                spinAnneeJeux.setEditable(true);
+                styliserSpinner(spinAnneeJeux, "Année");
 
                 Label lblJMin = createLabel("Joueurs Minimum :");
-                Spinner<Integer> spinJMin = createSpinner(1, 100, 1);
+                Spinner<Integer> spinJMin = new Spinner<>(1, 100, 1);
+                spinJMin.setEditable(true);
+                styliserSpinner(spinJMin, "Joueurs Minimum");
 
                 Label lblJMax = createLabel("Joueurs Maximum :");
-                Spinner<Integer> spinJMax = createSpinner(1, 100, 4);
+                Spinner<Integer> spinJMax = new Spinner<>(1, 100, 4);
+                spinJMax.setEditable(true);
+                styliserSpinner(spinJMax, "Joueurs Maximum");
 
-                Label lblAgeMin = createLabel("Age Minimum (PEGI) :");
-                Spinner<Integer> spinAgeMin = createSpinner(3, 18, 12);
+                Label lblAgeMin = createLabel("Age Minimum :");
+                Spinner<Integer> spinAgeMin = new Spinner<>(3, 18, 12);
+                spinAgeMin.setEditable(true);
+                styliserSpinner(spinAgeMin, "Age Minimum ");
 
                 Label lblDureeJeux = createLabel("Durée moyenne (min) :");
-                Spinner<Integer> spinDureeJeux = createSpinner(5, 600, 30);
+                Spinner<Integer> spinDureeJeux = new Spinner<>(5, 600, 30);
+                spinDureeJeux.setEditable(true);
+                styliserSpinner(spinDureeJeux, "Duree moyenne (min) ");
 
                 // Action du bouton
                 btnValider.setOnAction(event -> {
