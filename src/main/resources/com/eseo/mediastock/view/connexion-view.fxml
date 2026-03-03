@@ -2,11 +2,17 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import java.net.URL?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
             xmlns="http://javafx.com/javafx"
             fx:controller="com.eseo.mediastock.controller.ConnexionController"
             prefHeight="400.0" prefWidth="600.0"
             style="-fx-background-color: #2b2b2b;">
+
+    <stylesheets>
+        <URL value="@../../../../style/menu-deroulant.css"/>
+        <URL value="@../../../../style/button.css"/>
+    </stylesheets>
 
     <VBox alignment="CENTER"
           spacing="20" fillWidth="false"
@@ -21,11 +27,11 @@
         </Label>
         <VBox spacing="5">
             <Label style="-fx-text-fill: #ffcc00; -fx-font-size: 13px; -fx-font-weight: bold;">Email :</Label>
-            <TextField fx:id="field_mail_co"/>
+            <TextField fx:id="field_mail_co" styleClass="text_input"/>
         </VBox>
         <VBox spacing="5">
             <Label style="-fx-text-fill: #ffcc00; -fx-font-size: 13px; -fx-font-weight: bold;">Mot de passe :</Label>
-            <PasswordField fx:id="field_password_co"/>
+            <PasswordField fx:id="field_password_co" styleClass="text_input"/>
         </VBox>
 
         <Button text="connexion" onAction="#Buttonsend"
