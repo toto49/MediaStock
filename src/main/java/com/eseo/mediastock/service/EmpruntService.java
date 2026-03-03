@@ -8,6 +8,7 @@ import com.eseo.mediastock.model.Enum.EnumDispo;
 import com.eseo.mediastock.model.Exemplaire;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 public class EmpruntService {
@@ -57,9 +58,8 @@ public class EmpruntService {
     }
 
 
-    public List<Emprunt> getEmpruntsEnRetards(){
-        // TODO : empruntDao.trouverRetards(LocalDate.now()); stp morgiane (fait juste la fonction dans tes fichiers je m'occupe de l'appeler)
-        return List.of();
+    public List<Emprunt> getEmpruntsEnRetards() throws SQLException {
+        return empruntDAO.trouverRetards(LocalDate.now());
     }
 
 }

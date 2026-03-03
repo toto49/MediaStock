@@ -10,12 +10,12 @@ public class Emprunt {
     private Exemplaire exemplaire;
     private LocalDate dateDebut;
     private LocalDate dateRetour;
-    private EnumDispo status;
+    private EnumDispo statut;
 
     public Emprunt(){
         this.dateDebut = LocalDate.now();
         this.dateRetour = LocalDate.now().plusMonths(2);
-        this.status = EnumDispo.EMPRUNTE;
+        this.statut = EnumDispo.EMPRUNTE;
     }
 
     public Emprunt(int id, Adherent emprunteur, Exemplaire exemplaire,LocalDate dateDebut,LocalDate dateRetour) {
@@ -24,7 +24,7 @@ public class Emprunt {
         this.exemplaire = exemplaire;
         this.dateDebut = dateDebut;
         this.dateRetour = dateRetour;
-        this.status = EnumDispo.EMPRUNTE;
+        this.statut = EnumDispo.EMPRUNTE;
     }
 
     public void setEmprunteur(Adherent emprunteur) {
@@ -49,15 +49,15 @@ public class Emprunt {
         return dateRetour;
     }
 
-    public  EnumDispo getStatusDispo() {return status;}
+    public  EnumDispo getStatusDispo() {return statut;}
 
     public void setStatusDispo(EnumDispo statusDispo) {
-        this.status = statusDispo;
+        this.statut = statusDispo;
     }
 
     //Méthodes
     public boolean estEnRetard(){
-        return dateRetour.isBefore(LocalDate.now()) && this.status == EnumDispo.EMPRUNTE;
+        return dateRetour.isBefore(LocalDate.now()) && this.statut == EnumDispo.EMPRUNTE;
     }
 
 }
