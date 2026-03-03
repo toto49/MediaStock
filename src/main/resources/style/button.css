@@ -21,7 +21,7 @@
     -fx-background-color: #185018;
 }
 
-/* L'état normal (votre code précédent) */
+
 .bouton-valider {
     -fx-background-color: #4CAF50;
     -fx-text-fill: white;
@@ -30,11 +30,30 @@
     -fx-padding: 8 16;
 }
 
-
 .bouton-valider:hover {
     -fx-background-color: #45a049;
     -fx-cursor: hand;
 }
+
+
+.bouton-annuler {
+    -fx-background-color: #b33a3a;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 16;
+}
+
+.bouton-annuler:hover {
+    -fx-background-color: #a83232;
+    -fx-cursor: hand;
+}
+
+
+.label-or {
+    -fx-text-fill: #ffcc00;
+}
+
 .text_input {
     -fx-background-color: #383838;
     -fx-text-fill: white;
@@ -63,8 +82,10 @@
     -fx-border-radius: 10;
     -fx-border-width: 2;
     -fx-padding: 7 11;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 30, 0.35, 0, 10);
     -fx-prompt-text-fill: transparent;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.55), 25, 0.35, 0, 6);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
 }
 
 .bouton-or {
@@ -75,7 +96,6 @@
     -fx-border-radius: 5;
     -fx-background-radius: 5;
 }
-
 
 .bouton-or:hover {
     -fx-text-fill: #444444;
