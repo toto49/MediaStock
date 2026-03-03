@@ -3,9 +3,12 @@ name: Java CI with Maven (MediaStock)
 on:
   push:
     branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
 
 jobs:
   build:
+    # On utilise Windows car votre POM force les dépendances JavaFX "win" (x64)
     runs-on: windows-latest
 
     steps:
@@ -16,15 +19,16 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '21'
-          distribution: 'temurin'
+          distribution: 'temurin' # Eclipse Temurin est la version la plus stable pour la CI
           cache: maven
 
-      - name: Compilation et Packaging (jpackage)
-
+      - name: Compilation et Build
+        # Cette commande compile, teste et génère le JAR ainsi que l'image jpackage
         run: mvn -B clean package
 
-      - name: Archivage de l'exécutable
+      - name: Archivage de l'application (Artifact)
+        # Cela permet de télécharger le dossier de l'app directement depuis GitHub
         uses: actions/upload-artifact@v4
         with:
-
+          name: MediaStock-App-Windows
           path: target/dist/
