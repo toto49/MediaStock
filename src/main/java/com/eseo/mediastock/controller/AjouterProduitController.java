@@ -7,6 +7,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class AjouterProduitController implements Initializable {
@@ -104,10 +105,16 @@ public class AjouterProduitController implements Initializable {
         spinStock.setEditable(true);
         styliserSpinner(spinStock, "Ex: Stock du produit");
 
+        int anneeActuelle = LocalDate.now().getYear();
+        Label lblAnnee = createLabel("Année de sortie :");
+        Spinner<Integer> spinAnnee = new Spinner<>(1900, anneeActuelle, anneeActuelle);
+        spinAnnee.setEditable(true);
+        styliserSpinner(spinAnnee, "");
         Button btnValider = new Button();
         btnValider.getStyleClass().add("bouton-valider"); // Votre classe CSS
         Label lblOutput = new Label();
         lblOutput.setStyle("-fx-text-fill: white; -fx-padding: 10 0 0 0;");
+
 
         switch (choix) {
             case "LIVRES":
@@ -119,10 +126,6 @@ public class AjouterProduitController implements Initializable {
                 TextField txtAuteur = new TextField();
                 styliserChamp(txtAuteur, "Ex: Victor Hugo");
 
-                // 2. Année (Spinner)
-                Label lblAnnee = createLabel("Année de parution :");
-                // Constructeur : min, max, valeur initiale
-                Spinner<Integer> spinAnnee = new Spinner<>(1000, 2030, 2020);
                 spinAnnee.setEditable(true); // Permet d'écrire dedans
                 styliserSpinner(spinAnnee, "Année");
 
@@ -149,10 +152,10 @@ public class AjouterProduitController implements Initializable {
                         lblDesc, txtDesc,
                         lblEditeur, txtEditeur,
                         lblAuteur, txtAuteur,
-                        lblAnnee, spinAnnee,
                         lblIsbn, txtIsbn,
-                        lblPages, spinPages,
                         lblFormat, txtFormat,
+                        lblAnnee, spinAnnee,
+                        lblPages, spinPages,
                         lblStock, spinStock,
                         btnValider, lblOutput
                 );
@@ -166,10 +169,7 @@ public class AjouterProduitController implements Initializable {
                 TextField txtReal = new TextField();
                 styliserChamp(txtReal, "Ex: Christopher Nolan");
 
-                Label lblAnneeDvd = createLabel("Année de sortie :");
-                Spinner<Integer> spinAnneeDvd = new Spinner<>(1900, 2030, 2010);
-                spinAnneeDvd.setEditable(true);
-                styliserSpinner(spinAnneeDvd, "Année");
+
 
                 Label lblDuree = createLabel("Durée (minutes) :");
                 Spinner<Integer> spinDuree = new Spinner<>(1, 500, 120);
@@ -200,10 +200,10 @@ public class AjouterProduitController implements Initializable {
                         lblDesc, txtDesc,
                         lblEditeur, txtEditeur,
                         lblReal, txtReal,
-                        lblAnneeDvd, spinAnneeDvd,
-                        lblDuree, spinDuree,
                         lblAudio, txtAudio,
                         lblSousTitres, txtSousTitres,
+                        lblAnnee, spinAnnee,
+                        lblDuree, spinDuree,
                         lblStock, spinStock,
                         btnValider, lblOutput
                 );
@@ -212,12 +212,6 @@ public class AjouterProduitController implements Initializable {
             case "JEUX":
                 btnValider.setText("Ajouter le Jeu");
 
-                // --- Champs Spécifiques JEUX ---
-
-                Label lblAnneeJeux = createLabel("Année de sortie :");
-                Spinner<Integer> spinAnneeJeux = new Spinner<>(1980, 2030, 2024);
-                spinAnneeJeux.setEditable(true);
-                styliserSpinner(spinAnneeJeux, "Année");
 
                 Label lblJMin = createLabel("Joueurs Minimum :");
                 Spinner<Integer> spinJMin = new Spinner<>(1, 100, 1);
@@ -253,7 +247,7 @@ public class AjouterProduitController implements Initializable {
                         lblTitre, txtTitre,
                         lblDesc, txtDesc,
                         lblEditeur, txtEditeur,
-                        lblAnneeJeux, spinAnneeJeux,
+                        lblAnnee, spinAnnee,
                         lblJMin, spinJMin,
                         lblJMax, spinJMax,
                         lblAgeMin, spinAgeMin,
