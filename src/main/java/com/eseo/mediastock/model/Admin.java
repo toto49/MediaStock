@@ -3,12 +3,12 @@ package com.eseo.mediastock.model;
 public class Admin {
     private int id;
     private String email;
-    private String password;
+    private String mdp;
 
-    public Admin(int id, String email, String password) {
+    public Admin(int id, String email, String mdp) {
         this.id = id;
         this.email = email;
-        this.password = password;
+        this.mdp = mdp;
     }
 
     public int getId() {return id;}
@@ -21,11 +21,11 @@ public class Admin {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getMdp() {
+        return mdp;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setMdp(String mdp) {
+        this.mdp = mdp;
     }
 }
