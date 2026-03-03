@@ -27,7 +27,7 @@ public class EmpruntDAO {
 //        return null;
 //    }
 //
-//    public List<Emprunt> intoEmpruntList(ResultSet rs) throws SQLException {
+//    public List<Emprunt> intoEmpruntObjectList(ResultSet rs) throws SQLException {
 //        List<Emprunt> emprunts = new ArrayList<>();
 //
 //        while (rs.next()) {
