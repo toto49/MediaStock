@@ -12,13 +12,46 @@
 .buttonvalid {
     -fx-cursor: hand;
     -fx-text-fill: black;
-    -fx-background-color: #256B25;
-    -fx-border-radius: 15px;
+    -fx-background-color: #02d302;
+    -fx-border-radius: 10;
     -fx-font-size: 20;
 }
 
 .buttonvalid:hover {
     -fx-background-color: #185018;
+}
+
+
+.bouton-valider {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 16;
+}
+
+.bouton-valider:hover {
+    -fx-background-color: #45a049;
+    -fx-cursor: hand;
+}
+
+
+.bouton-annuler {
+    -fx-background-color: #b33a3a;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 16;
+}
+
+.bouton-annuler:hover {
+    -fx-background-color: #a83232;
+    -fx-cursor: hand;
+}
+
+
+.label-or {
+    -fx-text-fill: #ffcc00;
 }
 
 .text_input {
@@ -29,4 +62,42 @@
     -fx-border-radius: 10;
     -fx-border-width: 1;
     -fx-padding: 8 12;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 10, 0.2, 0, 2);
+    -fx-opacity: 1;
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+}
+
+.text_input:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.55), 25, 0.35, 0, 6);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.text_input:focused {
+    -fx-background-color: #383838;
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+    -fx-border-color: #ffcc00;
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+    -fx-padding: 7 11;
+    -fx-prompt-text-fill: transparent;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.55), 25, 0.35, 0, 6);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.bouton-or {
+    -fx-font-size: 14px;
+    -fx-background-color: #444444;
+    -fx-text-fill: #ffcc00;
+    -fx-border-color: #ffcc00;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.bouton-or:hover {
+    -fx-text-fill: #444444;
+    -fx-cursor: hand;
 }

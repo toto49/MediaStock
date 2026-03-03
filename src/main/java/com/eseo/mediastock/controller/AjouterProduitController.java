@@ -105,7 +105,7 @@ public class AjouterProduitController implements Initializable {
         styliserSpinner(spinStock, "Ex: Stock du produit");
 
         Button btnValider = new Button();
-        btnValider.getStyleClass().add("buttonvalid"); // Votre classe CSS
+        btnValider.getStyleClass().add("bouton-valider"); // Votre classe CSS
         Label lblOutput = new Label();
         lblOutput.setStyle("-fx-text-fill: white; -fx-padding: 10 0 0 0;");
 
