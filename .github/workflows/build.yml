@@ -3,26 +3,28 @@ name: Java CI with Maven (MediaStock)
 on:
   push:
     branches: [ "main", "master" ]
-  pull_request:
-    branches: [ "main", "master" ]
 
 jobs:
   build:
-    runs-on: windows-latest  # On utilise Windows car ton projet a des dépendances JavaFX Windows
+    runs-on: windows-latest
 
     steps:
       - name: Checkout du code
         uses: actions/checkout@v4
 
-      - name: Configuration du JDK 21 (x64)
+      - name: Configuration du JDK 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
-          distribution: 'temurin' # Version stable et performante
+          distribution: 'temurin'
           cache: maven
 
-      - name: Compilation avec Maven
-        run: mvn -B clean compile
+      - name: Compilation et Packaging (jpackage)
 
-      - name: Vérification des tests (optionnel)
-        run: mvn test
+        run: mvn -B clean package
+
+      - name: Archivage de l'exécutable
+        uses: actions/upload-artifact@v4
+        with:
+
+          path: target/dist/
