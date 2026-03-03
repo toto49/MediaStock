@@ -3,7 +3,11 @@ package com.eseo.mediastock.dao;
 import com.eseo.mediastock.model.Admin;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
+
+public class AdminDAO {
 /**
  * AUTHENTIFICATION DE L'ADMIN
  * @param email - L'email de l'admin
@@ -160,4 +164,5 @@ public boolean changePassword(int id, String ancienMdp, String nouveauMdp) throw
         int rowsAffected = updateStmt.executeUpdate();
         return rowsAffected > 0;
     }
+}
 }
