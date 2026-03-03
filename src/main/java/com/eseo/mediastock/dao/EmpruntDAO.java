@@ -95,7 +95,7 @@ public class EmpruntDAO {
         }
     }
 
-    public trouverRetards(LocalDate date) throws SQLException {
+    public List<Emprunt> trouverRetards(LocalDate date) throws SQLException {
         List<Emprunt> retards = new ArrayList<>();
         String sql = "SELECT * FROM emprunt WHERE date_retour_prevue < ? AND statut = ?";
 
@@ -107,7 +107,7 @@ public class EmpruntDAO {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    retards.add(intoEmpruntObject(rs));
+//                    retards.add(intoEmpruntObject(rs));
                 }
             }
         }
