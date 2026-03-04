@@ -2,6 +2,7 @@ package com.eseo.mediastock.controller;
 
 import com.eseo.mediastock.dao.LivreDAO;
 import com.eseo.mediastock.model.Produits.Livre;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,18 +24,21 @@ public class LivresController {
     }
 
     private void chargerDonneesDansTableau() {
-        try {
-            List<Livre> listeDepuisBdd = livreDAO.ProduitObjectList();
-            ObservableList<Livre> observableLivres = FXCollections.observableArrayList(listeDepuisBdd);
-            tableLivres.setItems(observableLivres);
 
-        } catch (SQLException e) {
-            System.err.println("Erreur lors du chargement des livres depuis la base de données !");
-            e.printStackTrace();
+        new Thread(() -> {
+            try {
+                List<Livre> listeDepuisBdd = livreDAO.ProduitObjectList();
+                Platform.runLater(() -> {
+                    ObservableList<Livre> observableLivres = FXCollections.observableArrayList(listeDepuisBdd);
+                    tableLivres.setItems(observableLivres);
+                });
 
-        }
+            } catch (SQLException e) {
+                System.err.println("Erreur lors du chargement des livres depuis la BDD !");
+                e.printStackTrace();
+            }
+        }).start();
     }
-
 
     @FXML
     public void ButtonReturn(ActionEvent actionEvent) {

@@ -71,7 +71,7 @@ public class LivreDAO implements ProduitDAO {
     private List<Livre> CreateLivres(ResultSet rs) throws SQLException {
         List<Livre> livres = new ArrayList<>();
         while (rs.next()) {
-            int id = rs.getInt("id_produit");
+            int id = rs.getInt("id");
             String titre = rs.getString("titre");
             String description = rs.getString("description");
             String editeur = rs.getString("editeur");
