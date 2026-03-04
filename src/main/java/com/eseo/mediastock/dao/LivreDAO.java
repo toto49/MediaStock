@@ -16,17 +16,18 @@ public class LivreDAO implements ProduitDAO {
     @Override
     public void addProduit(Produit p) throws SQLException {
         Livre l = (Livre) p;
-        String sql = "INSERT INTO PRODUIT (titre, description, editeur, annee_sortie, isbn, auteur, nb_pages, format)VALUES (?, ?, ?, ?, ?,?,?,?)";
+        String sql = "INSERT INTO PRODUIT (type_produit, titre, description, editeur, annee_sortie, isbn, auteur, nb_pages, format)VALUES (?, ?, ?, ?, ?,?,?,?,?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, l.getTitre());
-            stmt.setString(2, l.getDescription());
-            stmt.setString(3, l.getEditeur());
-            stmt.setInt(4, l.getAnneeSortie());
-            stmt.setInt(5, l.getIsbn());
-            stmt.setString(6, l.getAuteur());
-            stmt.setInt(7, l.getNbPages());
-            stmt.setString(8, l.getFormat());
+            stmt.setString(1, "Livre");
+            stmt.setString(2, l.getTitre());
+            stmt.setString(3, l.getDescription());
+            stmt.setString(4, l.getEditeur());
+            stmt.setInt(5, l.getAnneeSortie());
+            stmt.setInt(6, l.getIsbn());
+            stmt.setString(7, l.getAuteur());
+            stmt.setInt(8, l.getNbPages());
+            stmt.setString(9, l.getFormat());
             stmt.executeUpdate();
         }
     }

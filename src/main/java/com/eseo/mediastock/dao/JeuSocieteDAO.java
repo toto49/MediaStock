@@ -17,16 +17,17 @@ public class JeuSocieteDAO implements ProduitDAO {
     @Override
     public void addProduit(Produit p) throws SQLException {
         JeuSociete j = (JeuSociete) p;
-        String sql = "INSERT INTO PRODUIT (titre, description, editeur, annee_sortie, nb_joueurs_min,nb_joueurs_max, age_min, age_max, duree_partie) VALUES (?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO PRODUIT (type_produit, titre, description, editeur, annee_sortie, nb_joueurs_min,nb_joueurs_max, age_min, duree_partie) VALUES (?,?,?,?,?,?,?,?,?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)){
-            stmt.setString(1, j.getTitre());
-            stmt.setString(2, j.getDescription());
-            stmt.setString(3, j.getEditeur());
-            stmt.setInt(4, j.getAnneeSortie());
-            stmt.setInt(5, j.getNbJoueursMin());
-            stmt.setInt(6, j.getNbJoueursMax());
-            stmt.setInt(7, j.getAgeMin());
+            stmt.setString(1, "JeuSociete");
+            stmt.setString(2, j.getTitre());
+            stmt.setString(3, j.getDescription());
+            stmt.setString(4, j.getEditeur());
+            stmt.setInt(5, j.getAnneeSortie());
+            stmt.setInt(6, j.getNbJoueursMin());
+            stmt.setInt(7, j.getNbJoueursMax());
+            stmt.setInt(8, j.getAgeMin());
             stmt.setInt(9, j.getDureePartie());
         }
 
