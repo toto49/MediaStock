@@ -5,9 +5,8 @@ on:
     branches: [ "main", "master" ]
   pull_request:
     branches: [ "main", "master" ]
-
   schedule:
-    - cron: '0 12 * * *'
+    - cron: '12 00 * * *'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -15,7 +14,28 @@ concurrency:
 
 jobs:
   build:
-    runs-on: windows-latest
+    name: Build sur ${{ matrix.os_name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            os_name: Windows-x64
+            jfx_classifier: win
+
+          - os: ubuntu-latest
+            os_name: Linux-x64
+            jfx_classifier: linux
+
+          - os: macos-13
+            os_name: macOS-Intel-x64
+            jfx_classifier: mac
+
+          - os: macos-14
+            os_name: macOS-Silicon-ARM64
+            jfx_classifier: mac-aarch64
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout du code
@@ -29,16 +49,16 @@ jobs:
           cache: maven
 
       - name: Compilation
-        run: mvn -B clean compile
+        run: mvn -B clean compile -Djfx.os=${{ matrix.jfx_classifier }}
 
       - name: Tests Unitaires
-        run: mvn -B test
+        run: mvn -B test -Djfx.os=${{ matrix.jfx_classifier }}
 
       - name: Création de l'exécutable (Packaging)
-        run: mvn -B package -DskipTests
+        run: mvn -B package -DskipTests -Djfx.os=${{ matrix.jfx_classifier }}
 
       - name: Archivage de l'application (Artifact)
         uses: actions/upload-artifact@v4
         with:
-          name: MediaStock-App-Windows
+          name: MediaStock-App-${{ matrix.os_name }}
           path: target/dist/
