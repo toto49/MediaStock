@@ -27,15 +27,21 @@ jobs:
             os_name: Linux-x64
             jfx_classifier: linux
 
-          - os: macos-13
-            os_name: macOS-Intel-x64
-            jfx_classifier: mac
 
-          - os: macos-14
+          - os: macos-latest
             os_name: macOS-Silicon-ARM64
             jfx_classifier: mac-aarch64
 
+
+          - os: macos-12
+            os_name: macOS-Intel-x64
+            jfx_classifier: mac
+
     runs-on: ${{ matrix.os }}
+
+    defaults:
+      run:
+        shell: bash
 
     steps:
       - name: Checkout du code
@@ -49,13 +55,14 @@ jobs:
           cache: maven
 
       - name: Compilation
-        run: mvn -B clean compile -Djfx.os=${{ matrix.jfx_classifier }}
+
+        run: mvn -B clean compile "-Djfx.os=${{ matrix.jfx_classifier }}"
 
       - name: Tests Unitaires
-        run: mvn -B test -Djfx.os=${{ matrix.jfx_classifier }}
+        run: mvn -B test "-Djfx.os=${{ matrix.jfx_classifier }}"
 
       - name: Création de l'exécutable (Packaging)
-        run: mvn -B package -DskipTests -Djfx.os=${{ matrix.jfx_classifier }}
+        run: mvn -B package -DskipTests "-Djfx.os=${{ matrix.jfx_classifier }}"
 
       - name: Archivage de l'application (Artifact)
         uses: actions/upload-artifact@v4
