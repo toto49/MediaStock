@@ -55,7 +55,9 @@ public class AdminDAO {
             // Récupérer l'ID généré
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
-                    // pourmettre à jour l'objet avec l'ID
+                   int generatedId = rs.getInt(1);
+                   admin.setId(generatedId);
+                   System.out.println("id generee pour admin " +  generatedId);
                 }
             }
         }
