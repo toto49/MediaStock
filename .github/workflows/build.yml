@@ -27,15 +27,9 @@ jobs:
             os_name: Linux-x64
             jfx_classifier: linux
 
-
           - os: macos-latest
             os_name: macOS-Silicon-ARM64
             jfx_classifier: mac-aarch64
-
-
-          - os: macos-12
-            os_name: macOS-Intel-x64
-            jfx_classifier: mac
 
     runs-on: ${{ matrix.os }}
 
@@ -55,7 +49,6 @@ jobs:
           cache: maven
 
       - name: Compilation
-
         run: mvn -B clean compile "-Djfx.os=${{ matrix.jfx_classifier }}"
 
       - name: Tests Unitaires
