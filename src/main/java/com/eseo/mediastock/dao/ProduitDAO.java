@@ -10,5 +10,6 @@ import java.sql.SQLException;
 public interface ProduitDAO {
     void addProduit(Produit p) throws SQLException;
 
+    void updateProduit(Produit p) throws SQLException;
 }
 

@@ -29,8 +29,28 @@ public class JeuSocieteDAO implements ProduitDAO {
             stmt.setInt(7, j.getNbJoueursMax());
             stmt.setInt(8, j.getAgeMin());
             stmt.setInt(9, j.getDureePartie());
+            stmt.executeUpdate();
         }
 
+    }
+
+    @Override
+    public void updateProduit(Produit p) throws SQLException {
+        JeuSociete j = (JeuSociete) p;
+        String sql = "UPDATE PRODUIT SET titre = ?, description = ?, annee_sortie = ?, nb_joueurs_min = ?, nb_joueurs_max = ?, age_min = ?, duree_partie = ? WHERE id = ? AND type_produit = 'Jeu'";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setString(1, j.getTitre());
+            stmt.setString(2, j.getDescription());
+            stmt.setInt(3, j.getAnneeSortie());
+            stmt.setInt(4, j.getNbJoueursMin());
+            stmt.setInt(5, j.getNbJoueursMax());
+            stmt.setInt(6, j.getAgeMin());
+            stmt.setInt(7, j.getDureePartie());
+            stmt.setInt(8, j.getId());
+            stmt.executeUpdate();
+
+        }
     }
 
     public List<JeuSociete> ProduitObjectList() throws SQLException {

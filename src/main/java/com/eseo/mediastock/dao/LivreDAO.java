@@ -32,6 +32,24 @@ public class LivreDAO implements ProduitDAO {
         }
     }
 
+    @Override
+    public void updateProduit(Produit p) throws SQLException {
+        Livre l = (Livre) p;
+        String sql = "UPDATE PRODUIT SET titre = ?, description = ?, annee_sortie = ?, isbn = ?, auteur = ?, nb_pages = ?, format = ? WHERE id = ? AND type_produit = 'Livre'";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, l.getTitre());
+            stmt.setString(2, l.getDescription());
+            stmt.setInt(3, l.getAnneeSortie());
+            stmt.setInt(4, l.getIsbn());
+            stmt.setString(5, l.getAuteur());
+            stmt.setInt(6, l.getNbPages());
+            stmt.setString(7, l.getFormat());
+            stmt.setInt(8, l.getId());
+            stmt.executeUpdate();
+        }
+    }
+
     public List<Livre> ProduitObjectList() throws SQLException {
         String sql = "SELECT * FROM PRODUIT WHERE type_produit = ?";
         List<Livre> livres;
