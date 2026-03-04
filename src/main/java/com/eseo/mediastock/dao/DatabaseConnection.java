@@ -1,12 +1,13 @@
 package com.eseo.mediastock.dao;
 
 import io.github.cdimascio.dotenv.Dotenv;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    static Dotenv dotenv = Dotenv.load();
+    static Dotenv dotenv = Dotenv.configure().directory("./").load();
 
     private static final String URL = dotenv.get("DB_URL");
     private static final String USER = dotenv.get("DB_USER");
