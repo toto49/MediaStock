@@ -22,12 +22,9 @@ public class DvdDAO implements ProduitDAO {
             stmt.setInt(4, d.getAnneeSortie());
             stmt.setString(5, d.getRealisateur());
             stmt.setInt(6, d.getDureeMinutes());
-            //stmt.setArray(7, d.getAudioLangues());
-            //stmt.setArray(8, d.getSousTitres());
-            //TODO : Need help, trouve pas de stmt.setList --> Solution = passer les List en Array ?
-
-            //TODO: enlever les lignes en commentaires en dessous quand le code sera corrigé
-            //stmt.executeUpdate();
+            stmt.setString(7, String.join(",", d.getAudioLangues()));
+            stmt.setString(7, d.getSousTitres() == null ? null : String.join(",", d.getSousTitres()));
+            stmt.executeUpdate();
         }
     }
 }
