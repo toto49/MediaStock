@@ -2,7 +2,6 @@ package com.eseo.mediastock.dao;
 
 import com.eseo.mediastock.model.Exemplaire;
 import com.eseo.mediastock.model.Produits.DVD;
-import com.eseo.mediastock.model.Produits.Livre;
 import com.eseo.mediastock.model.Produits.Produit;
 
 import java.sql.Connection;
@@ -18,7 +17,7 @@ public class DvdDAO implements ProduitDAO {
     @Override
     public void addProduit(Produit p) throws SQLException {
         DVD d = (DVD) p;
-        String sql = "INSERT INTO PRODUIT (type_produit, titre, description, editeur, annee_sortie, realisateur, duree_minutes, audio_langues, sous_titres) VALUES (?,?,?,?,?,?,?,?,?) WHERE type_produit = ?";
+        String sql = "INSERT INTO PRODUIT (type_produit, titre, description, editeur, annee_sortie, realisateur, duree_minutes, audio_langues, sous_titres) VALUES (?,?,?,?,?,?,?,?,?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)){
             stmt.setString(1, "DVD");
@@ -30,6 +29,24 @@ public class DvdDAO implements ProduitDAO {
             stmt.setInt(7, d.getDureeMinutes());
             stmt.setString(8, String.join(",", d.getAudioLangues()));
             stmt.setString(9, d.getSousTitres() == null ? null : String.join(",", d.getSousTitres()));
+            stmt.executeUpdate();
+        }
+    }
+
+    @Override
+    public void updateProduit(Produit p) throws SQLException {
+        DVD d = (DVD) p;
+        String sql = "UPDATE PRODUIT SET titre = ?, description = ?, annee_sortie = ?, realisateur = ?, duree_minutes = ?, audio_langues = ?, sous_titres = ? WHERE id = ? AND type_produit = 'DVD'";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setString(1, d.getTitre());
+            stmt.setString(2, d.getDescription());
+            stmt.setInt(3, d.getAnneeSortie());
+            stmt.setString(4, d.getRealisateur());
+            stmt.setInt(5, d.getDureeMinutes());
+            stmt.setString(6, String.join(",", d.getAudioLangues()));
+            stmt.setString(7, d.getSousTitres() == null ? null : String.join(",", d.getSousTitres()));
+            stmt.setInt(8, d.getId());
             stmt.executeUpdate();
         }
     }
@@ -80,4 +97,5 @@ public class DvdDAO implements ProduitDAO {
         }
         return dvds;
     }
+
 }
