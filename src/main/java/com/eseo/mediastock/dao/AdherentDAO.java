@@ -129,4 +129,29 @@ public class AdherentDAO {
         }
         return 0;
     }
+    /**
+     * MÉTHODE DELETE - Supprime un adhérent par son ID
+     * @param id - L'ID de l'adhérent à supprimer (format String, ex: "ADH-2026-001")
+     * @throws SQLException - Si la suppression échoue
+     * @return boolean - true si suppression réussie, false sinon
+     */
+    public boolean deleteAdherent(String id) throws SQLException {
+        String sql = "DELETE FROM ADHERENT WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, id);
+
+            int rowsAffected = stmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("✅ Adhérent " + id + " supprimé avec succès");
+                return true;
+            } else {
+                System.out.println("⚠️ Aucun adhérent trouvé avec l'ID: " + id);
+                return false;
+            }
+        }
+    }
 }
