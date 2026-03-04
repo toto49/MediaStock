@@ -1,5 +1,11 @@
 package com.eseo.mediastock.controller;
 
+import com.eseo.mediastock.dao.DvdDAO;
+import com.eseo.mediastock.dao.JeuSocieteDAO;
+import com.eseo.mediastock.dao.LivreDAO;
+import com.eseo.mediastock.model.Produits.DVD;
+import com.eseo.mediastock.model.Produits.JeuSociete;
+import com.eseo.mediastock.model.Produits.Livre;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -7,7 +13,10 @@ import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class AjouterProduitController implements Initializable {
@@ -17,7 +26,6 @@ public class AjouterProduitController implements Initializable {
     @FXML
     private ComboBox<String> ChoiceAddProduit;
 
-    // Style commun pour les labels
     private final String STYLE_LABEL = "-fx-font-size: 15px; -fx-text-fill: #ffcc00;";
 
     @Override
@@ -27,136 +35,79 @@ public class AjouterProduitController implements Initializable {
         });
     }
 
-    private void styliserChamp(TextField field, String promptText) {
-        field.setPromptText(promptText);
-        String styleNormal = "-fx-background-color: #383838; " +
-                "-fx-text-fill: white; " +
-                "-fx-background-radius: 10; " +
-                "-fx-border-color: #555; " +
-                "-fx-border-radius: 10; " +
-                "-fx-border-width: 1; " +
-                "-fx-padding: 8 12;";
-
-        String styleFocus = "-fx-background-color: #383838; " +
-                "-fx-text-fill: white; " +
-                "-fx-background-radius: 10; " +
-                "-fx-border-color: #ffcc00; " +
-                "-fx-border-radius: 10; " +
-                "-fx-border-width: 2; " +
-                "-fx-padding: 7 11;";
-
-        field.setStyle(styleNormal);
-        field.focusedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                field.setStyle(styleFocus);
-            } else {
-                field.setStyle(styleNormal);
-            }
-        });
-    }
-    private void styliserSpinner(Spinner<?> spinner, String promptText) {
-
-        TextField editor = spinner.getEditor();
-        editor.setPromptText(promptText);
-        editor.setStyle("-fx-background-color: transparent; -fx-text-fill: white;");
-        String styleNormal = "-fx-background-color: #383838; " +
-                "-fx-text-fill: white; " +
-                "-fx-background-radius: 10; " +
-                "-fx-border-color: #555; " +
-                "-fx-border-radius: 10; " +
-                "-fx-border-width: 1; " +
-                "-fx-padding: 2 5;";
-
-        String styleFocus = "-fx-background-color: #383838; " +
-                "-fx-text-fill: white; " +
-                "-fx-background-radius: 10; " +
-                "-fx-border-color: #ffcc00; " +
-                "-fx-border-radius: 10; " +
-                "-fx-border-width: 2; " +
-                "-fx-padding: 1 4;";
-        spinner.setStyle(styleNormal);
-        editor.focusedProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal) {
-                spinner.setStyle(styleFocus);
-            } else {
-                spinner.setStyle(styleNormal);
-            }
-        });
-    }
     private void detecterSelection(String choix) {
         if (choix == null) return;
 
         containerFormulaire.getChildren().clear();
 
-        // Variables communes
+        // Champs communs
         Label lblTitre = createLabel("Titre :");
-        TextField txtTitre = new TextField();
-        styliserChamp(txtTitre, "Ex: Titre du produit");
+        TextField txtTitre = createTextField("Ex: Titre du produit");
 
         Label lblDesc = createLabel("Description :");
-        TextField txtDesc = new TextField();
-        styliserChamp(txtDesc, "Ex: Description du produit");
+        TextField txtDesc = createTextField("Ex: Description du produit");
+
         Label lblEditeur = createLabel("Editeur :");
-        TextField txtEditeur = new TextField();
-        styliserChamp(txtEditeur, "Ex: Nintendo / Asmodee/ Warnes Bros");
+        TextField txtEditeur = createTextField("Ex: Nintendo / Asmodee / Warner Bros");
 
         Label lblStock = createLabel("Nombre d'exemplaires (Stock) :");
-        Spinner<Integer> spinStock = new Spinner<>(0, 1000, 1); // Min 0, Max 1000, Défaut 1
-        spinStock.setEditable(true);
-        styliserSpinner(spinStock, "Ex: Stock du produit");
+        Spinner<Integer> spinStock = createSpinner(0, 1000, 1);
 
         int anneeActuelle = LocalDate.now().getYear();
         Label lblAnnee = createLabel("Année de sortie :");
-        Spinner<Integer> spinAnnee = new Spinner<>(1900, anneeActuelle, anneeActuelle);
-        spinAnnee.setEditable(true);
-        styliserSpinner(spinAnnee, "");
+        Spinner<Integer> spinAnnee = createSpinner(1900, anneeActuelle, anneeActuelle);
+
         Button btnValider = new Button();
-        btnValider.getStyleClass().add("bouton-valider"); // Votre classe CSS
+        btnValider.getStyleClass().add("bouton-valider");
+
         Label lblOutput = new Label();
         lblOutput.setStyle("-fx-text-fill: white; -fx-padding: 10 0 0 0;");
-
 
         switch (choix) {
             case "LIVRES":
                 btnValider.setText("Ajouter le Livre");
 
-
-                // 1. Auteur
                 Label lblAuteur = createLabel("Auteur :");
-                TextField txtAuteur = new TextField();
-                styliserChamp(txtAuteur, "Ex: Victor Hugo");
+                TextField txtAuteur = createTextField("Ex: Victor Hugo");
 
-                spinAnnee.setEditable(true); // Permet d'écrire dedans
-                styliserSpinner(spinAnnee, "Année");
-
-                // 3. Pages (Spinner)
                 Label lblPages = createLabel("Nombre de pages :");
-                // Constructeur : min, max, valeur initiale
-                Spinner<Integer> spinPages = new Spinner<>(1, 5000, 200);
-                spinPages.setEditable(true);
-                styliserSpinner(spinPages, "Nb Pages");
+                Spinner<Integer> spinPages = createSpinner(1, 5000, 200);
 
-                // 4. ISBN
                 Label lblIsbn = createLabel("ISBN :");
-                TextField txtIsbn = new TextField();
-                styliserChamp(txtIsbn, "Ex: 978-2070409228");
+                TextField txtIsbn = createTextField("Ex: 9782070409228");
 
-                // 5. Format
                 Label lblFormat = createLabel("Format :");
-                TextField txtFormat = new TextField();
-                styliserChamp(txtFormat, "Ex: Poche, Broché...");
+                TextField txtFormat = createTextField("Ex: Poche, Broché...");
 
+                btnValider.setOnAction(event -> {
+                    try {
+                        int isbn = 0;
+                        if (!txtIsbn.getText().isEmpty()) {
+                            try {
+                                isbn = Integer.parseInt(txtIsbn.getText().replaceAll("[^0-9]", ""));
+                            } catch (NumberFormatException e) {
+                                afficherMessage(lblOutput, "Erreur : L'ISBN est trop long ou invalide pour un entier.", false);
+                                return;
+                            }
+                        }
+
+                        Livre livre = new Livre(0, txtTitre.getText(), txtDesc.getText(), txtEditeur.getText(),
+                                spinAnnee.getValue(), null, isbn, txtAuteur.getText(), spinPages.getValue(), txtFormat.getText());
+
+                        LivreDAO livreDAO = new LivreDAO();
+                        livreDAO.addProduit(livre);
+
+                        afficherMessage(lblOutput, "Le Livre a été ajouté avec succès !", true);
+                        viderChamps(txtTitre, txtDesc, txtEditeur, txtAuteur, txtIsbn, txtFormat);
+                    } catch (SQLException e) {
+                        afficherMessage(lblOutput, "Erreur BDD : " + e.getMessage(), false);
+                    }
+                });
 
                 containerFormulaire.getChildren().addAll(
-                        lblTitre, txtTitre,
-                        lblDesc, txtDesc,
-                        lblEditeur, txtEditeur,
-                        lblAuteur, txtAuteur,
-                        lblIsbn, txtIsbn,
-                        lblFormat, txtFormat,
-                        lblAnnee, spinAnnee,
-                        lblPages, spinPages,
-                        lblStock, spinStock,
+                        lblTitre, txtTitre, lblDesc, txtDesc, lblEditeur, txtEditeur,
+                        lblAuteur, txtAuteur, lblIsbn, txtIsbn, lblFormat, txtFormat,
+                        lblAnnee, spinAnnee, lblPages, spinPages, lblStock, spinStock,
                         btnValider, lblOutput
                 );
                 break;
@@ -164,47 +115,40 @@ public class AjouterProduitController implements Initializable {
             case "DVD":
                 btnValider.setText("Ajouter le DVD");
 
-                // --- Champs Spécifiques DVD ---
                 Label lblReal = createLabel("Réalisateur :");
-                TextField txtReal = new TextField();
-                styliserChamp(txtReal, "Ex: Christopher Nolan");
-
-
+                TextField txtReal = createTextField("Ex: Christopher Nolan");
 
                 Label lblDuree = createLabel("Durée (minutes) :");
-                Spinner<Integer> spinDuree = new Spinner<>(1, 500, 120);
-                spinDuree.setEditable(true);
-                styliserSpinner(spinDuree, "Duree");
+                Spinner<Integer> spinDuree = createSpinner(1, 500, 120);
 
                 Label lblAudio = createLabel("Pistes Audio :");
-                TextField txtAudio = new TextField();
-                styliserChamp(txtAudio, "Ex: Français, Anglais 5.1");
+                TextField txtAudio = createTextField("Ex: Français, Anglais");
 
                 Label lblSousTitres = createLabel("Sous-titres :");
-                TextField txtSousTitres = new TextField();
-                styliserChamp(txtSousTitres, "Ex: Français, Espagnol");
+                TextField txtSousTitres = createTextField("Ex: Français, Espagnol");
 
-
-                // Action du bouton
                 btnValider.setOnAction(event -> {
-                    String resultat = "DVD AJOUTÉ :\n" +
-                            "Titre: " + txtTitre.getText() + "\n" +
-                            "Réalisateur: " + txtReal.getText() + "\n" +
-                            "Stock: " + spinStock.getValue();
-                    lblOutput.setText(resultat);
-                    System.out.println(resultat);
+                    try {
+                        List<String> pistesAudio = Arrays.asList(txtAudio.getText().split("\\s*,\\s*"));
+                        List<String> sousTitres = Arrays.asList(txtSousTitres.getText().split("\\s*,\\s*"));
+
+                        DVD dvd = new DVD(0, txtTitre.getText(), txtDesc.getText(), txtEditeur.getText(),
+                                spinAnnee.getValue(), null, txtReal.getText(), spinDuree.getValue(), pistesAudio, sousTitres);
+
+                        DvdDAO dvdDAO = new DvdDAO();
+                        dvdDAO.addProduit(dvd);
+
+                        afficherMessage(lblOutput, "Le DVD a été ajouté avec succès !", true);
+                        viderChamps(txtTitre, txtDesc, txtEditeur, txtReal, txtAudio, txtSousTitres);
+                    } catch (SQLException e) {
+                        afficherMessage(lblOutput, "Erreur BDD : " + e.getMessage(), false);
+                    }
                 });
 
                 containerFormulaire.getChildren().addAll(
-                        lblTitre, txtTitre,
-                        lblDesc, txtDesc,
-                        lblEditeur, txtEditeur,
-                        lblReal, txtReal,
-                        lblAudio, txtAudio,
-                        lblSousTitres, txtSousTitres,
-                        lblAnnee, spinAnnee,
-                        lblDuree, spinDuree,
-                        lblStock, spinStock,
+                        lblTitre, txtTitre, lblDesc, txtDesc, lblEditeur, txtEditeur,
+                        lblReal, txtReal, lblAudio, txtAudio, lblSousTitres, txtSousTitres,
+                        lblAnnee, spinAnnee, lblDuree, spinDuree, lblStock, spinStock,
                         btnValider, lblOutput
                 );
                 break;
@@ -212,56 +156,59 @@ public class AjouterProduitController implements Initializable {
             case "JEUX":
                 btnValider.setText("Ajouter le Jeu");
 
-
                 Label lblJMin = createLabel("Joueurs Minimum :");
-                Spinner<Integer> spinJMin = new Spinner<>(1, 100, 1);
-                spinJMin.setEditable(true);
-                styliserSpinner(spinJMin, "Joueurs Minimum");
+                Spinner<Integer> spinJMin = createSpinner(1, 100, 1);
 
                 Label lblJMax = createLabel("Joueurs Maximum :");
-                Spinner<Integer> spinJMax = new Spinner<>(1, 100, 4);
-                spinJMax.setEditable(true);
-                styliserSpinner(spinJMax, "Joueurs Maximum");
+                Spinner<Integer> spinJMax = createSpinner(1, 100, 4);
 
                 Label lblAgeMin = createLabel("Age Minimum :");
-                Spinner<Integer> spinAgeMin = new Spinner<>(3, 18, 12);
-                spinAgeMin.setEditable(true);
-                styliserSpinner(spinAgeMin, "Age Minimum ");
+                Spinner<Integer> spinAgeMin = createSpinner(3, 18, 12);
 
                 Label lblDureeJeux = createLabel("Durée moyenne (min) :");
-                Spinner<Integer> spinDureeJeux = new Spinner<>(5, 600, 30);
-                spinDureeJeux.setEditable(true);
-                styliserSpinner(spinDureeJeux, "Duree moyenne (min) ");
+                Spinner<Integer> spinDureeJeux = createSpinner(5, 600, 30);
 
-                // Action du bouton
                 btnValider.setOnAction(event -> {
-                    String resultat = "JEU AJOUTÉ :\n" +
-                            "Titre: " + txtTitre.getText() + "\n" +
-                            "Joueurs: " + spinJMin.getValue() + "-" + spinJMax.getValue() + "\n" +
-                            "Stock: " + spinStock.getValue();
-                    lblOutput.setText(resultat);
-                    System.out.println(resultat);
+                    try {
+                        JeuSociete jeu = new JeuSociete(0, txtTitre.getText(), txtDesc.getText(), txtEditeur.getText(),
+                                spinAnnee.getValue(), null, spinJMin.getValue(), spinJMax.getValue(), spinAgeMin.getValue(), spinDureeJeux.getValue());
+
+                        JeuSocieteDAO jeuDAO = new JeuSocieteDAO();
+                        jeuDAO.addProduit(jeu);
+
+                        afficherMessage(lblOutput, "Le Jeu a été ajouté avec succès !", true);
+                        viderChamps(txtTitre, txtDesc, txtEditeur);
+                    } catch (SQLException e) {
+                        afficherMessage(lblOutput, "Erreur BDD : " + e.getMessage(), false);
+                    }
                 });
 
                 containerFormulaire.getChildren().addAll(
-                        lblTitre, txtTitre,
-                        lblDesc, txtDesc,
-                        lblEditeur, txtEditeur,
-                        lblAnnee, spinAnnee,
-                        lblJMin, spinJMin,
-                        lblJMax, spinJMax,
-                        lblAgeMin, spinAgeMin,
-                        lblDureeJeux, spinDureeJeux,
-                        lblStock, spinStock,
+                        lblTitre, txtTitre, lblDesc, txtDesc, lblEditeur, txtEditeur,
+                        lblAnnee, spinAnnee, lblJMin, spinJMin, lblJMax, spinJMax,
+                        lblAgeMin, spinAgeMin, lblDureeJeux, spinDureeJeux, lblStock, spinStock,
                         btnValider, lblOutput
                 );
                 break;
-
-            default:
-                System.out.println("Choix inconnu");
         }
     }
 
+    // --- Méthodes utilitaires ---
+
+    private void afficherMessage(Label label, String message, boolean success) {
+        label.setText(message);
+        if (success) {
+            label.setStyle("-fx-text-fill: #2ecc71; -fx-padding: 10 0 0 0; -fx-font-weight: bold;");
+        } else {
+            label.setStyle("-fx-text-fill: #e74c3c; -fx-padding: 10 0 0 0; -fx-font-weight: bold;");
+        }
+    }
+
+    private void viderChamps(TextField... champs) {
+        for (TextField champ : champs) {
+            champ.clear();
+        }
+    }
 
     private Label createLabel(String text) {
         Label lbl = new Label(text);
@@ -269,26 +216,39 @@ public class AjouterProduitController implements Initializable {
         return lbl;
     }
 
-
     private TextField createTextField(String prompt) {
         TextField tf = new TextField();
         tf.setPromptText(prompt);
+        styliserChamp(tf);
         return tf;
     }
-
 
     private Spinner<Integer> createSpinner(int min, int max, int initial) {
         Spinner<Integer> spinner = new Spinner<>(min, max, initial);
         spinner.setEditable(true);
         StringConverter<Integer> converter = spinner.getValueFactory().getConverter();
         TextFormatter<Integer> formatter = new TextFormatter<>(converter, initial, c -> {
-            if (c.getControlNewText().matches("\\d*")) {
-                return c;
-            }
+            if (c.getControlNewText().matches("\\d*")) return c;
             return null;
         });
         spinner.getEditor().setTextFormatter(formatter);
-
+        styliserSpinner(spinner);
         return spinner;
+    }
+
+    private void styliserChamp(TextField field) {
+        String styleNormal = "-fx-background-color: #383838; -fx-text-fill: white; -fx-background-radius: 10; -fx-border-color: #555; -fx-border-radius: 10; -fx-border-width: 1; -fx-padding: 8 12;";
+        String styleFocus = "-fx-background-color: #383838; -fx-text-fill: white; -fx-background-radius: 10; -fx-border-color: #ffcc00; -fx-border-radius: 10; -fx-border-width: 2; -fx-padding: 7 11;";
+        field.setStyle(styleNormal);
+        field.focusedProperty().addListener((obs, oldVal, newVal) -> field.setStyle(newVal ? styleFocus : styleNormal));
+    }
+
+    private void styliserSpinner(Spinner<?> spinner) {
+        TextField editor = spinner.getEditor();
+        editor.setStyle("-fx-background-color: transparent; -fx-text-fill: white;");
+        String styleNormal = "-fx-background-color: #383838; -fx-text-fill: white; -fx-background-radius: 10; -fx-border-color: #555; -fx-border-radius: 10; -fx-border-width: 1; -fx-padding: 2 5;";
+        String styleFocus = "-fx-background-color: #383838; -fx-text-fill: white; -fx-background-radius: 10; -fx-border-color: #ffcc00; -fx-border-radius: 10; -fx-border-width: 2; -fx-padding: 1 4;";
+        spinner.setStyle(styleNormal);
+        editor.focusedProperty().addListener((obs, oldVal, newVal) -> spinner.setStyle(newVal ? styleFocus : styleNormal));
     }
 }
