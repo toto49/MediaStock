@@ -54,7 +54,7 @@ public class JeuSocieteDAO implements ProduitDAO {
     private List<JeuSociete> CreateJeux(ResultSet rs) throws SQLException {
         List<JeuSociete> jeux = new ArrayList<>();
         while (rs.next()) {
-            int id = rs.getInt("id_produit");
+            int id = rs.getInt("id");
             String titre = rs.getString("titre");
             String description = rs.getString("description");
             String editeur = rs.getString("editeur");

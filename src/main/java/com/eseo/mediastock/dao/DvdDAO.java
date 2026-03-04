@@ -55,7 +55,7 @@ public class DvdDAO implements ProduitDAO {
     private List<DVD> CreateLivres(ResultSet rs) throws SQLException {
         List<DVD> dvds = new ArrayList<>();
         while (rs.next()) {
-            int id = rs.getInt("id_produit");
+            int id = rs.getInt("id");
             String titre = rs.getString("titre");
             String description = rs.getString("description");
             String editeur = rs.getString("editeur");
