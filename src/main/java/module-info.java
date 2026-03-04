@@ -4,6 +4,7 @@ module com.eseo.mediastock {
     requires java.dotenv;
     requires java.sql;
     requires java.desktop;
+    requires atlantafx.base;
 
     // ... tes autres requires ...
 

@@ -1,5 +1,6 @@
 package com.eseo.mediastock;
 
+import atlantafx.base.theme.PrimerDark;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -14,6 +15,8 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        Application.setUserAgentStylesheet(new PrimerDark().getUserAgentStylesheet());
+
         FXMLLoader fxmlLoader = new FXMLLoader(
                 Launcher.class.getResource("view/bienvenue-view.fxml")
         );
