@@ -1,0 +1,79 @@
+.section-title {
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-font-family: "Arial";
+    -fx-text-fill: e9bb04;
+}
+
+
+.form-card {
+    -fx-background-color: #434343;
+    -fx-padding: 20px;
+
+
+    -fx-border-width: 2px;
+    -fx-border-radius: 25;
+    -fx-background-radius: 25;
+
+
+}
+
+/* Boutons */
+.btn-emprunter {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-pref-width: 100px;
+    -fx-cursor: hand;
+}
+
+.btn-rendre {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-pref-width: 100px;
+    -fx-cursor: hand;
+}
+
+
+.list-retard {
+    -fx-border-color: black;
+    -fx-border-width: 2px;
+}
+
+.retard-container {
+    -fx-background-color: #333333;
+    -fx-background-radius: 25;
+    -fx-border-radius: 25;
+}
+
+
+.title-retard {
+    -fx-text-fill: #FFC107;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+
+.dark-table {
+    -fx-background-color: #1a1d23;
+    -fx-border-color: #444;
+    -fx-control-inner-background: #1a1d23;
+}
+
+.dark-table .column-header {
+    -fx-background-color: #25282e;
+}
+
+.dark-table .column-header .label {
+    -fx-text-fill: #aaa;
+}
+
+.dark-table .table-row-cell {
+    -fx-background-color: #1a1d23;
+    -fx-text-fill: white;
+    -fx-border-color: #25282e;
+}
+
+.dark-table .table-row-cell:selected {
+    -fx-background-color: #3e444c;
+}

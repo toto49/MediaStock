@@ -35,6 +35,11 @@
                     text="Accueil"
                     prefWidth="180"
                     style="-fx-cursor: hand; -fx-background-color: #444; -fx-text-fill: white;"/>
+            <Button fx:id="btnEmprunt"
+                    onAction="#afficherEmprunt"
+                    text="Emprunter"
+                    prefWidth="180"
+                    style="-fx-cursor: hand; -fx-background-color: transparent; -fx-text-fill: white;"/>
             <Button fx:id="btnParametres"
                     onAction="#afficherParametres"
                     text="Paramètres"
