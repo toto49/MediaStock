@@ -145,7 +145,7 @@
 
                     <mainClass>com.eseo.mediastock.Launcher</mainClass>
 
-                    <winConsole>false</winConsole>
+                    <winConsole>true</winConsole>
 
                     <javaOptions>
                         <option>-Dfile.encoding=UTF-8</option>
