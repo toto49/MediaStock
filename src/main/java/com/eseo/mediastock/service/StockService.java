@@ -1,10 +1,14 @@
 package com.eseo.mediastock.service;
 
+import com.eseo.mediastock.dao.DvdDAO;
+import com.eseo.mediastock.dao.JeuSocieteDAO;
+import com.eseo.mediastock.dao.LivreDAO;
 import com.eseo.mediastock.model.Enum.EnumDispo;
 import com.eseo.mediastock.model.Enum.EnumEtat; // Pensez à l'importer
 import com.eseo.mediastock.model.Exemplaire;
 import com.eseo.mediastock.model.Produits.*;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +16,7 @@ public class StockService {
 
     // --- AJOUT DES PRODUITS ---
 
-    public void ajouterLivre(String titre, String description, String editeur, int annee, String isbn, String auteur, int nbPages, String format) {
+    public void ajouterLivre(String titre, String description, String editeur, int annee, String isbn, String auteur, int nbPages, String format) throws SQLException {
         if (titre == null || titre.trim().isEmpty()) throw new IllegalArgumentException("Le titre est obligatoire");
 
         Livre livre = new Livre();
@@ -27,10 +31,10 @@ public class StockService {
         livre.setNbPages(nbPages);
         livre.setFormat(format);
 
-        // TODO : produitDao.save(livre); stp morgiane (fait juste la fonction dans tes fichiers je m'occupe de l'appeler)
+        LivreDAO.addProduit(livre);
     }
 
-    public void ajouterDVD(String titre, String description,String editeur, int annee, String realisateur, int duree, List<String> audio,List<String> sousTitres) {
+    public void ajouterDVD(String titre, String description,String editeur, int annee, String realisateur, int duree, List<String> audio,List<String> sousTitres) throws SQLException {
         if (titre == null || titre.trim().isEmpty()) throw new IllegalArgumentException("Le titre est obligatoire");
 
         DVD dvd = new DVD();
@@ -44,10 +48,10 @@ public class StockService {
         dvd.setDureeMinutes(duree);
         dvd.setAudioLangues(audio);
 
-        // TODO : produitDao.save(dvd); stp morgiane (fait juste la fonction dans tes fichiers je m'occupe de l'appeler)
+        DvdDAO.addProduit(dvd);
     }
 
-    public void ajouterJeuSociete(String titre, String description,String editeur, int annee, int nbJoueursMin, int nbJoueursMax, int ageMin, int dureePartie) {
+    public void ajouterJeuSociete(String titre, String description,String editeur, int annee, int nbJoueursMin, int nbJoueursMax, int ageMin, int dureePartie) throws SQLException {
         if (titre == null || titre.trim().isEmpty()) throw new IllegalArgumentException("Le titre est obligatoire");
 
         JeuSociete jeu = new JeuSociete();
@@ -62,7 +66,7 @@ public class StockService {
         jeu.setAgeMin(ageMin);
         jeu.setDureePartie(dureePartie);
 
-        // TODO : produitDao.save(jeu); stp morgiane (fait juste la fonction dans tes fichiers je m'occupe de l'appeler)
+        JeuSocieteDAO.addProduit(jeu);
     }
 
     // --- GESTION DES TYPES ---
@@ -88,7 +92,7 @@ public class StockService {
     }
 
     /**
-     * Génère un code unique pour un EXEMPLAIRE (pas le produit).
+     * Génère un code unique pour un EXEMPLAIRE
      * Format : 2 + Type (1) + Aléatoire (10) + Clé (1)
      */
     public String creerCodeBarreUnique(Produit produit){
@@ -126,23 +130,23 @@ public class StockService {
     }
 
     // --- RECHERCHER PRODUITS ---
-    public List<Produit> SearchProduit (String searchbar,String typeProduit){
+    public List<Produit> SearchProduit (String searchbar,String typeProduit) throws SQLException {
         List<Produit> produits = new ArrayList<>();
+        List<? extends Produit> Allproducts = new ArrayList<>();
 
-        //  TODO : GetAllProduct pour chaque type produits , stp morgiane (fait juste la fonction dans tes fichiers je m'occupe de l'appeler)
         if (typeProduit.equals("DVD")){
-            //Allproducts = getAllDVD();
+            Allproducts = DvdDAO.ProduitObjectList();
         }else if (typeProduit.equals("Jeu")){
-            //Allproducts = getAllJeu();
+            Allproducts = JeuSocieteDAO.ProduitObjectList();
         }else if (typeProduit.equals("Livre")){
-            //Allproducts = getAllLivres();
+            Allproducts = LivreDAO.ProduitObjectList();
         }
 
-//        for (Produit produit : Allproducts){
-//            if (produit.getTitre().toLowerCase().contains(searchbar.toLowerCase())){
-//                produits.add(produit);
-//            }
-//        }
+        for (Produit produit : Allproducts){
+            if (produit.getTitre().toLowerCase().contains(searchbar.toLowerCase())){
+                produits.add(produit);
+            }
+        }
         return produits;
     }
 }

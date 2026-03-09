@@ -12,10 +12,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DvdDAO implements ProduitDAO {
+public class DvdDAO {
 
-    @Override
-    public void addProduit(Produit p) throws SQLException {
+    public static void addProduit(Produit p) throws SQLException {
         DVD d = (DVD) p;
         String sql = "INSERT INTO PRODUIT (type_produit, titre, description, editeur, annee_sortie, realisateur, duree_minutes, audio_langues, sous_titres) VALUES (?,?,?,?,?,?,?,?,?)";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -33,7 +32,6 @@ public class DvdDAO implements ProduitDAO {
         }
     }
 
-    @Override
     public void updateProduit(Produit p) throws SQLException {
         DVD d = (DVD) p;
         String sql = "UPDATE PRODUIT SET titre = ?, description = ?, annee_sortie = ?, realisateur = ?, duree_minutes = ?, audio_langues = ?, sous_titres = ? WHERE id = ? AND type_produit = 'DVD'";
@@ -51,7 +49,7 @@ public class DvdDAO implements ProduitDAO {
         }
     }
 
-    public List<DVD> ProduitObjectList() throws SQLException {
+    public static List<DVD> ProduitObjectList() throws SQLException {
         String sql = "SELECT * FROM PRODUIT WHERE type_produit = ?";
         List<DVD> dvds;
 
@@ -69,7 +67,7 @@ public class DvdDAO implements ProduitDAO {
         return dvds;
     }
 
-    private List<DVD> CreateLivres(ResultSet rs) throws SQLException {
+    private static List<DVD> CreateLivres(ResultSet rs) throws SQLException {
         List<DVD> dvds = new ArrayList<>();
         while (rs.next()) {
             int id = rs.getInt("id");

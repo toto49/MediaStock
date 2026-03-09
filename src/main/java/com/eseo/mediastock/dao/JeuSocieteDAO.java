@@ -12,10 +12,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JeuSocieteDAO implements ProduitDAO {
+public class JeuSocieteDAO {
 
-    @Override
-    public void addProduit(Produit p) throws SQLException {
+    public static void addProduit(Produit p) throws SQLException {
         JeuSociete j = (JeuSociete) p;
         String sql = "INSERT INTO PRODUIT (type_produit, titre, description, editeur, annee_sortie, nb_joueurs_min,nb_joueurs_max, age_min, duree_partie) VALUES (?,?,?,?,?,?,?,?,?)";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -34,7 +33,6 @@ public class JeuSocieteDAO implements ProduitDAO {
 
     }
 
-    @Override
     public void updateProduit(Produit p) throws SQLException {
         JeuSociete j = (JeuSociete) p;
         String sql = "UPDATE PRODUIT SET titre = ?, description = ?, annee_sortie = ?, nb_joueurs_min = ?, nb_joueurs_max = ?, age_min = ?, duree_partie = ? WHERE id = ? AND type_produit = 'Jeu'";
@@ -53,7 +51,7 @@ public class JeuSocieteDAO implements ProduitDAO {
         }
     }
 
-    public List<JeuSociete> ProduitObjectList() throws SQLException {
+    public static List<JeuSociete> ProduitObjectList() throws SQLException {
         String sql = "SELECT * FROM PRODUIT WHERE type_produit = ?";
         List<JeuSociete> jeux;
 
@@ -71,7 +69,7 @@ public class JeuSocieteDAO implements ProduitDAO {
         return jeux;
     }
 
-    private List<JeuSociete> CreateJeux(ResultSet rs) throws SQLException {
+    private static List<JeuSociete> CreateJeux(ResultSet rs) throws SQLException {
         List<JeuSociete> jeux = new ArrayList<>();
         while (rs.next()) {
             int id = rs.getInt("id");

@@ -11,10 +11,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LivreDAO implements ProduitDAO {
+public class LivreDAO {
 
-    @Override
-    public void addProduit(Produit p) throws SQLException {
+    public static void addProduit(Produit p) throws SQLException {
         Livre l = (Livre) p;
         String sql = "INSERT INTO PRODUIT (type_produit, titre, description, editeur, annee_sortie, isbn, auteur, nb_pages, format)VALUES (?, ?, ?, ?, ?,?,?,?,?)";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -32,7 +31,6 @@ public class LivreDAO implements ProduitDAO {
         }
     }
 
-    @Override
     public void updateProduit(Produit p) throws SQLException {
         Livre l = (Livre) p;
         String sql = "UPDATE PRODUIT SET titre = ?, description = ?, annee_sortie = ?, isbn = ?, auteur = ?, nb_pages = ?, format = ? WHERE id = ? AND type_produit = 'Livre'";
@@ -50,7 +48,7 @@ public class LivreDAO implements ProduitDAO {
         }
     }
 
-    public List<Livre> ProduitObjectList() throws SQLException {
+    public static List<Livre> ProduitObjectList() throws SQLException {
         String sql = "SELECT * FROM PRODUIT WHERE type_produit = ?";
         List<Livre> livres;
 
@@ -68,7 +66,7 @@ public class LivreDAO implements ProduitDAO {
         return livres;
     }
 
-    private List<Livre> CreateLivres(ResultSet rs) throws SQLException {
+    private static List<Livre> CreateLivres(ResultSet rs) throws SQLException {
         List<Livre> livres = new ArrayList<>();
         while (rs.next()) {
             int id = rs.getInt("id");
