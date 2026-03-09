@@ -101,3 +101,18 @@
     -fx-text-fill: #444444;
     -fx-cursor: hand;
 }
+
+/* Boutons */
+.btn-emprunter, .button-creer {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-pref-width: 100px;
+    -fx-cursor: hand;
+}
+
+.btn-rendre, .button-supprimer {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-pref-width: 100px;
+    -fx-cursor: hand;
+}

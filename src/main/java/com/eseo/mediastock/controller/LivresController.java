@@ -1,7 +1,8 @@
 package com.eseo.mediastock.controller;
 
-import com.eseo.mediastock.dao.LivreDAO;
 import com.eseo.mediastock.model.Produits.Livre;
+import com.eseo.mediastock.model.Produits.Produit;
+import com.eseo.mediastock.service.StockService;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,17 +10,17 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LivresController {
     @FXML
     private TableView<Livre> tableLivres;
-    private LivreDAO livreDAO;
+    private StockService stockService;
 
     @FXML
     public void initialize() {
-        livreDAO = new LivreDAO();
+        stockService = new StockService();
         chargerDonneesDansTableau();
     }
 
@@ -27,14 +28,20 @@ public class LivresController {
 
         new Thread(() -> {
             try {
-                List<Livre> listeDepuisBdd = livreDAO.ProduitObjectList();
+                List<Produit> listeProduits = stockService.SearchProduit("", "Livre");
+                List<Livre> listeDepuisBdd = new ArrayList<>();
+                for (Produit p : listeProduits) {
+                    if (p instanceof Livre) {
+                        listeDepuisBdd.add((Livre) p);
+                    }
+                }
                 Platform.runLater(() -> {
                     ObservableList<Livre> observableLivres = FXCollections.observableArrayList(listeDepuisBdd);
                     tableLivres.setItems(observableLivres);
                 });
 
-            } catch (SQLException e) {
-                System.err.println("Erreur lors du chargement des livres depuis la BDD !");
+            } catch (Exception e) {
+                System.err.println("Erreur lors du chargement des livres via le service !");
                 e.printStackTrace();
             }
         }).start();

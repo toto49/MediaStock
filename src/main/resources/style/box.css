@@ -18,20 +18,7 @@
 
 }
 
-/* Boutons */
-.btn-emprunter {
-    -fx-background-color: #2ecc71;
-    -fx-text-fill: white;
-    -fx-pref-width: 100px;
-    -fx-cursor: hand;
-}
 
-.btn-rendre {
-    -fx-background-color: #e74c3c;
-    -fx-text-fill: white;
-    -fx-pref-width: 100px;
-    -fx-cursor: hand;
-}
 
 
 .list-retard {

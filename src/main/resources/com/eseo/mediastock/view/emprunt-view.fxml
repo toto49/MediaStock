@@ -11,6 +11,8 @@
 
     <stylesheets>
         <URL value="@../../../../style/box.css"/>
+        <URL value="@../../../../style/button.css"/>
+
     </stylesheets>
 
     <VBox spacing="20"

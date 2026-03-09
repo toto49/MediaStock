@@ -27,7 +27,8 @@ public class MenuController {
     private Button btnAddProduit;
     @FXML
     private Button btnEmprunt;
-
+    @FXML
+    private Button btnadherent;
     public static MenuController getInstance() {
         return instance;
     }
@@ -81,6 +82,13 @@ public class MenuController {
     }
 
     @FXML
+    void afficheradherent(ActionEvent event) {
+        chargerPage("adherent");
+
+        updateButtonStyles(btnadherent);
+        changerTitre("Gestion Adherent");
+    }
+    @FXML
     void afficherAddProduit(ActionEvent event) {
         chargerPage("ajouter-produit");
         updateButtonStyles(btnAddProduit);
@@ -112,6 +120,7 @@ public class MenuController {
         if (btnListView != null) btnListView.setStyle(STYLE_INACTIF);
         if (btnAddProduit != null) btnAddProduit.setStyle(STYLE_INACTIF);
         if (btnEmprunt != null) btnEmprunt.setStyle(STYLE_INACTIF);
+        if (btnadherent != null) btnadherent.setStyle(STYLE_INACTIF);
 
         if (boutonActif != null) boutonActif.setStyle(STYLE_ACTIF);
     }

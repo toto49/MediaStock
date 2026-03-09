@@ -1,7 +1,8 @@
 package com.eseo.mediastock.controller;
 
-import com.eseo.mediastock.dao.JeuSocieteDAO;
 import com.eseo.mediastock.model.Produits.JeuSociete;
+import com.eseo.mediastock.model.Produits.Produit;
+import com.eseo.mediastock.service.StockService;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,33 +10,40 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JeuxController {
 
     @FXML
     private TableView<JeuSociete> tableJeux;
-    private JeuSocieteDAO jeuSocieteDAO;
+    private StockService stockService;
 
     @FXML
     public void initialize() {
-        jeuSocieteDAO = new JeuSocieteDAO();
+        stockService = new StockService();
         chargerDonneesDansTableau();
     }
 
     private void chargerDonneesDansTableau() {
         new Thread(() -> {
             try {
-                List<JeuSociete> listeDepuisBdd = jeuSocieteDAO.ProduitObjectList();
+                List<Produit> listeProduits = stockService.SearchProduit("", "Jeu");
+
+                List<JeuSociete> listeDepuisBdd = new ArrayList<>();
+                for (Produit p : listeProduits) {
+                    if (p instanceof JeuSociete) {
+                        listeDepuisBdd.add((JeuSociete) p);
+                    }
+                }
 
                 Platform.runLater(() -> {
                     ObservableList<JeuSociete> observableJeux = FXCollections.observableArrayList(listeDepuisBdd);
                     tableJeux.setItems(observableJeux);
                 });
 
-            } catch (SQLException e) {
-                System.err.println("Erreur lors du chargement des jeux depuis la BDD !");
+            } catch (Exception e) {
+                System.err.println("Erreur lors du chargement des jeux via le service !");
                 e.printStackTrace();
             }
         }).start();

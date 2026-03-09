@@ -1,11 +1,6 @@
 package com.eseo.mediastock.controller;
 
-import com.eseo.mediastock.dao.DvdDAO;
-import com.eseo.mediastock.dao.JeuSocieteDAO;
-import com.eseo.mediastock.dao.LivreDAO;
-import com.eseo.mediastock.model.Produits.DVD;
-import com.eseo.mediastock.model.Produits.JeuSociete;
-import com.eseo.mediastock.model.Produits.Livre;
+import com.eseo.mediastock.service.StockService;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -13,7 +8,6 @@ import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
 import java.net.URL;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -28,8 +22,14 @@ public class AjouterProduitController implements Initializable {
 
     private final String STYLE_LABEL = "-fx-font-size: 15px; -fx-text-fill: #ffcc00;";
 
+    // Ajout de l'instance du service
+    private StockService stockService;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Initialisation du service
+        stockService = new StockService();
+
         ChoiceAddProduit.valueProperty().addListener((observable, oldValue, newValue) -> {
             detecterSelection(newValue);
         });
@@ -81,26 +81,26 @@ public class AjouterProduitController implements Initializable {
 
                 btnValider.setOnAction(event -> {
                     try {
-                        int isbn = 0;
-                        if (!txtIsbn.getText().isEmpty()) {
-                            try {
-                                isbn = Integer.parseInt(txtIsbn.getText().replaceAll("[^0-9]", ""));
-                            } catch (NumberFormatException e) {
-                                afficherMessage(lblOutput, "Erreur : L'ISBN est trop long ou invalide pour un entier.", false);
-                                return;
-                            }
-                        }
+                        // On utilise le StockService au lieu de créer l'objet Livre et d'appeler le DAO
+                        stockService.ajouterLivre(
+                                txtTitre.getText(),
+                                txtDesc.getText(),
+                                txtEditeur.getText(),
+                                spinAnnee.getValue(),
+                                txtIsbn.getText(), // ISBN est un String dans le service
+                                txtAuteur.getText(),
+                                spinPages.getValue(),
+                                txtFormat.getText()
+                        );
 
-                        Livre livre = new Livre(0, txtTitre.getText(), txtDesc.getText(), txtEditeur.getText(),
-                                spinAnnee.getValue(), null, isbn, txtAuteur.getText(), spinPages.getValue(), txtFormat.getText());
-
-                        LivreDAO livreDAO = new LivreDAO();
-                        livreDAO.addProduit(livre);
+                        // TODO: Gérer l'ajout du stock (exemplaires) via spinStock.getValue() plus tard
 
                         afficherMessage(lblOutput, "Le Livre a été ajouté avec succès !", true);
                         viderChamps(txtTitre, txtDesc, txtEditeur, txtAuteur, txtIsbn, txtFormat);
-                    } catch (SQLException e) {
-                        afficherMessage(lblOutput, "Erreur BDD : " + e.getMessage(), false);
+                    } catch (IllegalArgumentException e) {
+                        afficherMessage(lblOutput, "Erreur : " + e.getMessage(), false);
+                    } catch (Exception e) {
+                        afficherMessage(lblOutput, "Erreur inattendue : " + e.getMessage(), false);
                     }
                 });
 
@@ -132,16 +132,26 @@ public class AjouterProduitController implements Initializable {
                         List<String> pistesAudio = Arrays.asList(txtAudio.getText().split("\\s*,\\s*"));
                         List<String> sousTitres = Arrays.asList(txtSousTitres.getText().split("\\s*,\\s*"));
 
-                        DVD dvd = new DVD(0, txtTitre.getText(), txtDesc.getText(), txtEditeur.getText(),
-                                spinAnnee.getValue(), null, txtReal.getText(), spinDuree.getValue(), pistesAudio, sousTitres);
+                        // Appel au service
+                        stockService.ajouterDVD(
+                                txtTitre.getText(),
+                                txtDesc.getText(),
+                                txtEditeur.getText(),
+                                spinAnnee.getValue(),
+                                txtReal.getText(),
+                                spinDuree.getValue(),
+                                pistesAudio,
+                                sousTitres
+                        );
 
-                        DvdDAO dvdDAO = new DvdDAO();
-                        dvdDAO.addProduit(dvd);
+                        // TODO: Gérer l'ajout du stock (exemplaires) via spinStock.getValue() plus tard
 
                         afficherMessage(lblOutput, "Le DVD a été ajouté avec succès !", true);
                         viderChamps(txtTitre, txtDesc, txtEditeur, txtReal, txtAudio, txtSousTitres);
-                    } catch (SQLException e) {
-                        afficherMessage(lblOutput, "Erreur BDD : " + e.getMessage(), false);
+                    } catch (IllegalArgumentException e) {
+                        afficherMessage(lblOutput, "Erreur : " + e.getMessage(), false);
+                    } catch (Exception e) {
+                        afficherMessage(lblOutput, "Erreur inattendue : " + e.getMessage(), false);
                     }
                 });
 
@@ -170,16 +180,26 @@ public class AjouterProduitController implements Initializable {
 
                 btnValider.setOnAction(event -> {
                     try {
-                        JeuSociete jeu = new JeuSociete(0, txtTitre.getText(), txtDesc.getText(), txtEditeur.getText(),
-                                spinAnnee.getValue(), null, spinJMin.getValue(), spinJMax.getValue(), spinAgeMin.getValue(), spinDureeJeux.getValue());
+                        // Appel au service
+                        stockService.ajouterJeuSociete(
+                                txtTitre.getText(),
+                                txtDesc.getText(),
+                                txtEditeur.getText(),
+                                spinAnnee.getValue(),
+                                spinJMin.getValue(),
+                                spinJMax.getValue(),
+                                spinAgeMin.getValue(),
+                                spinDureeJeux.getValue()
+                        );
 
-                        JeuSocieteDAO jeuDAO = new JeuSocieteDAO();
-                        jeuDAO.addProduit(jeu);
+                        // TODO: Gérer l'ajout du stock (exemplaires) via spinStock.getValue() plus tard
 
                         afficherMessage(lblOutput, "Le Jeu a été ajouté avec succès !", true);
                         viderChamps(txtTitre, txtDesc, txtEditeur);
-                    } catch (SQLException e) {
-                        afficherMessage(lblOutput, "Erreur BDD : " + e.getMessage(), false);
+                    } catch (IllegalArgumentException e) {
+                        afficherMessage(lblOutput, "Erreur : " + e.getMessage(), false);
+                    } catch (Exception e) {
+                        afficherMessage(lblOutput, "Erreur inattendue : " + e.getMessage(), false);
                     }
                 });
 
