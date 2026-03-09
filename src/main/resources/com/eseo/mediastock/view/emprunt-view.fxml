@@ -12,7 +12,6 @@
     <stylesheets>
         <URL value="@../../../../style/box.css"/>
         <URL value="@../../../../style/button.css"/>
-
     </stylesheets>
 
     <VBox spacing="20"
@@ -38,8 +37,10 @@
 
             <HBox spacing="20" alignment="CENTER">
                 <Button fx:id="btnEmprunter" text="Emprunter" styleClass="btn-emprunter" onAction="#handleEmprunter"/>
-                <Button fx:id="btnRendre" text="rendre" styleClass="btn-rendre" onAction="#handleRendre"/>
+                <Button fx:id="btnRendre" text="Rendre" styleClass="btn-rendre" onAction="#handleRendre"/>
             </HBox>
+
+            <Label fx:id="lblMessage" text="" alignment="CENTER" maxWidth="Infinity"/>
         </VBox>
 
         <VBox spacing="15" styleClass="form-card" VBox.vgrow="ALWAYS">
@@ -51,15 +52,19 @@
 
             <TableView fx:id="tableRetard" VBox.vgrow="ALWAYS" styleClass="dark-table">
                 <columns>
-                    <TableColumn fx:id="colAdherent" text="Adhérent" prefWidth="150"/>
-                    <TableColumn fx:id="colExemplaire" text="Exemplaire" prefWidth="250"/>
-                    <TableColumn fx:id="colDateLimite" text="Date Limite" prefWidth="120"/>
+                    <TableColumn fx:id="colNumAdherent" text="N° Adhérent" prefWidth="120"/>
+                    <TableColumn fx:id="colNomAdherent" text="Nom" prefWidth="180"/>
+
+                    <TableColumn fx:id="colExemplaire" text="Exemplaire" prefWidth="300"/>
+                    <TableColumn fx:id="colDateLimite" text="Date Limite" prefWidth="150"/>
                     <TableColumn fx:id="colJours" text="Jours de retard" prefWidth="120"/>
                 </columns>
                 <columnResizePolicy>
-                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
                 </columnResizePolicy>
             </TableView>
+
+            <Pagination fx:id="paginationRetards" maxPageIndicatorCount="5" pageCount="1"/>
         </VBox>
 
     </VBox>

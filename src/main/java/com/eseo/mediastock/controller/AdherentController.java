@@ -2,6 +2,7 @@ package com.eseo.mediastock.controller;
 
 import com.eseo.mediastock.model.Adherent;
 import com.eseo.mediastock.service.AdherentService;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -14,7 +15,9 @@ import java.util.List;
 
 public class AdherentController {
 
-    private final int LIGNES_PAR_PAGE = 15;
+    // On passe de 15 à 50 pour remplir les grands écrans et activer la barre verticale !
+    private final int LIGNES_PAR_PAGE = 50;
+
     // --- Champs du formulaire ---
     @FXML
     private TextField TeldAdherent;
@@ -24,18 +27,21 @@ public class AdherentController {
     private TextField PrenomAdherent;
     @FXML
     private TextField EmailAdherent;
+
     // --- Boutons et Messages ---
     @FXML
     private Button btnCreer;
     @FXML
     private Button btnSupprimer;
     @FXML
-    private Label lblMessage; // Nouveau label pour les retours utilisateur
+    private Label lblMessage;
+
     // --- Nouveaux champs pour la Recherche et Pagination ---
     @FXML
     private TextField searchBarAdherent;
     @FXML
     private Pagination paginationAdherents;
+
     // --- Tableau et Colonnes ---
     @FXML
     private TableView<Adherent> tableRetard;
@@ -49,6 +55,7 @@ public class AdherentController {
     private TableColumn<Adherent, String> colPrenomAdherent;
     @FXML
     private TableColumn<Adherent, String> colEmailAdherent;
+
     // --- Service et Gestion des Données ---
     private AdherentService adherentService;
     private final ObservableList<Adherent> masterData = FXCollections.observableArrayList();
@@ -58,26 +65,30 @@ public class AdherentController {
     public void initialize() {
         adherentService = new AdherentService();
         colidAdherent.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colTelAdherent.setCellValueFactory(new PropertyValueFactory<>("telephone"));
+        colTelAdherent.setCellValueFactory(new PropertyValueFactory<>("numTel"));
         colNomAdherent.setCellValueFactory(new PropertyValueFactory<>("nom"));
         colPrenomAdherent.setCellValueFactory(new PropertyValueFactory<>("prenom"));
-        colEmailAdherent.setCellValueFactory(new PropertyValueFactory<>("email"));
+        colEmailAdherent.setCellValueFactory(new PropertyValueFactory<>("emailContact"));
         configurerRechercheEtPagination();
         chargerAdherents();
     }
 
     private void chargerAdherents() {
-
-        try {
-            List<Adherent> listeDepuisBdd = adherentService.getAllAdherents();
-            masterData.setAll(listeDepuisBdd);
-            mettreAJourPagination();
-        } catch (Exception e) {
-            afficherMessage("Erreur de chargement des données : " + e.getMessage(), true);
-            e.printStackTrace();
-        }
+        new Thread(() -> {
+            try {
+                List<Adherent> listeDepuisBdd = adherentService.getAllAdherents();
+                Platform.runLater(() -> {
+                    masterData.setAll(listeDepuisBdd);
+                    mettreAJourPagination();
+                });
+            } catch (Exception e) {
+                Platform.runLater(() -> {
+                    afficherMessage("Erreur de chargement des données : " + e.getMessage(), true);
+                    e.printStackTrace();
+                });
+            }
+        }).start();
     }
-
 
     private void configurerRechercheEtPagination() {
         filteredData = new FilteredList<>(masterData, p -> true);
@@ -133,7 +144,6 @@ public class AdherentController {
         }
 
         try {
-
             adherentService.inscrireAdherent(nom, prenom, email, tel);
             afficherMessage("L'adhérent a été créé avec succès !", false);
             chargerAdherents();
@@ -161,14 +171,12 @@ public class AdherentController {
         }
     }
 
-
     private void viderChamps() {
         TeldAdherent.clear();
         NomAdherent.clear();
         PrenomAdherent.clear();
         EmailAdherent.clear();
     }
-
 
     private void afficherMessage(String message, boolean estErreur) {
         lblMessage.setText(message);
