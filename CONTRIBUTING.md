@@ -23,7 +23,7 @@ Ce projet respecte strictement un motif architectural en couches :
 ## Configuration de l'environnement
 Pour compiler et exécuter le projet localement :
 1. Assurez-vous d'avoir installé **Java JDK 25+** (Liberica JDK recommandé pour JavaFX).
-2. Clonez le dépôt : `git clone https://github.com/VOTRE-PSEUDO/MediaStock.git`
+2. Clonez le dépôt : `git clone https://github.com/toto49/MediaStock.git`
 3. Installez un serveur **MySQL** (version 8.x) et créez une base de données nommée `mediastock`.
 4. Importez le fichier SQL de structure fourni dans le dossier `/sql`.
 5. Ouvrez le projet dans IntelliJ IDEA en tant que projet Maven/Gradle.
