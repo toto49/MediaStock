@@ -27,12 +27,12 @@ public class AdherentServiceTest {
     static void setup() {
         adherentService = new AdherentService();
         adherentDAO = new AdherentDAO();
-        System.out.println("Initialisation du Service Adherent");
+        System.out.println("=== INITIALISATION DES TESTS ===");
     }
 
     @AfterAll
     static void nettoyage() throws SQLException {
-        System.out.println("NETTOYAGE AUTOMATIQUE");
+        System.out.println(" NETTOYAGE AUTOMATIQUE");
         System.out.println("Suppression des " + idsACleaner.size() + " adhérents de test...");
 
         int supprime = 0;
@@ -41,7 +41,7 @@ public class AdherentServiceTest {
         for (String id : idsACleaner) {
             try {
                 if (adherentDAO.deleteAdherent(id)) {
-                    System.out.println("Supprimé: " + id);
+                    System.out.println(" Supprimé: " + id);
                     supprime++;
                 } else {
                     System.out.println("Non trouvé: " + id);
@@ -53,8 +53,10 @@ public class AdherentServiceTest {
             }
         }
 
-        System.out.println(" Bilan: " + supprime + " supprimés, " + erreurs + " erreurs");
-        System.out.println(" FIN NETTOYAGE ");
+        System.out.println("BILAN NETTOYAGE");
+        System.out.println("  Supprimés: " + supprime);
+        System.out.println("  Erreurs: " + erreurs);
+        System.out.println("  Total: " + idsACleaner.size());
 
         idsACleaner.clear();
     }
@@ -67,55 +69,39 @@ public class AdherentServiceTest {
     }
 
     /**
-     * Test: Test de la méthode nbrAdherent
+     * Test: Test de la méthode generateNumAdherent
      */
     @Test
     @Order(1)
-    void testNbrAdherent() {
-        System.out.println("Test nbrAdherent");
+    void testGenerateNumAdherent() {
+        System.out.println(" TEST 1: generateNumAdherent");
 
-        int valeurInitiale = Adherent.nbrAdherent;
-
-        int nouvelleValeur = adherentService.nbrAdherent();
-
-        assertEquals(valeurInitiale + 1, nouvelleValeur);
-
-        System.out.println("nbrAdherent incrémenté: " + nouvelleValeur);
-    }
-
-    /**
-     * Test: Test de la méthode createNumAdherent
-     */
-    @Test
-    @Order(2)
-    void testCreateNumAdherent() {
-        System.out.println("Test createNumAdherent");
-
-        String numAdherent = adherentService.createNumAdherent();
+        String numAdherent = adherentService.generateNumAdherent();
 
         assertNotNull(numAdherent);
-        assertTrue(numAdherent.startsWith("ADH-"));
+        assertTrue(numAdherent.startsWith("ADH-"), "Devrait commencer par ADH-");
 
         int anneeCourante = LocalDate.now().getYear();
-        assertTrue(numAdherent.contains(String.valueOf(anneeCourante)));
+        assertTrue(numAdherent.contains(String.valueOf(anneeCourante)),
+                "Devrait contenir l'année courante");
 
         // Vérifie le format: ADH-YYYY-XXX
         String[] parties = numAdherent.split("-");
-        assertEquals(3, parties.length);
+        assertEquals(3, parties.length, "Format devrait être ADH-YYYY-XXX");
         assertEquals("ADH", parties[0]);
         assertEquals(String.valueOf(anneeCourante), parties[1]);
-        assertEquals(3, parties[2].length()); // 3 chiffres
+        assertEquals(3, parties[2].length(), "Le numéro de séquence doit avoir 3 chiffres");
 
-        System.out.println(" Numéro généré: " + numAdherent);
+        System.out.println("Numéro généré: " + numAdherent);
     }
 
     /**
      * Test : Inscription d'un adhérent
      */
     @Test
-    @Order(3)
+    @Order(2)
     void testInscrireAdherent() throws SQLException {
-        System.out.println("Test inscrireAdherent");
+        System.out.println(" TEST 2: inscrireAdherent");
 
         String nom = "Martin";
         String prenom = "Sophie";
@@ -125,7 +111,7 @@ public class AdherentServiceTest {
         // Utilise le service pour inscrire
         adherentService.inscrireAdherent(nom, prenom, email, telephone);
 
-        // Récupére l'adhérent par email
+        // Récupère l'adhérent par email
         List<Adherent> tous = adherentDAO.findAll();
         Adherent trouve = null;
 
@@ -144,24 +130,23 @@ public class AdherentServiceTest {
 
         // Vérifie le format du numéro d'adhérent
         String numAdherent = trouve.getId();
-        assertTrue(numAdherent.startsWith("ADH-"));
+        assertTrue(numAdherent.startsWith("ADH-"), "ID devrait commencer par ADH-");
 
         // Ajoute à la liste de nettoyage
         idsACleaner.add(trouve.getId());
         idTest = trouve.getId();
 
-        System.out.println("Adhérent créé via service avec ID: " + trouve.getId());
-        System.out.println("Email: " + trouve.getEmailContact());
-        System.out.println("Numéro: " + trouve.getId());
+        System.out.println(" Adhérent créé avec ID: " + trouve.getId());
+        System.out.println(" Email: " + trouve.getEmailContact());
     }
 
     /**
      * Test : Inscription avec des données spéciales
      */
     @Test
-    @Order(4)
+    @Order(3)
     void testInscrireAdherentDonneesSpeciales() throws SQLException {
-        System.out.println("Test inscrireAdherent - données spéciales");
+        System.out.println("TEST 3: inscrireAdherent - données spéciales");
 
         String nom = "Dupont-Étienne";
         String prenom = "Jean-Claude";
@@ -170,7 +155,7 @@ public class AdherentServiceTest {
 
         adherentService.inscrireAdherent(nom, prenom, email, telephone);
 
-        // Récupére et vérifie
+        // Récupère et vérifie
         List<Adherent> tous = adherentDAO.findAll();
         Adherent trouve = null;
 
@@ -181,23 +166,23 @@ public class AdherentServiceTest {
             }
         }
 
-        assertNotNull(trouve);
+        assertNotNull(trouve, "L'adhérent devrait avoir été créé");
         assertEquals(nom, trouve.getNom());
         assertEquals(prenom, trouve.getPrenom());
         assertEquals(telephone, trouve.getNumTel());
 
         idsACleaner.add(trouve.getId());
 
-        System.out.println("Adhérent avec données spéciales créé: " + trouve.getId());
+        System.out.println(" Adhérent avec données spéciales créé: " + trouve.getId());
     }
 
     /**
      * Test: Inscriptions multiples
      */
     @Test
-    @Order(5)
+    @Order(4)
     void testInscriptionsMultiples() throws SQLException {
-        System.out.println("📝 Test inscriptions multiples");
+        System.out.println(" TEST 4: inscriptions multiples");
 
         String[] noms = {"Dupont", "Martin", "Bernard"};
         String[] prenoms = {"Jean", "Sophie", "Pierre"};
@@ -209,6 +194,7 @@ public class AdherentServiceTest {
             String email = genererEmailUnique();
             emails.add(email);
             adherentService.inscrireAdherent(noms[i], prenoms[i], email, telephones[i]);
+            System.out.println("  Création " + (i+1) + ": " + noms[i] + " " + prenoms[i]);
         }
 
         // Vérifie que tous ont été créés
@@ -226,50 +212,51 @@ public class AdherentServiceTest {
             assertTrue(trouve, "L'email " + email + " devrait exister");
         }
 
-        System.out.println("   ✅ " + noms.length + " adhérents créés avec succès");
+        System.out.println("  ✓ " + noms.length + " adhérents créés avec succès");
     }
 
     /**
      * Test : Vérification que les numéros sont uniques
      */
     @Test
-    @Order(6)
+    @Order(5)
     void testNumerosUniques() throws SQLException {
-        System.out.println("Test numéros uniques");
+        System.out.println("TEST 5: numéros uniques");
 
         // Crée plusieurs adhérents
+        List<String> idsCrees = new ArrayList<>();
+
         for (int i = 0; i < 3; i++) {
+            String email = genererEmailUnique();
             adherentService.inscrireAdherent(
                     "Nom" + i,
                     "Prenom" + i,
-                    genererEmailUnique(),
+                    email,
                     "000000000" + i
             );
-        }
 
-        // Récupére tous les adhérents
-        List<Adherent> tous = adherentDAO.findAll();
-
-        // Récupére les derniers créés (ceux avec nos emails de test)
-        List<Adherent> recents = new ArrayList<>();
-        for (Adherent a : tous) {
-            if (a.getEmailContact().startsWith("test") && a.getEmailContact().endsWith("@email.com")) {
-                recents.add(a);
-                idsACleaner.add(a.getId());
+            // Récupère l'ID du dernier créé
+            List<Adherent> tous = adherentDAO.findAll();
+            for (Adherent a : tous) {
+                if (email.equals(a.getEmailContact())) {
+                    idsCrees.add(a.getId());
+                    idsACleaner.add(a.getId());
+                    break;
+                }
             }
         }
 
         // Vérifie que les IDs sont différents
-        for (int i = 0; i < recents.size(); i++) {
-            for (int j = i + 1; j < recents.size(); j++) {
-                assertNotEquals(recents.get(i).getId(), recents.get(j).getId(),
+        for (int i = 0; i < idsCrees.size(); i++) {
+            for (int j = i + 1; j < idsCrees.size(); j++) {
+                assertNotEquals(idsCrees.get(i), idsCrees.get(j),
                         "Les IDs devraient être uniques");
             }
         }
 
-        System.out.println("Tous les numéros sont uniques");
-        for (Adherent a : recents) {
-            System.out.println(" - " + a.getId());
+        System.out.println("  ✓ Tous les numéros sont uniques:");
+        for (String id : idsCrees) {
+            System.out.println("     - " + id);
         }
     }
 
@@ -277,9 +264,9 @@ public class AdherentServiceTest {
      * Test: Test de récupération après création
      */
     @Test
-    @Order(7)
+    @Order(6)
     void testRecuperationApresCreation() throws SQLException {
-        System.out.println("Test récupération après création");
+        System.out.println("TEST 6: récupération après création");
 
         String nom = "Recuperation";
         String prenom = "Test";
@@ -299,12 +286,13 @@ public class AdherentServiceTest {
             }
         }
 
-        assertNotNull(trouve);
+        assertNotNull(trouve, "L'adhérent devrait être trouvé");
         assertEquals(nom, trouve.getNom());
         assertEquals(prenom, trouve.getPrenom());
         assertEquals(email, trouve.getEmailContact());
         assertEquals(telephone, trouve.getNumTel());
 
-        System.out.println("Adhérent retrouvé: " + trouve.getId());
+        System.out.println(" Adhérent retrouvé: " + trouve.getId());
+        System.out.println("Nom: " + trouve.getNom() + " " + trouve.getPrenom());
     }
 }

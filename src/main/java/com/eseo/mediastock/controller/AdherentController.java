@@ -10,6 +10,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.util.List;
+
 public class AdherentController {
 
     private final int LIGNES_PAR_PAGE = 15;
@@ -65,16 +67,15 @@ public class AdherentController {
     }
 
     private void chargerAdherents() {
-        // TODO: Décommenter quand getAllAdherents() existera
-        /*
+
         try {
             List<Adherent> listeDepuisBdd = adherentService.getAllAdherents();
             masterData.setAll(listeDepuisBdd);
             mettreAJourPagination();
         } catch (Exception e) {
             afficherMessage("Erreur de chargement des données : " + e.getMessage(), true);
+            e.printStackTrace();
         }
-        */
     }
 
 
@@ -149,9 +150,7 @@ public class AdherentController {
 
         if (adherentSelectionne != null) {
             try {
-                // TODO: Décommenter quand supprimerAdherent() existera
-                // adherentService.supprimerAdherent(adherentSelectionne.getId());
-
+                adherentService.supprimerAdherent(adherentSelectionne.getId());
                 afficherMessage("L'adhérent a été supprimé.", false);
                 chargerAdherents();
             } catch (Exception e) {

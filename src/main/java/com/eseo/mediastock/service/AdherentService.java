@@ -4,21 +4,28 @@ import com.eseo.mediastock.model.Adherent;
 import com.eseo.mediastock.dao.AdherentDAO;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 
 public class AdherentService {
 
     private AdherentDAO adherentDAO;
-    //constructeur
-    public AdherentService(){
+
+    // Constructeur
+    public AdherentService() {
         this.adherentDAO = new AdherentDAO();
     }
 
-    public int nbrAdherent(){
-        Adherent.nbrAdherent += 1;
-        return Adherent.nbrAdherent;
+    /**
+     * Récupère tous les adhérents
+     */
+    public List<Adherent> getAllAdherents() throws SQLException {
+        return adherentDAO.findAll();
     }
 
-    public String createNumAdherent() {
+    /**
+     * Génère un numéro d'adhérent unique au format ADH-ANNEE-NUMERO
+     */
+    public String generateNumAdherent() {
         int annee = LocalDate.now().getYear();
         int totalAdherents = 0;
 
@@ -30,23 +37,46 @@ public class AdherentService {
         }
 
         int numeroSequence = totalAdherents + 1;
-
         return String.format("ADH-%d-%03d", annee, numeroSequence);
     }
 
-    public void inscrireAdherent(String nom, String prenom, String email, String telephone){
-        String numAdherent = createNumAdherent();
+    /**
+     * Inscrit un nouvel adhérent
+     */
+    public void inscrireAdherent(String nom, String prenom, String email, String telephone) throws SQLException {
+        // Génération de l'ID unique
+        String numAdherent = generateNumAdherent();
+
+        // Création de l'objet Adherent
         Adherent nouvelAdherent = new Adherent(numAdherent, nom, prenom, email, telephone);
 
-        try {
-            adherentDAO.createAdherent(nouvelAdherent);
-            System.out.println("Adhérent créé avec succès !");
-            System.out.println("ID attribué: " + nouvelAdherent.getId());
+        // Insertion en base de données
+        adherentDAO.createAdherent(nouvelAdherent);
 
-        } catch (SQLException e) {
-            System.err.println("Erreur lors de l'inscription: " + e.getMessage());
-            e.printStackTrace();
-        }
+        System.out.println("✅ Adhérent créé avec succès !");
+        System.out.println("   ID attribué: " + nouvelAdherent.getId());
     }
 
+    /**
+     * Supprime un adhérent par son ID
+     */
+    public void supprimerAdherent(String id) throws SQLException {
+        adherentDAO.deleteAdherent(id);
+        System.out.println("✅ Adhérent " + id + " supprimé avec succès");
+    }
+
+    /**
+     * Met à jour les informations d'un adhérent
+     */
+    public void mettreAJourAdherent(Adherent adherent) throws SQLException {
+        adherentDAO.updateAdherent(adherent);
+        System.out.println("✅ Adhérent " + adherent.getId() + " mis à jour avec succès");
+    }
+
+    /**
+     * Recherche un adhérent par son ID
+     */
+    public Adherent trouverAdherentParId(String id) throws SQLException {
+        return adherentDAO.findById(id);
+    }
 }
