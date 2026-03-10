@@ -96,4 +96,18 @@ public class DvdDAO {
         return dvds;
     }
 
+    public int countDVDs() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM PRODUIT WHERE type_produit = 'DVD'";
+        int count = 0;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        }
+        return count;
+    }
 }

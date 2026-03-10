@@ -2,12 +2,11 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.*?>
-<?import javafx.scene.effect.*?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
-
+<?import javafx.scene.shape.SVGPath?>
 <?import java.net.URL?>
-<AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #2b2b2b;"  xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eseo.mediastock.controller.JeuxController">
+<AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #2b2b2b;" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.eseo.mediastock.controller.JeuxController">
     <stylesheets>
         <URL value="@../../../../style/menu-deroulant.css"/>
         <URL value="@../../../../style/tableview.css"/>
@@ -79,6 +78,7 @@
                         </placeholder>
 
                     </TableView>
+                    <Pagination fx:id="paginationJeux" maxPageIndicatorCount="5" pageCount="1"/>
                 </VBox>
             </VBox>
         </content>

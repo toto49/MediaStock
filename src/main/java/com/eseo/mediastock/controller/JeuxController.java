@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Pagination;
 import javafx.scene.control.TableView;
 
 import java.util.ArrayList;
@@ -15,14 +16,53 @@ import java.util.List;
 
 public class JeuxController {
 
+    private final int LIGNES_PAR_PAGE = 50;
+
     @FXML
     private TableView<JeuSociete> tableJeux;
+    private final ObservableList<JeuSociete> masterData = FXCollections.observableArrayList();
+
     private StockService stockService;
+    @FXML
+    private Pagination paginationJeux;
 
     @FXML
     public void initialize() {
         stockService = new StockService();
+        tableJeux.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+
+        configurerPagination();
         chargerDonneesDansTableau();
+    }
+
+    private void configurerPagination() {
+        if (paginationJeux != null) {
+            paginationJeux.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> {
+                afficherPage(newIndex.intValue());
+            });
+        }
+    }
+
+    private void mettreAJourPagination() {
+        if (paginationJeux != null) {
+            int pageCount = (int) Math.ceil((double) masterData.size() / LIGNES_PAR_PAGE);
+            paginationJeux.setPageCount(pageCount == 0 ? 1 : pageCount);
+            paginationJeux.setCurrentPageIndex(0);
+            afficherPage(0);
+        } else {
+            tableJeux.setItems(masterData); // Si pas de pagination dans le FXML, on affiche tout
+        }
+    }
+
+    private void afficherPage(int pageIndex) {
+        int fromIndex = pageIndex * LIGNES_PAR_PAGE;
+        int toIndex = Math.min(fromIndex + LIGNES_PAR_PAGE, masterData.size());
+
+        if (fromIndex <= toIndex && fromIndex >= 0) {
+            tableJeux.setItems(FXCollections.observableArrayList(masterData.subList(fromIndex, toIndex)));
+        } else {
+            tableJeux.setItems(FXCollections.observableArrayList());
+        }
     }
 
     private void chargerDonneesDansTableau() {
@@ -38,8 +78,8 @@ public class JeuxController {
                 }
 
                 Platform.runLater(() -> {
-                    ObservableList<JeuSociete> observableJeux = FXCollections.observableArrayList(listeDepuisBdd);
-                    tableJeux.setItems(observableJeux);
+                    masterData.setAll(listeDepuisBdd);
+                    mettreAJourPagination();
                 });
 
             } catch (Exception e) {

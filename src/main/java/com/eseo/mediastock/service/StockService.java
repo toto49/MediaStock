@@ -4,9 +4,12 @@ import com.eseo.mediastock.dao.DvdDAO;
 import com.eseo.mediastock.dao.JeuSocieteDAO;
 import com.eseo.mediastock.dao.LivreDAO;
 import com.eseo.mediastock.model.Enum.EnumDispo;
-import com.eseo.mediastock.model.Enum.EnumEtat; // Pensez à l'importer
+import com.eseo.mediastock.model.Enum.EnumEtat;
 import com.eseo.mediastock.model.Exemplaire;
-import com.eseo.mediastock.model.Produits.*;
+import com.eseo.mediastock.model.Produits.DVD;
+import com.eseo.mediastock.model.Produits.JeuSociete;
+import com.eseo.mediastock.model.Produits.Livre;
+import com.eseo.mediastock.model.Produits.Produit;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -148,5 +151,33 @@ public class StockService {
             }
         }
         return produits;
+    }
+    // --- STATISTIQUES ---
+
+    public int getNombreTotalLivres() {
+        try {
+            LivreDAO livreDAO = new LivreDAO();
+            return livreDAO.countLivres();
+        } catch (SQLException e) {
+            return 0;
+        }
+    }
+
+    public int getNombreTotalDVDs() {
+        try {
+            DvdDAO dvdDAO = new DvdDAO();
+            return dvdDAO.countDVDs();
+        } catch (SQLException e) {
+            return 0;
+        }
+    }
+
+    public int getNombreTotalJeux() {
+        try {
+            JeuSocieteDAO jeuxDAO = new JeuSocieteDAO();
+            return jeuxDAO.countJeux();
+        } catch (SQLException e) {
+            return 0;
+        }
     }
 }

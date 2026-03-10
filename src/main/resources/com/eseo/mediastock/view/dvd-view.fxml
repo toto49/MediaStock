@@ -95,6 +95,7 @@
                         </placeholder>
 
                     </TableView>
+                    <Pagination fx:id="paginationDVD" maxPageIndicatorCount="5" pageCount="1"/>
 
                 </VBox>
             </VBox>

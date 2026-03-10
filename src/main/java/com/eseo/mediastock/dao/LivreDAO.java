@@ -90,4 +90,18 @@ public class LivreDAO {
         return livres;
     }
 
+    public int countLivres() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM PRODUIT WHERE type_produit = 'Livre'";
+        int count = 0;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        }
+        return count;
+    }
 }

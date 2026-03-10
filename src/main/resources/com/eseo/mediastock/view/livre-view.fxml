@@ -5,7 +5,6 @@
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.SVGPath?>
-
 <?import java.net.URL?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
             xmlns="http://javafx.com/javafx"
@@ -95,6 +94,7 @@
                         </placeholder>
 
                     </TableView>
+                    <Pagination fx:id="paginationLivres" maxPageIndicatorCount="5" pageCount="1"/>
                 </VBox>
             </VBox>
         </content>
