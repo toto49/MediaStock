@@ -100,6 +100,8 @@ public class JeuSocieteDAO {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
+            stmt.setInt(1, id);
+
             try (ResultSet rs = stmt.executeQuery()) {
                 jeu = CreateJeux(rs).getFirst();
             }

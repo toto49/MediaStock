@@ -97,6 +97,8 @@ public class LivreDAO {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
+            stmt.setInt(1, id);
+
             try (ResultSet rs = stmt.executeQuery()) {
                 livre = CreateLivres(rs).getFirst();
             }

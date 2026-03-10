@@ -98,12 +98,12 @@ public class AdherentDAO {
     }
 
     /**
-     * MÉTHODE READ (findById) - Récupère un adhérent par son ID
+     * MÉTHODE READ (GetByID) - Récupère un adhérent par son ID
      * @param id - L'identifiant de l'adhérent dans la base
      * @return Adherent - L'objet Adherent correspondant, ou null si non trouvé
      * @throws SQLException - Si la requête échoue**/
 
-    public Adherent findById (String id) throws SQLException {
+    public Adherent GetByID(String id) throws SQLException {
         String sql = "SELECT * FROM ADHERENT WHERE id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();

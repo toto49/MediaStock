@@ -44,7 +44,24 @@ public class ExemplaireDAO {
         return exemplaires;
     }
 
-    private List<Exemplaire> createExemplaires(ResultSet rs) throws SQLException {
+    public Exemplaire GetByID(int id) throws SQLException {
+        Exemplaire exemplaire = null;
+        String sql = "SELECT * FROM EXEMPLAIRE WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                exemplaire = createExemplaires(rs).getFirst();
+            }
+        }
+
+        return exemplaire;
+    }
+
+    public List<Exemplaire> createExemplaires(ResultSet rs) throws SQLException {
         List<Exemplaire> exemplaires = new ArrayList<>();
 
         while (rs.next()) {

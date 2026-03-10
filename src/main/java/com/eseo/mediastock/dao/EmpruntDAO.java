@@ -12,50 +12,51 @@ import java.util.List;
 
 public class EmpruntDAO {
 
-//    public ResultSet FindById(int id) throws SQLException {
-//        String sql = "SELECT * FROM EMPRUNT WHERE id = ?";
-//
-//        try (Connection conn = DatabaseConnection.getConnection();
-//             PreparedStatement stmt = conn.prepareStatement(sql)) {
-//
-//            stmt.setInt(1, id);
-//
-//            try (ResultSet rs = stmt.executeQuery()) {
-//                return rs;
-//            }
-//        }
-//        return null;
-//    }
-//
-//    public List<Emprunt> intoEmpruntObjectList(ResultSet rs) throws SQLException {
-//        List<Emprunt> emprunts = new ArrayList<>();
-//
-//        while (rs.next()) {
-//            // 1. Récupération des données basiques
-//            int id = rs.getInt("id");
-//
-//            // Attention aux valeurs nulles possibles en base pour les dates
-//            LocalDate dateDebut = rs.getDate("date_debut") != null ? rs.getDate("date_debut").toLocalDate() : null;
-//            LocalDate dateRetour = rs.getDate("date_retour") != null ? rs.getDate("date_retour").toLocalDate() : null;
-//
-//            // 2. Gestion de l'Enum
-//            String statutStr = rs.getString("statut");
-//            EnumDispo statut = statutStr != null ? EnumDispo.valueOf(statutStr) : EnumDispo.EMPRUNTE;
-//
-//            // 3. Récupération des objets liés via leurs DAOs respectifs
-//            Adherent adherent = adherentDAO.findById(rs.getString("id_adherent"));
-//            Exemplaire exemplaire = exemplaireDAO.findById(rs.getInt("id_exemplaire"));
-//
-//            // 4. Construction de l'objet
-//            Emprunt emprunt = new Emprunt(id, adherent, exemplaire, dateDebut, dateRetour);
-//            emprunt.setStatusDispo(statut);
-//
-//            // 5. Ajout à la liste
-//            emprunts.add(emprunt);
-//        }
-//
-//        return emprunts;
-//    }
+    private AdherentDAO adherentDAO = new AdherentDAO();
+    private ExemplaireDAO exemplaireDAO = new ExemplaireDAO();
+
+    public List<Emprunt> findAllEmprunts() throws SQLException {
+        String sql = "SELECT * FROM EMPRUNT";
+        List<Emprunt> emprunts = new ArrayList<>();
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                emprunts.add(createEmprunt(rs));
+            }
+        }
+        return emprunts;
+    }
+
+    // Méthode utilitaire pour construire un Emprunt de façon claire
+    private Emprunt createEmprunt(ResultSet rs) throws SQLException {
+        // 1. Récupération des données basiques de la table EMPRUNT
+        int id = rs.getInt("id");
+
+        // Gestion sécurisée des dates (évite les NullPointerException si la date est vide en base)
+        java.sql.Date sqlDateDebut = rs.getDate("date_debut");
+        java.sql.Date sqlDateRetour = rs.getDate("date_retour");
+        LocalDate dateDebut = sqlDateDebut != null ? sqlDateDebut.toLocalDate() : null;
+        LocalDate dateRetour = sqlDateRetour != null ? sqlDateRetour.toLocalDate() : null;
+
+        String statutStr = rs.getString("statut");
+        EnumDispo statut = statutStr != null ? EnumDispo.valueOf(statutStr) : EnumDispo.EMPRUNTE;
+
+        // 2. Appel aux autres DAO (Lisible et bien séparé !)
+        String idAdherent = rs.getString("id_adherent");
+        int idExemplaire = rs.getInt("id_exemplaire");
+
+        Adherent adherent = adherentDAO.GetByID(idAdherent);
+        Exemplaire exemplaire = exemplaireDAO.GetByID(idExemplaire);
+
+        // 3. Construction de l'objet
+        Emprunt emprunt = new Emprunt(id, adherent, exemplaire, dateDebut, dateRetour);
+        emprunt.setStatusDispo(statut);
+
+        return emprunt;
+    }
 
     public void createEmprunt(Adherent adherent, Exemplaire exemplaire) throws SQLException {
         String sql = "INSERT INTO EMPRUNT (date_debut, date_retour, id_adherent, id_exemplaire,statut) VALUES (?, ?, ? , ?, ?)";
@@ -103,11 +104,11 @@ public class EmpruntDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setDate(1, java.sql.Date.valueOf(date));
-            stmt.setString(2, EnumDispo.EMPRUNTE.name()); // On cherche ceux non rendus
+            stmt.setString(2, EnumDispo.EMPRUNTE.name());
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-//                    retards.add(intoEmpruntObject(rs));
+                    retards.add(createEmprunt(rs));
                 }
             }
         }
