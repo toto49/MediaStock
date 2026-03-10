@@ -20,8 +20,9 @@ public class ExemplaireDAO {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, exemplaire.getStatusDispo().toString());
-            stmt.setString(2, exemplaire.getEtatPhysique().toString());
+            // L'utilisation de name() est plus sûre que toString() pour enregistrer les Enums en BDD
+            stmt.setString(1, exemplaire.getStatusDispo().name());
+            stmt.setString(2, exemplaire.getEtatPhysique().name());
             stmt.setInt(3, exemplaire.getId());
 
             stmt.executeUpdate();
@@ -29,7 +30,6 @@ public class ExemplaireDAO {
     }
 
     public List<Exemplaire> getAllExemplaires() throws SQLException {
-        // On fait une jointure pour récupérer le type_produit de la table PRODUIT
         String sql = "SELECT e.*, p.type_produit FROM EXEMPLAIRE e JOIN PRODUIT p ON e.id_produit = p.id";
         List<Exemplaire> exemplaires = new ArrayList<>();
 
@@ -37,7 +37,6 @@ public class ExemplaireDAO {
              PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
-            // On transforme le ResultSet en liste d'objets
             exemplaires = createExemplaires(rs);
         }
 
@@ -46,7 +45,8 @@ public class ExemplaireDAO {
 
     public Exemplaire GetByID(int id) throws SQLException {
         Exemplaire exemplaire = null;
-        String sql = "SELECT * FROM EXEMPLAIRE WHERE id = ?";
+        // CORRECTION : Ajout de la jointure pour pouvoir récupérer le 'type_produit'
+        String sql = "SELECT e.*, p.type_produit FROM EXEMPLAIRE e JOIN PRODUIT p ON e.id_produit = p.id WHERE e.id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -54,31 +54,49 @@ public class ExemplaireDAO {
             stmt.setInt(1, id);
 
             try (ResultSet rs = stmt.executeQuery()) {
-                exemplaire = createExemplaires(rs).getFirst();
+                List<Exemplaire> list = createExemplaires(rs);
+                if (!list.isEmpty()) {
+                    exemplaire = list.getFirst(); // Récupère le premier élément
+                }
             }
         }
 
         return exemplaire;
     }
 
+    // --- NOUVELLE MÉTHODE --- (Nécessaire pour le EmpruntService)
+    public Exemplaire findByCodeBarre(String codeBarre) throws SQLException {
+        Exemplaire exemplaire = null;
+        // Jointure obligatoire ici aussi
+        String sql = "SELECT e.*, p.type_produit FROM EXEMPLAIRE e JOIN PRODUIT p ON e.id_produit = p.id WHERE e.code_barre = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, codeBarre);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                List<Exemplaire> list = createExemplaires(rs);
+                if (!list.isEmpty()) {
+                    exemplaire = list.getFirst();
+                }
+            }
+        }
+        return exemplaire;
+    }
+
+    // --- TA MÉTHODE UTILITAIRE (inchangée) ---
     public List<Exemplaire> createExemplaires(ResultSet rs) throws SQLException {
         List<Exemplaire> exemplaires = new ArrayList<>();
 
         while (rs.next()) {
-            // 1. Récupération des données basiques
             int id = rs.getInt("id");
             String codeBarre = rs.getString("code_barre");
-
-            // 3. Récupération et conversion des Enums
             EnumEtat etatPhysique = EnumEtat.valueOf(rs.getString("etat"));
             EnumDispo statusDispo = EnumDispo.valueOf(rs.getString("statut"));
-
-            // 4. Gestion de l'objet Produit
             int idProduit = rs.getInt("id_produit");
             String typeProduit = rs.getString("type_produit");
             Produit produit = null;
-
-            // On choisit le bon DAO en fonction du type récupéré en base
             switch (typeProduit) {
                 case "Livre":
                     produit = LivreDAO.GetByID(idProduit);
@@ -86,21 +104,17 @@ public class ExemplaireDAO {
                 case "DVD":
                     produit = DvdDAO.GetByID(idProduit);
                     break;
-                case "JeuSociete": // ou "Jeu", voir note ci-dessous !
+                case "JeuSociete": // Vérifie bien que c'est l'orthographe exacte dans ta base de données
                     produit = JeuSocieteDAO.GetByID(idProduit);
                     break;
                 default:
                     throw new SQLException("Type de produit inconnu en base : " + typeProduit);
             }
 
-            // 5. Création de l'objet
             Exemplaire exemplaire = new Exemplaire(id, produit, codeBarre, etatPhysique, statusDispo);
-
-            // 6. Ajout à la liste
             exemplaires.add(exemplaire);
         }
         return exemplaires;
     }
-
 
 }
