@@ -19,7 +19,7 @@ public class JeuSocieteDAO {
         String sql = "INSERT INTO PRODUIT (type_produit, titre, description, editeur, annee_sortie, nb_joueurs_min,nb_joueurs_max, age_min, duree_partie) VALUES (?,?,?,?,?,?,?,?,?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)){
-            stmt.setString(1, "JeuSociete");
+            stmt.setString(1, "Jeu");
             stmt.setString(2, j.getTitre());
             stmt.setString(3, j.getDescription());
             stmt.setString(4, j.getEditeur());
