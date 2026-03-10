@@ -4,8 +4,6 @@ import com.eseo.mediastock.model.Enum.EnumDispo;
 import com.eseo.mediastock.model.Enum.EnumEtat;
 import com.eseo.mediastock.model.Produits.Produit;
 
-import java.time.LocalDate;
-
 public class Exemplaire {
     // Déclaration des variables
     private int id;

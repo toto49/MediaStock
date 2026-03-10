@@ -1,14 +1,15 @@
 package com.eseo.mediastock.service;
 
-import com.eseo.mediastock.model.Adherent;
 import com.eseo.mediastock.dao.AdherentDAO;
+import com.eseo.mediastock.model.Adherent;
+
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
 public class AdherentService {
 
-    private AdherentDAO adherentDAO;
+    private final AdherentDAO adherentDAO;
 
     // Constructeur
     public AdherentService() {

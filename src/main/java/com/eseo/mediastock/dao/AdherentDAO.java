@@ -99,19 +99,21 @@ public class AdherentDAO {
 
     /**
      * MÉTHODE READ (GetByID) - Récupère un adhérent par son ID
+     *
      * @param id - L'identifiant de l'adhérent dans la base
      * @return Adherent - L'objet Adherent correspondant, ou null si non trouvé
-     * @throws SQLException - Si la requête échoue**/
+     * @throws SQLException - Si la requête échoue
+     **/
 
     public Adherent GetByID(String id) throws SQLException {
         String sql = "SELECT * FROM ADHERENT WHERE id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)){
-            stmt.setString(1,id);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, id);
             //resultat de la requete
-            try (ResultSet rs = stmt.executeQuery()){
-                if (rs.next()){
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
                     return new Adherent(
                             rs.getString("id"),
                             rs.getString("nom"),
@@ -127,20 +129,22 @@ public class AdherentDAO {
 
     /**
      * MÉTHODE READ ALL (findAll) - Récupère TOUS les adhérents
+     *
      * @return List<Adherent> - Liste de tous les adhérents
      * @throws SQLException - Si la requête échoue
-     * **/
-    public List<Adherent> findAll() throws SQLException{
+     *
+     **/
+    public List<Adherent> findAll() throws SQLException {
         //liste pour stocker les resultats
         List<Adherent> adherents = new ArrayList<>();
 
         String sql = "SELECT * FROM ADHERENT ORDER BY nom, prenom";
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)){
+             ResultSet rs = stmt.executeQuery(sql)) {
 
             //parcour et créer les lignes du resultat
-            while (rs.next()){
+            while (rs.next()) {
                 Adherent adherent = new Adherent(
                         rs.getString("id"),
                         rs.getString("nom"),

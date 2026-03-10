@@ -28,7 +28,7 @@ public class AdminDAO {
                 if (rs.next()) {
                     String hash = rs.getString("mdp");
 
-                    if (PasswordUtil.verify(hash, password)){
+                    if (PasswordUtil.verify(hash, password)) {
                         return new Admin(
                                 rs.getInt("id"),
                                 rs.getString("email"),

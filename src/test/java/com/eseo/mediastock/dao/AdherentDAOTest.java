@@ -2,9 +2,11 @@ package com.eseo.mediastock.dao;
 
 import com.eseo.mediastock.model.Adherent;
 import org.junit.jupiter.api.*;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

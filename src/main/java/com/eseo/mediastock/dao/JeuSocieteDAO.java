@@ -2,7 +2,6 @@ package com.eseo.mediastock.dao;
 
 import com.eseo.mediastock.model.Exemplaire;
 import com.eseo.mediastock.model.Produits.JeuSociete;
-import com.eseo.mediastock.model.Produits.Livre;
 import com.eseo.mediastock.model.Produits.Produit;
 
 import java.sql.Connection;
@@ -108,5 +107,20 @@ public class JeuSocieteDAO {
         }
 
         return jeu;
+    }
+
+    public int countJeux() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM PRODUIT WHERE type_produit = 'JeuSociete'";
+        int count = 0;
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        }
+        return count;
     }
 }

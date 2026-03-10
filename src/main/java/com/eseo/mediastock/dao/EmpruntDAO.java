@@ -12,8 +12,8 @@ import java.util.List;
 
 public class EmpruntDAO {
 
-    private AdherentDAO adherentDAO = new AdherentDAO();
-    private ExemplaireDAO exemplaireDAO = new ExemplaireDAO();
+    private final AdherentDAO adherentDAO = new AdherentDAO();
+    private final ExemplaireDAO exemplaireDAO = new ExemplaireDAO();
 
     public List<Emprunt> findAllEmprunts() throws SQLException {
         String sql = "SELECT * FROM EMPRUNT";

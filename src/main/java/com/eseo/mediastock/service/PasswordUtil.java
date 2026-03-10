@@ -9,10 +9,10 @@ public class PasswordUtil {
             Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
 
     public static String hash(String password) {
-        return argon2.hash(3,65536,1,password);
+        return argon2.hash(3, 65536, 1, password);
     }
 
-    public static boolean verify(String hash, String password){
-        return argon2.verify(hash,password);
+    public static boolean verify(String hash, String password) {
+        return argon2.verify(hash, password);
     }
 }
