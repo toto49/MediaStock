@@ -20,22 +20,25 @@ public class EmpruntController {
     private TextField fieldAdherent;
     @FXML
     private TextField fieldExemplaire;
+
     // --- Données ---
     private final ObservableList<RetardItem> masterData = FXCollections.observableArrayList();
+
+    // --- Boutons et Message ---
     @FXML
     private Button btnRendre;
-    // --- Boutons et Message ---
     @FXML
     private Button btnEmprunter;
     @FXML
     private Label lblMessage;
+
     // --- TableView, Pagination et Colonnes ---
     @FXML
     private TableView<RetardItem> tableRetard;
-    // NOUVEAU : Les deux colonnes séparées
     @FXML
     private TableColumn<RetardItem, String> colNumAdherent;
-
+    @FXML
+    private TableColumn<RetardItem, String> colNomAdherent;
     @FXML
     private TableColumn<RetardItem, String> colExemplaire;
     @FXML
@@ -43,35 +46,42 @@ public class EmpruntController {
     @FXML
     private TableColumn<RetardItem, Integer> colJours;
     @FXML
-    private TableColumn<RetardItem, String> colNomAdherent;
-    @FXML
     private Pagination paginationRetards;
 
     @FXML
     public void initialize() {
-        // Lien avec les méthodes getNumAdherent() et getNomAdherent() de RetardItem
         colNumAdherent.setCellValueFactory(new PropertyValueFactory<>("numAdherent"));
         colNomAdherent.setCellValueFactory(new PropertyValueFactory<>("nomAdherent"));
-
         colExemplaire.setCellValueFactory(new PropertyValueFactory<>("exemplaire"));
         colDateLimite.setCellValueFactory(new PropertyValueFactory<>("dateLimite"));
         colJours.setCellValueFactory(new PropertyValueFactory<>("joursRetard"));
 
+        // Message affiché quand le tableau est vide
+        Label placeholder = new Label("Aucun emprunt en retard.");
+        placeholder.setStyle("-fx-text-fill: #aaaaaa; -fx-font-style: italic; -fx-font-size: 14px;");
+        tableRetard.setPlaceholder(placeholder);
+
         configurerPagination();
-        chargerDonneesTest();
+        chargerEmpruntsEnRetard();
     }
 
     private void configurerPagination() {
-        paginationRetards.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> {
-            afficherPage(newIndex.intValue());
-        });
+        if (paginationRetards != null) {
+            paginationRetards.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> {
+                afficherPage(newIndex.intValue());
+            });
+        }
     }
 
     private void mettreAJourPagination() {
-        int pageCount = (int) Math.ceil((double) masterData.size() / LIGNES_PAR_PAGE);
-        paginationRetards.setPageCount(pageCount == 0 ? 1 : pageCount);
-        paginationRetards.setCurrentPageIndex(0);
-        afficherPage(0);
+        if (paginationRetards != null) {
+            int pageCount = (int) Math.ceil((double) masterData.size() / LIGNES_PAR_PAGE);
+            paginationRetards.setPageCount(pageCount == 0 ? 1 : pageCount);
+            paginationRetards.setCurrentPageIndex(0);
+            afficherPage(0);
+        } else {
+            tableRetard.setItems(masterData);
+        }
     }
 
     private void afficherPage(int pageIndex) {
@@ -85,16 +95,15 @@ public class EmpruntController {
         }
     }
 
-    private void chargerDonneesTest() {
+    // --- PLUS DE FAUSSES DONNÉES ICI ---
+    private void chargerEmpruntsEnRetard() {
         new Thread(() -> {
             try {
-                Thread.sleep(1000);
-                List<RetardItem> listeDepuisBdd = new ArrayList<>();
+                // TODO: Appeler plus tard ton EmpruntService ici :
+                // List<RetardItem> listeDepuisBdd = empruntService.getEmpruntsEnRetards();
 
-                for (int i = 1; i <= 120; i++) {
-                    // Création de fausses données avec le Numéro ET le Nom
-                    listeDepuisBdd.add(new RetardItem("ADH-" + i, "Utilisateur " + i, "Titre test " + i, "01/03/2026", i));
-                }
+                // Pour l'instant, la liste est vide au démarrage
+                List<RetardItem> listeDepuisBdd = new ArrayList<>();
 
                 Platform.runLater(() -> {
                     masterData.setAll(listeDepuisBdd);
@@ -102,7 +111,10 @@ public class EmpruntController {
                 });
 
             } catch (Exception e) {
-                e.printStackTrace();
+                Platform.runLater(() -> {
+                    afficherMessage("Erreur de chargement des retards.", true);
+                    e.printStackTrace();
+                });
             }
         }).start();
     }
@@ -119,7 +131,7 @@ public class EmpruntController {
             return;
         }
 
-        // TODO: Ajouter la logique BDD
+
         afficherMessage("Emprunt validé pour l'adhérent " + numAdherent, false);
         fieldAdherent.clear();
         fieldExemplaire.clear();
@@ -136,7 +148,7 @@ public class EmpruntController {
             return;
         }
 
-        // TODO: Ajouter la logique BDD
+        // TODO: Appeler ton EmpruntService (enregistrerRetour)
         afficherMessage("Retour validé pour l'exemplaire : " + codeExemplaire, false);
         fieldExemplaire.clear();
     }
@@ -150,8 +162,8 @@ public class EmpruntController {
         }
     }
 
-    // --- La classe RetardItem ---
-        public record RetardItem(String numAdherent, String nomAdherent, String exemplaire, String dateLimite,
-                                 int joursRetard) {
+
+    public record RetardItem(String numAdherent, String nomAdherent, String exemplaire, String dateLimite,
+                             int joursRetard) {
     }
 }
