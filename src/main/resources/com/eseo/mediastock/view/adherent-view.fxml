@@ -72,14 +72,15 @@
 
             <TableView fx:id="tableRetard" VBox.vgrow="ALWAYS" styleClass="dark-table">
                 <columns>
-                    <TableColumn fx:id="colidAdherent" text="Id" prefWidth="100"/>
-                    <TableColumn fx:id="colNomAdherent" text="Nom" prefWidth="150"/>
-                    <TableColumn fx:id="colPrenomAdherent" text="Prénom" prefWidth="150"/>
+                    <TableColumn fx:id="colidAdherent" text="Id" prefWidth="120"/>
+                    <TableColumn fx:id="colNomAdherent" text="Nom" prefWidth="180"/>
+                    <TableColumn fx:id="colPrenomAdherent" text="Prénom" prefWidth="180"/>
                     <TableColumn fx:id="colTelAdherent" text="Numéro tel" prefWidth="150"/>
-                    <TableColumn fx:id="colEmailAdherent" text="Email" prefWidth="200"/>
+                    <TableColumn fx:id="colEmailAdherent" text="Email" prefWidth="250"/>
                 </columns>
+
                 <columnResizePolicy>
-                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                    <TableView fx:constant="UNCONSTRAINED_RESIZE_POLICY"/>
                 </columnResizePolicy>
             </TableView>
 
