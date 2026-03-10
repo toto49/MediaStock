@@ -16,13 +16,6 @@ public class AdherentService {
     }
 
     /**
-     * Récupère tous les adhérents
-     */
-    public List<Adherent> getAllAdherents() throws SQLException {
-        return adherentDAO.findAll();
-    }
-
-    /**
      * Génère un numéro d'adhérent unique au format ADH-ANNEE-NUMERO
      */
     public String generateNumAdherent() {
@@ -73,10 +66,4 @@ public class AdherentService {
         System.out.println("✅ Adhérent " + adherent.getId() + " mis à jour avec succès");
     }
 
-    /**
-     * Recherche un adhérent par son ID
-     */
-    public Adherent trouverAdherentParId(String id) throws SQLException {
-        return adherentDAO.findById(id);
-    }
 }
