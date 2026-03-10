@@ -1,6 +1,7 @@
 package com.eseo.mediastock.dao;
 
 import com.eseo.mediastock.model.Admin;
+import com.eseo.mediastock.service.PasswordUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,21 +17,24 @@ public class AdminDAO {
      * @throws SQLException - Si erreur SQL
      */
     public Admin authenticate(String email, String password) throws SQLException {
-        String sql = "SELECT * FROM ADMINISTRATEUR WHERE email = ? AND mdp = ?";
+        String sql = "SELECT * FROM ADMINISTRATEUR WHERE email = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, email);
-            stmt.setString(2, password);
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return new Admin(
-                            rs.getInt("id"),
-                            rs.getString("email"),
-                            rs.getString("mdp")
-                    );
+                    String hash = rs.getString("mdp");
+
+                    if (PasswordUtil.verify(hash, password)) {
+                        return new Admin(
+                                rs.getInt("id"),
+                                rs.getString("email"),
+                                hash
+                        );
+                    }
                 }
             }
         }
@@ -49,7 +53,7 @@ public class AdminDAO {
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, admin.getEmail());
-            stmt.setString(2, admin.getMdp());
+            stmt.setString(2, PasswordUtil.hash(admin.getPasswordHash()));
             stmt.executeUpdate();
 
             // Récupérer l'ID généré
@@ -74,7 +78,7 @@ public class AdminDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, admin.getEmail());
-            stmt.setString(2, admin.getMdp());
+            stmt.setString(2, PasswordUtil.hash(admin.getPasswordHash()));
             stmt.setInt(3, admin.getId());
 
             int rowsAffected = stmt.executeUpdate();
@@ -139,18 +143,22 @@ public class AdminDAO {
      * @throws SQLException - Si erreur
      */
     public boolean changePassword(int id, String ancienMdp, String nouveauMdp) throws SQLException {
-        // Vérifier d'abord l'ancien mot de passe
-        String checkSql = "SELECT * FROM ADMINISTRATEUR WHERE id = ? AND mdp = ?";
+
+        String sql = "SELECT mdp FROM ADMINISTRATEUR WHERE id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            checkStmt.setInt(1, id);
-            checkStmt.setString(2, ancienMdp);
+            stmt.setInt(1, id);
 
-            try (ResultSet rs = checkStmt.executeQuery()) {
-                if (!rs.next()) {
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next())
                     return false; // Ancien mot de passe incorrect
+
+                String hashActuel = rs.getString("mdp");
+
+                if (!PasswordUtil.verify(hashActuel, ancienMdp)) {
+                    return false;
                 }
             }
         }
@@ -160,7 +168,7 @@ public class AdminDAO {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
 
-            updateStmt.setString(1, nouveauMdp);
+            updateStmt.setString(1, PasswordUtil.hash(nouveauMdp));
             updateStmt.setInt(2, id);
 
             int rowsAffected = updateStmt.executeUpdate();

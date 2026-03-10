@@ -3,12 +3,12 @@ package com.eseo.mediastock.model;
 public class Admin {
     private int id;
     private String email;
-    private String mdp;
+    private String passwordHash;
 
-    public Admin(int id, String email, String mdp) {
+    public Admin(int id, String email, String passwordHash) {
         this.id = id;
         this.email = email;
-        this.mdp = mdp;
+        this.passwordHash = passwordHash;
     }
 
     public int getId() {return id;}
@@ -22,11 +22,11 @@ public class Admin {
         this.email = email;
     }
 
-    public String getMdp() {
-        return mdp;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
-    public void setMdp(String mdp) {
-        this.mdp = mdp;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 }

@@ -90,6 +90,22 @@ public class LivreDAO {
         return livres;
     }
 
+    public static Livre GetByID(int id) throws SQLException {
+        Livre livre = null;
+        String sql = "SELECT * FROM PRODUIT WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                livre = CreateLivres(rs).getFirst();
+            }
+        }
+
+        return livre;
+    }
     public int countLivres() throws SQLException {
         String sql = "SELECT COUNT(*) FROM PRODUIT WHERE type_produit = 'Livre'";
         int count = 0;

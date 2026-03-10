@@ -2,9 +2,11 @@ package com.eseo.mediastock.dao;
 
 import com.eseo.mediastock.model.Adherent;
 import org.junit.jupiter.api.*;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -96,13 +98,13 @@ public class AdherentDAOTest {
      */
     @Test
     @Order(2)
-    void testFindById() throws SQLException {
+    void testGetByID() throws SQLException {
         System.out.println(" Test FIND BY ID");
 
         assertNotNull(idTest, "ID non disponible ou non créé");
 
         // Cherche l'adhérent par id
-        Adherent trouve = dao.findById(idTest);
+        Adherent trouve = dao.GetByID(idTest);
 
         // Vérifie qu'on l'a trouvé
         assertNotNull(trouve);
@@ -121,10 +123,10 @@ public class AdherentDAOTest {
      */
     @Test
     @Order(3)
-    void testFindByIdInexistant() throws SQLException {
+    void testGetByIDInexistant() throws SQLException {
         System.out.println(" Test FIND BY ID - inexistant");
 
-        Adherent trouve = dao.findById("ID-QUI-NEXISTE-PAS");
+        Adherent trouve = dao.GetByID("ID-QUI-NEXISTE-PAS");
 
         assertNull(trouve);
 
@@ -143,7 +145,7 @@ public class AdherentDAOTest {
         assertNotNull(idTest);
 
         // Récupérer l'adhérent
-        Adherent a = dao.findById(idTest);
+        Adherent a = dao.GetByID(idTest);
         assertNotNull(a);
 
         // Afficher les anciennes valeurs
@@ -157,7 +159,7 @@ public class AdherentDAOTest {
         dao.updateAdherent(a);
 
         // Vérifier les changements
-        Adherent modifie = dao.findById(idTest);
+        Adherent modifie = dao.GetByID(idTest);
         assertEquals("LicornTestModif", modifie.getNom());
 
         System.out.println("Mise à jour réussie");
@@ -234,9 +236,9 @@ public class AdherentDAOTest {
         System.out.println(" IDs : " + a1.getId() + ", " + a2.getId() + ", " + a3.getId());
 
         // Vérifier qu'on peut les retrouver
-        Adherent trouve1 = dao.findById(a1.getId());
-        Adherent trouve2 = dao.findById(a2.getId());
-        Adherent trouve3 = dao.findById(a3.getId());
+        Adherent trouve1 = dao.GetByID(a1.getId());
+        Adherent trouve2 = dao.GetByID(a2.getId());
+        Adherent trouve3 = dao.GetByID(a3.getId());
 
         assertNotNull(trouve1);
         assertNotNull(trouve2);
@@ -262,7 +264,7 @@ public class AdherentDAOTest {
         System.out.println("Adhérent créé pour test suppression : " + aSupprimer.getId());
 
         // Vérifier qu'il existe
-        Adherent avant = dao.findById(aSupprimer.getId());
+        Adherent avant = dao.GetByID(aSupprimer.getId());
         assertNotNull(avant);
 
         // Supprimer
@@ -270,7 +272,7 @@ public class AdherentDAOTest {
         assertTrue(supprime);
 
         // Vérifier qu'il n'existe plus
-        Adherent apres = dao.findById(aSupprimer.getId());
+        Adherent apres = dao.GetByID(aSupprimer.getId());
         assertNull(apres);
 
         System.out.println("Adhérent " + aSupprimer.getId() + " supprimé avec succès");

@@ -92,6 +92,23 @@ public class JeuSocieteDAO {
         return jeux;
     }
 
+    public static JeuSociete GetByID(int id) throws SQLException {
+        JeuSociete jeu = null;
+        String sql = "SELECT * FROM PRODUIT WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                jeu = CreateJeux(rs).getFirst();
+            }
+        }
+
+        return jeu;
+    }
+
     public int countJeux() throws SQLException {
         String sql = "SELECT COUNT(*) FROM PRODUIT WHERE type_produit = 'JeuSociete'";
         int count = 0;
