@@ -282,7 +282,7 @@ public class EmpruntServiceTest {
         private int id = 1;
 
         public ExemplaireMock() {
-            super(0, null, "codeBarre", null, null, null);
+            super(0, null, "codeBarre", null, null);
         }
 
         @Override

@@ -11,7 +11,6 @@ public class Exemplaire {
     private int id;
     private Produit produit;
     private String codeBarre;
-    private LocalDate dateAcquisition;
     private EnumEtat etatPhysique;
     private EnumDispo statusDispo;
 
@@ -19,11 +18,10 @@ public class Exemplaire {
     public Exemplaire(){
     }
 
-    public Exemplaire(int id, Produit produit, String codeBarre, LocalDate dateAcquisition, EnumEtat etatPhysique, EnumDispo statusDispo) {
+    public Exemplaire(int id, Produit produit, String codeBarre, EnumEtat etatPhysique, EnumDispo statusDispo) {
         this.id = id;
         this.produit = produit;
         this.codeBarre = codeBarre;
-        this.dateAcquisition = dateAcquisition;
         this.etatPhysique = etatPhysique;
         this.statusDispo = statusDispo;
     }
@@ -39,10 +37,6 @@ public class Exemplaire {
 
     public String getCodeBarre() {
         return codeBarre;
-    }
-
-    public LocalDate getDateAcquisition() {
-        return dateAcquisition;
     }
 
     public EnumEtat getEtatPhysique() {

@@ -16,13 +16,6 @@ public class AdherentService {
     }
 
     /**
-     * Récupère tous les adhérents
-     */
-    public List<Adherent> getAllAdherents() throws SQLException {
-        return adherentDAO.findAll();
-    }
-
-    /**
      * Génère un numéro d'adhérent unique au format ADH-ANNEE-NUMERO
      */
     public String generateNumAdherent() {
@@ -74,9 +67,9 @@ public class AdherentService {
     }
 
     /**
-     * Recherche un adhérent par son ID
+     * Récupère tous les adhérents
      */
-    public Adherent trouverAdherentParId(String id) throws SQLException {
-        return adherentDAO.findById(id);
+    public List<Adherent> getAllAdherents() throws SQLException {
+        return adherentDAO.findAll();
     }
 }

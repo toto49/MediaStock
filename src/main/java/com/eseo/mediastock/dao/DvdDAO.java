@@ -2,6 +2,7 @@ package com.eseo.mediastock.dao;
 
 import com.eseo.mediastock.model.Exemplaire;
 import com.eseo.mediastock.model.Produits.DVD;
+import com.eseo.mediastock.model.Produits.Livre;
 import com.eseo.mediastock.model.Produits.Produit;
 
 import java.sql.Connection;
@@ -60,14 +61,14 @@ public class DvdDAO {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 // On transforme le ResultSet en liste d'objets AVANT de fermer la connexion
-                dvds = CreateLivres(rs);
+                dvds = CreateDVD(rs);
             }
         }
 
         return dvds;
     }
 
-    private static List<DVD> CreateLivres(ResultSet rs) throws SQLException {
+    private static List<DVD> CreateDVD(ResultSet rs) throws SQLException {
         List<DVD> dvds = new ArrayList<>();
         while (rs.next()) {
             int id = rs.getInt("id");
@@ -94,6 +95,21 @@ public class DvdDAO {
             dvds.add(dvd);
         }
         return dvds;
+    }
+
+    public static DVD GetByID(int id) throws SQLException {
+        DVD dvd = null;
+        String sql = "SELECT * FROM PRODUIT WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                dvd = CreateDVD(rs).getFirst();
+            }
+        }
+
+        return dvd;
     }
 
 }

@@ -92,4 +92,19 @@ public class JeuSocieteDAO {
         }
         return jeux;
     }
+
+    public static JeuSociete GetByID(int id) throws SQLException {
+        JeuSociete jeu = null;
+        String sql = "SELECT * FROM PRODUIT WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                jeu = CreateJeux(rs).getFirst();
+            }
+        }
+
+        return jeu;
+    }
 }
