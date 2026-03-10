@@ -97,19 +97,62 @@ public class AdherentDAO {
         }
     }
 
-    public List<Adherent> getAllAdherents() throws SQLException {
-        String sql = "SELECT * FROM ADHERENT";
-        List<Adherent> adherents = new ArrayList<>();
+    /**
+     * MÉTHODE READ (findById) - Récupère un adhérent par son ID
+     * @param id - L'identifiant de l'adhérent dans la base
+     * @return Adherent - L'objet Adherent correspondant, ou null si non trouvé
+     * @throws SQLException - Si la requête échoue**/
+
+    public Adherent findById (String id) throws SQLException {
+        String sql = "SELECT * FROM ADHERENT WHERE id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            // On transforme le ResultSet en liste d'objets
-            adherents = createAdherents(rs);
+             PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setString(1,id);
+            //resultat de la requete
+            try (ResultSet rs = stmt.executeQuery()){
+                if (rs.next()){
+                    return new Adherent(
+                            rs.getString("id"),
+                            rs.getString("nom"),
+                            rs.getString("prenom"),
+                            rs.getString("email"),
+                            rs.getString("num_tel")
+                    );
+                }
+                return null; //si pas de resultat
+            }
         }
+    }
 
-        return adherents;
+    /**
+     * MÉTHODE READ ALL (findAll) - Récupère TOUS les adhérents
+     * @return List<Adherent> - Liste de tous les adhérents
+     * @throws SQLException - Si la requête échoue
+     * **/
+    public List<Adherent> findAll() throws SQLException{
+        //liste pour stocker les resultats
+        List<Adherent> adherents = new ArrayList<>();
+
+        String sql = "SELECT * FROM ADHERENT ORDER BY nom, prenom";
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)){
+
+            //parcour et créer les lignes du resultat
+            while (rs.next()){
+                Adherent adherent = new Adherent(
+                        rs.getString("id"),
+                        rs.getString("nom"),
+                        rs.getString("prenom"),
+                        rs.getString("email"),
+                        rs.getString("num_tel")
+                );
+                //ajout a la liste
+                adherents.add(adherent);
+            }
+        }
+        return adherents; // retourne la liste complete
     }
 
     private List<Adherent> createAdherents(ResultSet rs) throws SQLException {

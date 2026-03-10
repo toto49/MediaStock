@@ -66,4 +66,10 @@ public class AdherentService {
         System.out.println("✅ Adhérent " + adherent.getId() + " mis à jour avec succès");
     }
 
+    /**
+     * Récupère tous les adhérents
+     */
+    public List<Adherent> getAllAdherents() throws SQLException {
+        return adherentDAO.findAll();
+    }
 }
