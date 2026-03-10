@@ -1,6 +1,7 @@
 package com.eseo.mediastock.dao;
 
 import com.eseo.mediastock.model.Admin;
+import com.eseo.mediastock.service.PasswordUtil;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -156,7 +157,7 @@ public class AdminDAO {
 
                 String hashActuel = rs.getString("mdp");
 
-                if (!PasswordYtil.verify(hashActuel, ancienMdp)) {
+                if (!PasswordUtil.verify(hashActuel, ancienMdp)) {
                     return false;
                 }
             }
@@ -167,7 +168,7 @@ public class AdminDAO {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
 
-            updateStmt.setString(1, PasswordUtil.has(nouveauMdp));
+            updateStmt.setString(1, PasswordUtil.hash(nouveauMdp));
             updateStmt.setInt(2, id);
 
             int rowsAffected = updateStmt.executeUpdate();
