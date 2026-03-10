@@ -17,6 +17,15 @@ public class AdminDAO {
      * @throws SQLException - Si erreur SQL
      */
     public Admin authenticate(String email, String password) throws SQLException {
+        // Nettoie les entrées (supprime les espaces invisibles)
+        email = email != null ? email.trim() : null;
+        password = password != null ? password.trim() : null;
+
+        if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
+            System.out.println("Email ou mot de passe vide");
+            return null;
+        }
+
         String sql = "SELECT * FROM ADMINISTRATEUR WHERE email = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -28,15 +37,25 @@ public class AdminDAO {
                 if (rs.next()) {
                     String hash = rs.getString("mdp");
 
+                    // Vérification avec le mot de passe en clair
                     if (PasswordUtil.verify(hash, password)) {
-                        return new Admin(
+                        Admin admin = new Admin(
                                 rs.getInt("id"),
                                 rs.getString("email"),
-                                hash
+                                hash  // Retourne le hash, pas le mot de passe
                         );
+                        System.out.println(" Authentification réussie pour: " + email);
+                        return admin;
+                    } else {
+                        System.out.println(" Échec: mot de passe incorrect pour: " + email);
                     }
+                } else {
+                    System.out.println(" Échec: email non trouvé: " + email);
                 }
             }
+        } catch (SQLException e) {
+            System.err.println(" Erreur SQL dans authenticate: " + e.getMessage());
+            throw e;
         }
         return null;
     }

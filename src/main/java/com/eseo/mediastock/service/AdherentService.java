@@ -47,7 +47,7 @@ public class AdherentService {
         // Insertion en base de données
         adherentDAO.createAdherent(nouvelAdherent);
 
-        System.out.println("✅ Adhérent créé avec succès !");
+        System.out.println(" Adhérent créé avec succès !");
         System.out.println("   ID attribué: " + nouvelAdherent.getId());
     }
 
@@ -56,7 +56,7 @@ public class AdherentService {
      */
     public void supprimerAdherent(String id) throws SQLException {
         adherentDAO.deleteAdherent(id);
-        System.out.println("✅ Adhérent " + id + " supprimé avec succès");
+        System.out.println("Adhérent " + id + " supprimé avec succès");
     }
 
     /**
@@ -64,7 +64,7 @@ public class AdherentService {
      */
     public void mettreAJourAdherent(Adherent adherent) throws SQLException {
         adherentDAO.updateAdherent(adherent);
-        System.out.println("✅ Adhérent " + adherent.getId() + " mis à jour avec succès");
+        System.out.println("Adhérent " + adherent.getId() + " mis à jour avec succès");
     }
 
     /**

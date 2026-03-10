@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Adherent {
     //
-    public static int nbrAdherent;
+    public int nbrAdherent;
     // Déclarations Variables
     private String id;
     private String nom;
@@ -23,7 +23,12 @@ public class Adherent {
         this.numTel = numTel;
         this.empruntsEnCours = new ArrayList<>();
         this.historique = new ArrayList<>();
+
+        //initialiser à 0 pour chaque nvel adhrent
+    this.nbrAdherent = 0;
     }
+
+
 
     // Getter/Setter
     public String getId() {return id;}
