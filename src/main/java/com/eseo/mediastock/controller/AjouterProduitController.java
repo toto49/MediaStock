@@ -91,9 +91,9 @@ public class AjouterProduitController implements Initializable {
                                 txtAuteur.getText(),
                                 spinPages.getValue(),
                                 txtFormat.getText(),
+                                spinStock.getValue()
                         );
 
-                        // TODO: Gérer l'ajout du stock (exemplaires) via spinStock.getValue() plus tard
 
                         afficherMessage(lblOutput, "Le Livre a été ajouté avec succès !", true);
                         viderChamps(txtTitre, txtDesc, txtEditeur, txtAuteur, txtIsbn, txtFormat);
@@ -142,9 +142,10 @@ public class AjouterProduitController implements Initializable {
                                 spinDuree.getValue(),
                                 pistesAudio,
                                 sousTitres,
+                                spinStock.getValue()
                         );
 
-                        // TODO: Gérer l'ajout du stock (exemplaires) via spinStock.getValue() plus tard
+
 
                         afficherMessage(lblOutput, "Le DVD a été ajouté avec succès !", true);
                         viderChamps(txtTitre, txtDesc, txtEditeur, txtReal, txtAudio, txtSousTitres);
@@ -190,9 +191,9 @@ public class AjouterProduitController implements Initializable {
                                 spinJMax.getValue(),
                                 spinAgeMin.getValue(),
                                 spinDureeJeux.getValue(),
+                                spinStock.getValue()
                         );
 
-                        // TODO: Gérer l'ajout du stock (exemplaires) via spinStock.getValue() plus tard
 
                         afficherMessage(lblOutput, "Le Jeu a été ajouté avec succès !", true);
                         viderChamps(txtTitre, txtDesc, txtEditeur);
