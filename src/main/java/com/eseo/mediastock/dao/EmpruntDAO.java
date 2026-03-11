@@ -30,12 +30,9 @@ public class EmpruntDAO {
         return emprunts;
     }
 
-    // Méthode utilitaire pour construire un Emprunt de façon claire
     private Emprunt createEmprunt(ResultSet rs) throws SQLException {
-        // 1. Récupération des données basiques de la table EMPRUNT
         int id = rs.getInt("id");
 
-        // Gestion sécurisée des dates (évite les NullPointerException si la date est vide en base)
         java.sql.Date sqlDateDebut = rs.getDate("date_debut");
         java.sql.Date sqlDateRetour = rs.getDate("date_retour");
         LocalDate dateDebut = sqlDateDebut != null ? sqlDateDebut.toLocalDate() : null;
@@ -44,14 +41,12 @@ public class EmpruntDAO {
         String statutStr = rs.getString("statut");
         EnumDispo statut = statutStr != null ? EnumDispo.valueOf(statutStr) : EnumDispo.EMPRUNTE;
 
-        // 2. Appel aux autres DAO (Lisible et bien séparé !)
         String idAdherent = rs.getString("id_adherent");
         int idExemplaire = rs.getInt("id_exemplaire");
 
         Adherent adherent = adherentDAO.GetByID(idAdherent);
         Exemplaire exemplaire = exemplaireDAO.GetByID(idExemplaire);
 
-        // 3. Construction de l'objet
         Emprunt emprunt = new Emprunt(id, adherent, exemplaire, dateDebut, dateRetour);
         emprunt.setStatusDispo(statut);
 
@@ -59,20 +54,15 @@ public class EmpruntDAO {
     }
 
     public void createEmprunt(Adherent adherent, Exemplaire exemplaire) throws SQLException {
-        String sql = "INSERT INTO EMPRUNT (date_debut, date_retour, id_adherent, id_exemplaire,statut) VALUES (?, ?, ? , ?, ?)";
+        String sql = "INSERT INTO EMPRUNT (date_debut, date_retour, id_adherent, id_exemplaire, statut) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            // 1. date_debut : On utilise la date du jour
             stmt.setDate(1, Date.valueOf(LocalDate.now()));
-            // 2. date_retour : On définit une date de retour
-            stmt.setDate(2, Date.valueOf(LocalDate.now().plusMonths(2)));
-            // 3. id_adherent : CHAR(12) dans la BDD, on récupère l'ID de l'objet Adherent
+            stmt.setDate(2, Date.valueOf(LocalDate.now().plusMonths(2))); // Date de retour prévue
             stmt.setString(3, adherent.getId());
-            // 4. id_exemplaire : INT(11) dans la BDD, on récupère l'ID de l'objet Exemplaire
             stmt.setInt(4, exemplaire.getId());
-            // 5. statut : On définit le statut à EMPRUNTE
             stmt.setString(5, EnumDispo.EMPRUNTE.name());
 
             stmt.executeUpdate();
@@ -80,16 +70,13 @@ public class EmpruntDAO {
     }
 
     public void saveRetour(Emprunt emprunt) throws SQLException {
-        String sql = "UPDATE EMPRUNT SET date_retour = ?, status = ? WHERE id = ?";
+        String sql = "UPDATE EMPRUNT SET date_retour = ?, statut = ? WHERE id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            // 1. Date du jour (Conversion LocalDate vers java.sql.Date)
-            stmt.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
-            // 2. Status : On utilise .name() pour enregistrer le String de l'Enum en base
+            stmt.setDate(1, java.sql.Date.valueOf(LocalDate.now())); // Date effective de retour
             stmt.setString(2, EnumDispo.RENDU.name());
-            // 3. ID de l'emprunt
             stmt.setInt(3, emprunt.getId());
 
             stmt.executeUpdate();
@@ -98,7 +85,7 @@ public class EmpruntDAO {
 
     public List<Emprunt> trouverRetards(LocalDate date) throws SQLException {
         List<Emprunt> retards = new ArrayList<>();
-        String sql = "SELECT * FROM emprunt WHERE date_retour_prevue < ? AND statut = ?";
+        String sql = "SELECT * FROM EMPRUNT WHERE date_retour < ? AND statut = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -113,5 +100,26 @@ public class EmpruntDAO {
             }
         }
         return retards;
+    }
+
+    // --- NOUVELLE MÉTHODE ---
+    public Emprunt trouverEmpruntEnCours(String codeBarre) throws SQLException {
+        String sql = "SELECT emp.* FROM EMPRUNT emp " +
+                "JOIN EXEMPLAIRE ex ON emp.id_exemplaire = ex.id " +
+                "WHERE ex.code_barre = ? AND emp.statut = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, codeBarre);
+            stmt.setString(2, EnumDispo.EMPRUNTE.name());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return createEmprunt(rs);
+                }
+            }
+        }
+        return null;
     }
 }

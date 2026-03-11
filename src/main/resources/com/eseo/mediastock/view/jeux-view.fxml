@@ -71,6 +71,7 @@
                             <TableColumn fx:id="colDureePartie" maxWidth="100" minWidth="60" style="-fx-alignment: CENTER;" text="Durée">
                                 <cellValueFactory><PropertyValueFactory property="dureePartie" /></cellValueFactory>
                             </TableColumn>
+                            <TableColumn fx:id="colAction" text="Actions" prefWidth="120"/>
                         </columns>
 
                         <placeholder>

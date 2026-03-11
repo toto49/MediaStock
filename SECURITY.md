@@ -20,7 +20,7 @@ Veuillez ne pas signaler les problèmes suivants :
 ## Signaler une vulnérabilité
 
 **Ne signalez jamais une faille de sécurité critique en ouvrant une Issue publique sur GitHub.** Si vous pensez avoir trouvé une vulnérabilité (par exemple, une Injection SQL, un accès non autorisé aux données des adhérents, etc.), veuillez envoyer un e-mail directement à l'équipe de développement principale :
-👉 **[tom.boudaudL@reseau.eseo.fr]**
+👉 **[tom.boudaud@reseau.eseo.fr]**
 
 **Dans votre e-mail, veuillez inclure :**
 1. Une description détaillée de la vulnérabilité.

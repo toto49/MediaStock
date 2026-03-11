@@ -88,6 +88,7 @@
                             <TableColumn text="Sous-titres" fx:id="colSousTitres" minWidth="90">
                                 <cellValueFactory><PropertyValueFactory property="sousTitres"/></cellValueFactory>
                             </TableColumn>
+                            <TableColumn fx:id="colAction" text="Actions" prefWidth="120"/>
                         </columns>
 
                         <placeholder>

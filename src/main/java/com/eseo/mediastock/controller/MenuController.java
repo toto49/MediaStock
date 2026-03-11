@@ -1,10 +1,12 @@
 package com.eseo.mediastock.controller;
 
+import com.eseo.mediastock.HelloApplication;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -13,7 +15,6 @@ import java.io.IOException;
 public class MenuController {
 
     private static MenuController instance;
-
 
     @FXML
     private BorderPane mainPane;
@@ -29,6 +30,10 @@ public class MenuController {
     private Button btnEmprunt;
     @FXML
     private Button btnadherent;
+
+    private Stage mainStage;
+    private Label lblTitreHeader;
+
     public static MenuController getInstance() {
         return instance;
     }
@@ -37,24 +42,22 @@ public class MenuController {
     public void initialize() {
         instance = this;
         chargerPage("accueil");
-
-        // 3. Style par défaut
         if (btnAccueil != null) updateButtonStyles(btnAccueil);
+    }
+
+    public void setComposantsFenetre(Stage stage, Label labelTitre) {
+        this.mainStage = stage;
+        this.lblTitreHeader = labelTitre;
     }
 
     public void chargerPage(String nomFichier) {
         try {
-
             String chemin = "/com/eseo/mediastock/view/" + nomFichier + "-view.fxml";
             FXMLLoader loader = new FXMLLoader(getClass().getResource(chemin));
             Parent vue = loader.load();
-            Object controller = loader.getController();
 
-
-            if (controller instanceof ListeViewController) {
-
-            }
             if (mainPane != null) {
+
                 mainPane.setCenter(vue);
             }
 
@@ -78,21 +81,21 @@ public class MenuController {
     void afficherEmprunt(ActionEvent event) {
         chargerPage("emprunt");
         updateButtonStyles(btnEmprunt);
-        changerTitre("emprunter");
+        changerTitre("Emprunter");
     }
 
     @FXML
     void afficheradherent(ActionEvent event) {
         chargerPage("adherent");
-
         updateButtonStyles(btnadherent);
-        changerTitre("Gestion Adherent");
+        changerTitre("Gestion Adhérent");
     }
+
     @FXML
     void afficherAddProduit(ActionEvent event) {
         chargerPage("ajouter-produit");
         updateButtonStyles(btnAddProduit);
-        changerTitre("ajouter Produit");
+        changerTitre("Ajouter Produit");
     }
 
     @FXML
@@ -104,17 +107,15 @@ public class MenuController {
 
     @FXML
     void afficherListeView(ActionEvent event) {
-        chargerPage("liste"); // Charge la liste générique par défaut
+        chargerPage("liste");
         updateButtonStyles(btnListView);
         changerTitre("Inventaire");
     }
-
 
     private void updateButtonStyles(Button boutonActif) {
         String STYLE_INACTIF = "-fx-cursor: hand; -fx-background-color: transparent; -fx-text-fill: white;";
         String STYLE_ACTIF = "-fx-cursor: hand; -fx-background-color: #444; -fx-text-fill: #ffcc00; -fx-font-weight: bold; -fx-border-width: 0 0 0 5; -fx-border-color: #ffcc00;";
 
-        // Sécurité : on vérifie que les boutons ne sont pas null avant de changer le style
         if (btnAccueil != null) btnAccueil.setStyle(STYLE_INACTIF);
         if (btnParametres != null) btnParametres.setStyle(STYLE_INACTIF);
         if (btnListView != null) btnListView.setStyle(STYLE_INACTIF);
@@ -126,11 +127,6 @@ public class MenuController {
     }
 
     public void changerTitre(String nouveauTitre) {
-        // On récupère la fenêtre (Stage) à partir du panneau principal
-        if (mainPane != null && mainPane.getScene() != null) {
-            Stage stage = (Stage) mainPane.getScene().getWindow();
-            stage.setTitle("MediaStock - " + nouveauTitre);
-        }
+        HelloApplication.changerTitreGlobal(nouveauTitre);
     }
-
 }

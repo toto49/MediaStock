@@ -88,10 +88,10 @@ public class AdherentDAO {
             int rowsAffected = stmt.executeUpdate();
 
             if (rowsAffected > 0) {
-                System.out.println("✅ Adhérent " + id + " supprimé avec succès");
+                System.out.println(" Adhérent " + id + " supprimé avec succès");
                 return true;
             } else {
-                System.out.println("⚠️ Aucun adhérent trouvé avec l'ID: " + id);
+                System.out.println(" Aucun adhérent trouvé avec l'ID: " + id);
                 return false;
             }
         }
@@ -163,17 +163,17 @@ public class AdherentDAO {
         List<Adherent> adherents = new ArrayList<>();
 
         while (rs.next()) {
-            // 1. Récupération des données selon le nom des colonnes en BDD
+            //  Récupération des données selon le nom des colonnes en BDD
             String id = rs.getString("id");
             String numTel = rs.getString("num_tel");
             String nom = rs.getString("nom");
             String prenom = rs.getString("prenom");
             String email = rs.getString("email");
 
-            // 2. Création de l'objet Adherent
+            // création de l'objet Adherent
             Adherent adherent = new Adherent(id, nom, prenom, email, numTel);
 
-            // 3. Ajout à la liste
+            // Ajout à la liste
             adherents.add(adherent);
         }
         return adherents;
