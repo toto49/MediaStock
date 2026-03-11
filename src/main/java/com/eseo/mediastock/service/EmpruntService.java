@@ -58,8 +58,8 @@ public class EmpruntService {
     }
 
 
-//    public List<Emprunt> getEmpruntsEnRetards() throws SQLException {
-//        return empruntDAO.trouverRetards(LocalDate.now());
-//    }
+    public List<Emprunt> getEmpruntsEnRetards() throws SQLException {
+        return empruntDAO.trouverRetards(LocalDate.now());
+    }
 
 }

@@ -14,6 +14,21 @@ import java.util.List;
 
 public class ExemplaireDAO {
 
+    public void addExemplaire(Exemplaire exemplaire) throws SQLException {
+        String sql = "INSERT INTO EXEMPLAIRE (code_barre, etat, statut, id_produit) VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, exemplaire.getCodeBarre());
+            stmt.setString(2, exemplaire.getEtatPhysique().toString());
+            stmt.setString(3, exemplaire.getStatusDispo().toString());
+            stmt.setInt(4, exemplaire.getProduit().getId());
+
+            stmt.executeUpdate();
+        }
+    }
+
     public void updateExemplaire(Exemplaire exemplaire) throws SQLException {
         String sql = "UPDATE EXEMPLAIRE SET statut = ?, etat = ? WHERE id = ?";
 
@@ -29,7 +44,6 @@ public class ExemplaireDAO {
     }
 
     public List<Exemplaire> getAllExemplaires() throws SQLException {
-        // On fait une jointure pour récupérer le type_produit de la table PRODUIT
         String sql = "SELECT e.*, p.type_produit FROM EXEMPLAIRE e JOIN PRODUIT p ON e.id_produit = p.id";
         List<Exemplaire> exemplaires = new ArrayList<>();
 

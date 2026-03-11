@@ -1,6 +1,7 @@
 package com.eseo.mediastock.service;
 
 import com.eseo.mediastock.dao.DvdDAO;
+import com.eseo.mediastock.dao.ExemplaireDAO;
 import com.eseo.mediastock.dao.JeuSocieteDAO;
 import com.eseo.mediastock.dao.LivreDAO;
 import com.eseo.mediastock.model.Enum.EnumDispo;
@@ -17,9 +18,11 @@ import java.util.List;
 
 public class StockService {
 
+    ExemplaireDAO exemplaireDAO;
+
     // --- AJOUT DES PRODUITS ---
 
-    public void ajouterLivre(String titre, String description, String editeur, int annee, String isbn, String auteur, int nbPages, String format) throws SQLException {
+    public void ajouterLivre(String titre, String description, String editeur, int annee, String isbn, String auteur, int nbPages, String format,int nbExemplaires) throws SQLException {
         if (titre == null || titre.trim().isEmpty()) throw new IllegalArgumentException("Le titre est obligatoire");
 
         Livre livre = new Livre();
@@ -35,9 +38,12 @@ public class StockService {
         livre.setFormat(format);
 
         LivreDAO.addProduit(livre);
+        for (int i = 0; i < nbExemplaires; i++) {
+            ajouterExemplaire(livre);
+        }
     }
 
-    public void ajouterDVD(String titre, String description,String editeur, int annee, String realisateur, int duree, List<String> audio,List<String> sousTitres) throws SQLException {
+    public void ajouterDVD(String titre, String description,String editeur, int annee, String realisateur, int duree, List<String> audio,List<String> sousTitres,int nbExemplaires) throws SQLException {
         if (titre == null || titre.trim().isEmpty()) throw new IllegalArgumentException("Le titre est obligatoire");
 
         DVD dvd = new DVD();
@@ -52,9 +58,13 @@ public class StockService {
         dvd.setAudioLangues(audio);
 
         DvdDAO.addProduit(dvd);
+        for (int i = 0; i < nbExemplaires; i++) {
+            ajouterExemplaire(dvd);
+        }
+
     }
 
-    public void ajouterJeuSociete(String titre, String description,String editeur, int annee, int nbJoueursMin, int nbJoueursMax, int ageMin, int dureePartie) throws SQLException {
+    public void ajouterJeuSociete(String titre, String description,String editeur, int annee, int nbJoueursMin, int nbJoueursMax, int ageMin, int dureePartie,int nbExemplaires) throws SQLException {
         if (titre == null || titre.trim().isEmpty()) throw new IllegalArgumentException("Le titre est obligatoire");
 
         JeuSociete jeu = new JeuSociete();
@@ -70,6 +80,9 @@ public class StockService {
         jeu.setDureePartie(dureePartie);
 
         JeuSocieteDAO.addProduit(jeu);
+        for (int i = 0; i < nbExemplaires; i++) {
+            ajouterExemplaire(jeu);
+        }
     }
 
     // --- GESTION DES TYPES ---
@@ -110,7 +123,7 @@ public class StockService {
 
     // --- GESTION DES EXEMPLAIRES ---
 
-    public void ajouterExemplaire(Produit produit){
+    public void ajouterExemplaire(Produit produit) throws SQLException{
 
         // On crée l'exemplaire physique
         Exemplaire ex = new Exemplaire();
@@ -124,12 +137,7 @@ public class StockService {
         ex.setEtatPhysique(EnumEtat.NEUF);
         ex.setStatusDispo(EnumDispo.DISPONIBLE);
 
-        // TODO : Sauvegarder dans la BDD via ExemplaireDAO stp morgiane (fait juste la fonction dans tes fichiers je m'occupe de l'appeler)
-    }
-
-    public void changerStatus(Exemplaire exemplaire, EnumDispo newStatus){
-        exemplaire.setStatusDispo(newStatus);
-        // TODO : Update en BDD stp morgiane (fait juste la fonction dans tes fichiers je m'occupe de l'appeler)
+        exemplaireDAO.addExemplaire(ex);
     }
 
     // --- RECHERCHER PRODUITS ---
@@ -152,6 +160,7 @@ public class StockService {
         }
         return produits;
     }
+
     // --- STATISTIQUES ---
 
     public int getNombreTotalLivres() {

@@ -87,10 +87,10 @@ public class AjouterProduitController implements Initializable {
                                 txtDesc.getText(),
                                 txtEditeur.getText(),
                                 spinAnnee.getValue(),
-                                txtIsbn.getText(), // ISBN est un String dans le service
+                                txtIsbn.getText(),
                                 txtAuteur.getText(),
                                 spinPages.getValue(),
-                                txtFormat.getText()
+                                txtFormat.getText(),
                         );
 
                         // TODO: Gérer l'ajout du stock (exemplaires) via spinStock.getValue() plus tard
@@ -141,7 +141,7 @@ public class AjouterProduitController implements Initializable {
                                 txtReal.getText(),
                                 spinDuree.getValue(),
                                 pistesAudio,
-                                sousTitres
+                                sousTitres,
                         );
 
                         // TODO: Gérer l'ajout du stock (exemplaires) via spinStock.getValue() plus tard
@@ -189,7 +189,7 @@ public class AjouterProduitController implements Initializable {
                                 spinJMin.getValue(),
                                 spinJMax.getValue(),
                                 spinAgeMin.getValue(),
-                                spinDureeJeux.getValue()
+                                spinDureeJeux.getValue(),
                         );
 
                         // TODO: Gérer l'ajout du stock (exemplaires) via spinStock.getValue() plus tard
