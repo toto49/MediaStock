@@ -1,0 +1,79 @@
+name: Build MSI on push (secure, from secrets)
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  msi:
+    name: Windows MSI (auto)
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 1) Écrire le .env à partir des SECRETS (méthode A: chaque clé)
+      - name: Write .env from Secrets (per-key)
+        if: ${{ secrets.DOTENV == '' }}  # si tu n'utilises PAS DOTENV complet
+        shell: pwsh
+        run: |
+          "@"
+          DB_URL=${{ secrets.DB_URL }}
+          DB_USER=${{ secrets.DB_USER }}
+          DB_PASSWORD=${{ secrets.DB_PASSWORD }}
+          "@" | Out-File -FilePath .env -Encoding utf8 -NoNewline
+
+      # (Alternative méthode B: un seul secret DOTENV multi-ligne)
+      - name: Write .env from Secrets (DOTENV)
+        if: ${{ secrets.DOTENV != '' }}   # si tu utilises DOTENV complet
+        shell: bash
+        run: |
+          printf '%s\n' "${{ secrets.DOTENV }}" > .env
+
+      # 2) Java 25 + cache Maven
+      - name: Setup Temurin JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+
+      # 3) Installer WiX (requis pour MSI)
+      - name: Install WiX v3
+        run: choco install wixtoolset --version=3.11.2 -y
+
+      # 4) Calcul d'une version NUMÉRIQUE pour MSI (pas de -SNAPSHOT)
+      - name: Compute app.version
+        id: ver
+        shell: pwsh
+        run: |
+          $ref = "${{ github.ref_name }}"
+          if ($ref -match '^(?:v)?(\d+\.\d+\.\d+(?:\.\d+)?)$') {
+            $v = $Matches[1]
+          } else {
+            $v = "1.0.${{ github.run_number }}"
+          }
+          "version=$v" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+
+      # 5) Build + MSI (Windows + JavaFX)
+      - name: Build & Package (MSI)
+        run: |
+          ./mvnw -B clean package `
+            -DskipTests `
+            -D"jfx.os=win" `
+            -D"installer.type=MSI" `
+            -D"app.version=${{ steps.ver.outputs.version }}"
+
+      # 6) Publier l'installeur
+      - name: Upload MSI
+        uses: actions/upload-artifact@v4
+        with:
+          name: MediaStock-MSI-${{ steps.ver.outputs.version }}
+          path: target/installers/*.msi
+          if-no-files-found: error
