@@ -162,6 +162,11 @@ public class StockService {
         return produits;
     }
 
+    // --- LISTE EXEMPLAIRES PRODUITS
+    public List<Exemplaire> getExemplaireFromProduct(Produit produit){
+        return produit.getExemplaires();
+    }
+
     // --- STATISTIQUES ---
 
     public int getNombreTotalLivres() {
