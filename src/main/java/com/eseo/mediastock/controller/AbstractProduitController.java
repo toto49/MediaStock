@@ -1,5 +1,6 @@
 package com.eseo.mediastock.controller;
 
+import com.eseo.mediastock.model.Exemplaire;
 import com.eseo.mediastock.model.Produits.Produit;
 import com.eseo.mediastock.service.StockService;
 import javafx.application.Platform;
@@ -174,9 +175,13 @@ public abstract class AbstractProduitController<T extends Produit> {
 
         Label lblTitre = new Label("Liste des exemplaires pour le " + getCategorieProduit() + " n°" + produit.getId());
         lblTitre.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #ffcc00;");
+        List<Exemplaire> listeExemplaires = stockService.getExemplaireFromProduct(produit);
 
-        // TODO: Remplacer Object par Exemplaire
-        ObservableList<Object> donneesExemplaires = FXCollections.observableArrayList();
+        if (listeExemplaires == null) {
+            listeExemplaires = new ArrayList<>();
+        }
+
+        ObservableList<Exemplaire> donneesExemplaires = FXCollections.observableArrayList(listeExemplaires);
 
         Pagination paginationExemplaire = new Pagination();
         int lignesParPagePopup = 10;
@@ -184,22 +189,24 @@ public abstract class AbstractProduitController<T extends Produit> {
         paginationExemplaire.setPageCount(nbPages == 0 ? 1 : nbPages);
 
         paginationExemplaire.setPageFactory(pageIndex -> {
-            TableView<Object> tablePage = new TableView<>();
+            TableView<Exemplaire> tablePage = new TableView<>();
             tablePage.setStyle("-fx-background-color: #383838;");
 
             Label placeholder = new Label("Aucun exemplaire trouvé pour ce " + getCategorieProduit().toLowerCase() + ".");
             placeholder.setStyle("-fx-text-fill: #aaaaaa; -fx-font-style: italic;");
             tablePage.setPlaceholder(placeholder);
-
-            TableColumn<Object, String> colRef = new TableColumn<>("Référence");
-            colRef.setCellValueFactory(new PropertyValueFactory<>("reference"));
+            TableColumn<Exemplaire, String> colRef = new TableColumn<>("Code Barre");
+            colRef.setCellValueFactory(new PropertyValueFactory<>("codeBarre"));
             colRef.setPrefWidth(150);
 
-            TableColumn<Object, String> colEtat = new TableColumn<>("État");
-            colEtat.setCellValueFactory(new PropertyValueFactory<>("etat"));
+            TableColumn<Exemplaire, String> colEtat = new TableColumn<>("État Physique");
+            colEtat.setCellValueFactory(new PropertyValueFactory<>("etatPhysique"));
             colEtat.setPrefWidth(120);
+            TableColumn<Exemplaire, String> colDispo = new TableColumn<>("Disponibilité");
+            colDispo.setCellValueFactory(new PropertyValueFactory<>("statusDispo"));
+            colDispo.setPrefWidth(120);
 
-            tablePage.getColumns().addAll(colRef, colEtat);
+            tablePage.getColumns().addAll(colRef, colEtat, colDispo);
 
             if (donneesExemplaires.isEmpty()) {
                 tablePage.setItems(FXCollections.observableArrayList());
