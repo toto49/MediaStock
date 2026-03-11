@@ -1,7 +1,7 @@
 package com.eseo.mediastock.dao;
 
 import com.eseo.mediastock.model.Admin;
-import com.eseo.mediastock.service.PasswordUtil;
+import com.eseo.mediastock.service.PasswordUtilService;
 import org.junit.jupiter.api.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -191,12 +191,12 @@ public class AdminDAOTest {
         System.out.println("Test PASSWORD UTIL");
 
         String mdpClair = "password123";
-        String hash = PasswordUtil.hash(mdpClair);
+        String hash = PasswordUtilService.hash(mdpClair);
 
         System.out.println("Mot de passe clair: '" + mdpClair + "'");
         System.out.println("Hash généré: '" + hash + "'");
 
-        boolean verification = PasswordUtil.verify(hash, mdpClair);
+        boolean verification = PasswordUtilService.verify(hash, mdpClair);
         System.out.println("Vérification: " + (verification ? "RÉUSSIE" : "ÉCHEC"));
 
         assertTrue(verification, "PasswordUtil ne fonctionne pas correctement");

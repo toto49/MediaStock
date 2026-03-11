@@ -1,7 +1,7 @@
 package com.eseo.mediastock.dao;
 
 import com.eseo.mediastock.model.Admin;
-import com.eseo.mediastock.service.PasswordUtil;
+import com.eseo.mediastock.service.PasswordUtilService;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class AdminDAO {
                     String hash = rs.getString("mdp");
 
                     // Vérification avec le mot de passe en clair
-                    if (PasswordUtil.verify(hash, password)) {
+                    if (PasswordUtilService.verify(hash, password)) {
                         Admin admin = new Admin(
                                 rs.getInt("id"),
                                 rs.getString("email"),
@@ -72,15 +72,15 @@ public class AdminDAO {
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, admin.getEmail());
-            stmt.setString(2, PasswordUtil.hash(admin.getPasswordHash()));
+            stmt.setString(2, PasswordUtilService.hash(admin.getPlainPassword()));
             stmt.executeUpdate();
 
             // Récupérer l'ID généré
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
-                   int generatedId = rs.getInt(1);
-                   admin.setId(generatedId);
-                   System.out.println("id generee pour admin " +  generatedId);
+                    int generatedId = rs.getInt(1);
+                    admin.setId(generatedId);
+                    System.out.println("id generee pour admin " +  generatedId);
                 }
             }
         }
@@ -97,7 +97,12 @@ public class AdminDAO {
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, admin.getEmail());
-            stmt.setString(2, PasswordUtil.hash(admin.getPasswordHash()));
+            if (admin.getPlainPassword() != null  && !admin.getPlainPassword().isEmpty()) {
+                stmt.setString(2, PasswordUtilService.hash(admin.getPlainPassword()));
+            } else {
+                stmt.setString(2, admin.getPasswordHash());
+            }
+
             stmt.setInt(3, admin.getId());
 
             int rowsAffected = stmt.executeUpdate();
@@ -153,6 +158,27 @@ public class AdminDAO {
         return admins;
     }
 
+    public Admin findByEmail (String email) throws SQLException {
+        String sql = "SELECT * FROM ADMINISTRATEUR WHERE email = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, email);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return new Admin(
+                            rs.getInt("id"),
+                            rs.getString("email"),
+                            rs.getString("mdp")
+                    );
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * Change le mot de passe d'un admin METHODE UPDATE
      * @param id - L'ID de l'admin
@@ -163,35 +189,38 @@ public class AdminDAO {
      */
     public boolean changePassword(int id, String ancienMdp, String nouveauMdp) throws SQLException {
 
-        String sql = "SELECT mdp FROM ADMINISTRATEUR WHERE id = ?";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, id);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (!rs.next())
-                    return false; // Ancien mot de passe incorrect
-
-                String hashActuel = rs.getString("mdp");
-
-                if (!PasswordUtil.verify(hashActuel, ancienMdp)) {
-                    return false;
-                }
-            }
-        }
-
+        String selectSql = "SELECT mdp FROM ADMINISTRATEUR WHERE id = ?";
         String updateSql = "UPDATE ADMINISTRATEUR SET mdp = ? WHERE id = ?";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            conn.setAutoCommit(false);
 
-            updateStmt.setString(1, PasswordUtil.hash(nouveauMdp));
-            updateStmt.setInt(2, id);
+            try {
+                try (PreparedStatement selectStmt = conn.prepareStatement(selectSql)) {
+                    selectStmt.setInt(1, id);
 
-            int rowsAffected = updateStmt.executeUpdate();
-            return rowsAffected > 0;
+                    try (ResultSet rs = selectStmt.executeQuery()) {
+                        if (!rs.next()) {
+                            conn.rollback();
+                            return false;
+                        }
+                    }
+                }
+
+                try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
+                    updateStmt.setString(1, PasswordUtilService.hash(nouveauMdp));
+                    updateStmt.setInt(2, id);
+                    int rowsAffected = updateStmt.executeUpdate();
+
+                    conn.commit();
+                    return (rowsAffected > 0);
+                }
+            } catch (SQLException e) {
+                conn.rollback();
+                throw e;
+            } finally {
+                conn.setAutoCommit(true);
+            }
         }
     }
 }

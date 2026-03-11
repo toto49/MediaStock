@@ -49,15 +49,14 @@ public class AdminService {
     public boolean creerAdmin(String email, String mdp) {
         try {
             // Vérifie si l'email existe déjà
-            List<Admin> admins = adminDAO.findAll();
-            for (Admin a : admins) {
-                if (a.getEmail().equals(email)) {
-                    System.out.println("Un admin avec cet email existe déjà");
-                    return false;
-                }
+            Admin existant = adminDAO.findByEmail(email);
+            if (existant != null) {
+                System.out.println("Un admin avec cet email existe déjà");
+                return false;
             }
 
-            Admin nouvelAdmin = new Admin(0, email, mdp);
+            Admin nouvelAdmin = new Admin(0, email, null);
+            nouvelAdmin.setPlainPassword(mdp);
             adminDAO.create(nouvelAdmin);
 
             System.out.println("Admin créé avec succès - ID: " + nouvelAdmin.getId());
@@ -96,13 +95,7 @@ public class AdminService {
      */
     public Admin getAdminParEmail(String email) {
         try {
-            List<Admin> admins = adminDAO.findAll();
-            for (Admin a : admins) {
-                if (a.getEmail().equals(email)) {
-                    return a;
-                }
-            }
-            return null;
+            return adminDAO.findByEmail(email);
         } catch (SQLException e) {
             System.err.println("Erreur lors de la recherche: " + e.getMessage());
             return null;
@@ -124,7 +117,7 @@ public class AdminService {
             }
 
             admin.setEmail(nouvelEmail);
-            admin.setPasswordHash(nouveauMdp);
+            admin.setPlainPassword(nouveauMdp);
             adminDAO.update(admin);
 
             System.out.println("Admin mis à jour avec succès");
