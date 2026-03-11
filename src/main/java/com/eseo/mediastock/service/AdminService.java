@@ -5,25 +5,16 @@ import com.eseo.mediastock.model.Admin;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
- * Service pour la gestion des administrateurs
- */
 public class AdminService {
 
     private AdminDAO adminDAO;
 
-    /**
-     * Constructeur = Initialise le DAO
-     */
     public AdminService() {
         this.adminDAO = new AdminDAO();
     }
 
     /**
      * Authentifie un administrateur
-     * @param email l'email de l'admin
-     * @param password le mot de passe
-     * @return l'admin connecté ou null si échec
      */
     public Admin login(String email, String password) {
         try {
@@ -42,35 +33,45 @@ public class AdminService {
 
     /**
      * Crée un nouvel administrateur
-     * @param email l'email
-     * @param mdp le mot de passe
-     * @return true si création réussie
      */
-    public boolean creerAdmin(String email, String mdp) {
-        try {
-            // Vérifie si l'email existe déjà
-            Admin existant = adminDAO.findByEmail(email);
-            if (existant != null) {
-                System.out.println("Un admin avec cet email existe déjà");
-                return false;
-            }
+    public void creerAdmin(String email, String mdp, String nom, String prenom, int numTel)
+            throws SQLException, IllegalArgumentException {
 
-            Admin nouvelAdmin = new Admin(0, email, null);
-            nouvelAdmin.setPlainPassword(mdp);
-            adminDAO.create(nouvelAdmin);
-
-            System.out.println("Admin créé avec succès - ID: " + nouvelAdmin.getId());
-            return true;
-        } catch (SQLException e) {
-            System.err.println("Erreur lors de la création: " + e.getMessage());
-            return false;
+        // Validation
+        if (email == null || email.trim().isEmpty()) {
+            throw new IllegalArgumentException("L'email ne peut pas être vide");
         }
+        if (mdp == null || mdp.length() < 6) {
+            throw new IllegalArgumentException("Le mot de passe doit contenir au moins 6 caractères");
+        }
+        if (nom == null || nom.trim().isEmpty()) {
+            throw new IllegalArgumentException("Le nom ne peut pas être vide");
+        }
+        if (prenom == null || prenom.trim().isEmpty()) {
+            throw new IllegalArgumentException("Le prénom ne peut pas être vide");
+        }
+        if (numTel <= 0) {
+            throw new IllegalArgumentException("Le numéro de téléphone doit être valide");
+        }
+
+        // Vérifie si l'email existe déjà
+        Admin existant = adminDAO.findByEmail(email);
+        if (existant != null) {
+            throw new IllegalArgumentException("Un admin avec cet email existe déjà: " + email);
+        }
+
+        // Création de l'admin
+        Admin nouvelAdmin = new Admin(0, nom.trim(), prenom.trim(), email.trim(), numTel, mdp);
+        nouvelAdmin.setPlainPassword(mdp);//pour definir le mot de passe avant hashage
+        adminDAO.create(nouvelAdmin);
+
+        System.out.println("Admin créé avec succès - ID: " + nouvelAdmin.getId());
+        System.out.println("Email: " + email);
+        System.out.println("Nom: " + nom + " " + prenom);
     }
 
     /**
      * Récupère un admin par son ID
-     * @param id l'ID de l'admin
-     * @return l'admin ou null si non trouvé
      */
     public Admin getAdminParId(int id) {
         try {
@@ -89,106 +90,54 @@ public class AdminService {
     }
 
     /**
-     * Récupère un admin par son email
-     * @param email l'email de l'admin
-     * @return l'admin ou null si non trouvé
-     */
-    public Admin getAdminParEmail(String email) {
-        try {
-            return adminDAO.findByEmail(email);
-        } catch (SQLException e) {
-            System.err.println("Erreur lors de la recherche: " + e.getMessage());
-            return null;
-        }
-    }
-
-    /**
      * Met à jour les informations d'un admin
-     * @param id l'ID de l'admin
-     * @param nouvelEmail le nouvel email
-     * @param nouveauMdp le nouveau mot de passe
-     * @return true si mise à jour réussie
      */
-    public boolean mettreAJourAdmin(int id, String nouvelEmail, String nouveauMdp) {
-        try {
-            Admin admin = getAdminParId(id);
-            if (admin == null) {
-                return false;
-            }
+    public void mettreAJourAdmin(int id, String nouvelEmail, String nouveauMdp,
+                                 String nouveauNom, String nouveauPrenom, int nouveauNumTel)
+            throws SQLException, IllegalArgumentException {
 
-            admin.setEmail(nouvelEmail);
-            admin.setPlainPassword(nouveauMdp);
-            adminDAO.update(admin);
-
-            System.out.println("Admin mis à jour avec succès");
-            return true;
-        } catch (SQLException e) {
-            System.err.println("Erreur lors de la mise à jour: " + e.getMessage());
-            return false;
+        Admin admin = getAdminParId(id);
+        if (admin == null) {
+            throw new IllegalArgumentException("Aucun admin trouvé avec l'ID: " + id);
         }
+
+        // Mise à jour des champs
+        admin.setEmail(nouvelEmail);
+        admin.setPlainPassword(nouveauMdp);
+        admin.setNom(nouveauNom);
+        admin.setPrenom(nouveauPrenom);
+        admin.setNumTel(nouveauNumTel);
+
+        adminDAO.update(admin);
+        System.out.println("Admin mis à jour avec succès");
     }
 
     /**
      * Change le mot de passe d'un admin
-     * @param id l'ID de l'admin
-     * @param ancienMdp l'ancien mot de passe
-     * @param nouveauMdp le nouveau mot de passe
-     * @return true si changement réussi
      */
-    public boolean changerMotDePasse(int id, String ancienMdp, String nouveauMdp) {
-        try {
-            boolean success = adminDAO.changePassword(id, ancienMdp, nouveauMdp);
-            if (success) {
-                System.out.println("Mot de passe changé avec succès");
-            } else {
-                System.out.println("Ancien mot de passe incorrect");
-            }
-            return success;
-        } catch (SQLException e) {
-            System.err.println("Erreur lors du changement: " + e.getMessage());
-            return false;
+    public void changerMotDePasse(int id, String ancienMdp, String nouveauMdp)
+            throws SQLException, IllegalArgumentException {
+
+        boolean success = adminDAO.changePassword(id, ancienMdp, nouveauMdp);
+        if (!success) {
+            throw new IllegalArgumentException("Ancien mot de passe incorrect");
         }
+
+        System.out.println("Mot de passe changé avec succès");
     }
 
     /**
      * Supprime un administrateur
-     * @param id l'ID de l'admin à supprimer
-     * @return true si suppression réussie
      */
-    public boolean supprimerAdmin(int id) {
-        try {
-            adminDAO.delete(id);
-            System.out.println("Admin supprimé avec succès");
-            return true;
-        } catch (SQLException e) {
-            System.err.println("Erreur lors de la suppression: " + e.getMessage());
-            return false;
-        }
-    }
+    public void supprimerAdmin(int id) throws SQLException, IllegalArgumentException {
 
-    /**
-     * Liste tous les administrateurs
-     * @return liste des admins
-     */
-    public List<Admin> listerTousLesAdmins() {
-        try {
-            return adminDAO.findAll();
-        } catch (SQLException e) {
-            System.err.println("Erreur lors du listage: " + e.getMessage());
-            return List.of();
+        // Récupérer l'admin pour vérifier s'il existe
+        Admin admin = getAdminParId(id);
+        if (admin == null) {
+            throw new IllegalArgumentException("Aucun admin trouvé avec l'ID: " + id);
         }
-    }
 
-    /**
-     * Compte le nombre total d'administrateurs
-     * @return le nombre d'admins
-     */
-    public int compterAdmins() {
-        try {
-            return adminDAO.findAll().size();
-        } catch (SQLException e) {
-            System.err.println("Erreur lors du comptage: " + e.getMessage());
-            return 0;
-        }
+        adminDAO.delete(id);
+        System.out.println("Admin supprimé avec succès");
     }
 }

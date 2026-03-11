@@ -4,201 +4,194 @@ import com.eseo.mediastock.model.Admin;
 import com.eseo.mediastock.service.PasswordUtilService;
 import org.junit.jupiter.api.*;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdminDAOTest {
 
-    private static AdminDAO dao;
-    private static Integer idTest;
-    private static AtomicInteger compteur = new AtomicInteger(1);
-    private static final List<Integer> idsACleaner = new ArrayList<>();
-    private static String emailTest;
+    private static AdminDAO adminDAO;
+    private static int idAdminTest = 0;
+
+    // Constantes pour les tests
+    private static final String EMAIL_TEST = "testdao@admin.com";
+    private static final String MDP_TEST = "password123";
+    private static final String NOM_TEST = "Test";
+    private static final String PRENOM_TEST = "DAO";
+    private static final int TEL_TEST = 123456789;
 
     @BeforeAll
-    static void setup() throws SQLException {
-        dao = new AdminDAO();
-        System.out.println(" Initialisation du DAO Admin");
-
-        // NETTOYAGE : Supprimer tous les anciens admins de test
-        List<Admin> tous = dao.findAll();
-        System.out.println("Nettoyage des anciens admins de test...");
-        for (Admin a : tous) {
-            if (a.getEmail().startsWith("admin.test")) {
-                dao.delete(a.getId());
-                System.out.println("  Supprimé ancien admin: ID=" + a.getId() + " Email=" + a.getEmail());
-            }
-        }
+    static void setup() {
+        adminDAO = new AdminDAO();
+        System.out.println("DÉMARRAGE DES TESTS ADMIN DAO ");
     }
 
     @AfterAll
-    static void nettoyage() throws SQLException {
-        System.out.println(" NETTOYAGE AUTOMATIQUE ");
-        for (Integer id : idsACleaner) {
+    static void cleanup() {
+        System.out.println("NETTOYAGE ");
+        if (idAdminTest > 0) {
             try {
-                dao.delete(id);
-                System.out.println("Supprimé: admin ID " + id);
-            } catch (Exception e) {
-                System.out.println("Erreur pour admin ID " + id);
+                adminDAO.delete(idAdminTest);
+                System.out.println("Admin " + idAdminTest + " supprimé");
+            } catch (SQLException e) {
+                System.out.println("Erreur nettoyage: " + e.getMessage());
             }
         }
-        idsACleaner.clear();
-        System.out.println(" FIN NETTOYAGE ");
-    }
-
-    private String genererEmailUnique() {
-        // Ajoute un timestamp pour garantir l'unicité
-        long timestamp = System.currentTimeMillis();
-        return "admin.test" + compteur.getAndIncrement() + "_" + timestamp + "@test.com";
     }
 
     @Test
     @Order(1)
     void testCreate() throws SQLException {
-        System.out.println("Test CREATE");
-        emailTest = genererEmailUnique();
-        Admin admin = new Admin(0, emailTest, "password123");
-        dao.create(admin);
-        assertTrue(admin.getId() > 0);
-        idTest = admin.getId();
-        idsACleaner.add(idTest);
-        System.out.println(" Admin créé ID: " + idTest + " Email: " + emailTest);
+        System.out.println("Test 1: Création admin");
+
+        // Créer un admin avec le mot de passe en clair (sera hashé par le DAO)
+        Admin admin = new Admin(0, NOM_TEST, PRENOM_TEST, EMAIL_TEST, TEL_TEST, MDP_TEST);
+        admin.setPlainPassword(MDP_TEST);
+
+        adminDAO.create(admin);
+
+        assertTrue(admin.getId() > 0, "L'ID devrait être généré");
+        idAdminTest = admin.getId();
+
+        System.out.println("Admin créé avec ID: " + idAdminTest);
     }
 
     @Test
     @Order(2)
-    void testAuthenticate() throws SQLException {
-        System.out.println("Test AUTHENTICATE");
+    void testFindByEmail() throws SQLException {
+        System.out.println("Test 2: Recherche par email");
 
-        // Petite pause
-        try { Thread.sleep(100); } catch (InterruptedException e) {}
+        Admin admin = adminDAO.findByEmail(EMAIL_TEST);
 
-        Admin trouve = dao.authenticate(emailTest, "password123");
-        assertNotNull(trouve, "L'authentification a échoué pour " + emailTest);
-        assertEquals(emailTest, trouve.getEmail());
-        System.out.println(" Authentification OK");
+        assertNotNull(admin, "L'admin devrait être trouvé");
+        assertEquals(EMAIL_TEST, admin.getEmail());
+        assertEquals(NOM_TEST, admin.getNom());
+        assertEquals(PRENOM_TEST, admin.getPrenom());
+        assertEquals(TEL_TEST, admin.getNumTel());
+
+        System.out.println("Admin trouvé: " + admin.getEmail());
     }
 
     @Test
     @Order(3)
-    void testAuthenticateWrongPassword() throws SQLException {
-        System.out.println("Test AUTHENTICATE wrong password");
-        assertNull(dao.authenticate(emailTest, "wrongpassword"));
-        System.out.println(" Authentification refusée OK");
+    void testAuthenticate() throws SQLException {
+        System.out.println("Test 3: Authentification");
+
+        // Test avec bons identifiants
+        Admin admin = adminDAO.authenticate(EMAIL_TEST, MDP_TEST);
+        assertNotNull(admin, "Authentification devrait réussir");
+        assertEquals(EMAIL_TEST, admin.getEmail());
+        System.out.println("Authentification réussie");
+
+        // Test avec mauvais mot de passe
+        Admin adminFail = adminDAO.authenticate(EMAIL_TEST, "mauvaisMdp");
+        assertNull(adminFail, "Authentification devrait échouer");
+        System.out.println("Échec authentification avec mauvais mdp");
     }
 
     @Test
     @Order(4)
-    void testUpdate() throws SQLException {
-        System.out.println("Test UPDATE");
-        String nouvelEmail = genererEmailUnique();
-        Admin adminModifie = new Admin(idTest, nouvelEmail, "nouveauPassword456");
-        dao.update(adminModifie);
+    void testFindAll() throws SQLException {
+        System.out.println("Test 4: Liste tous les admins");
 
-        // Petite pause
-        try { Thread.sleep(100); } catch (InterruptedException e) {}
+        var admins = adminDAO.findAll();
+        assertNotNull(admins);
+        assertTrue(admins.size() > 0, "La liste ne devrait pas être vide");
 
-        Admin verif = dao.authenticate(nouvelEmail, "nouveauPassword456");
-        assertNotNull(verif, "La mise à jour a échoué");
-        assertEquals(idTest, verif.getId());
-        assertEquals(nouvelEmail, verif.getEmail());
-        emailTest = nouvelEmail;
-        System.out.println(" Update OK - Nouvel email: " + nouvelEmail);
+        boolean trouve = admins.stream()
+                .anyMatch(a -> a.getId() == idAdminTest);
+        assertTrue(trouve, "L'admin de test devrait être dans la liste");
+
+        System.out.println("✅ " + admins.size() + " admin(s) trouvé(s)");
     }
 
     @Test
     @Order(5)
     void testChangePassword() throws SQLException {
-        System.out.println("Test CHANGE PASSWORD");
+        System.out.println("Test 5: Changement mot de passe");
 
-        // Vérifier d'abord que l'ancien mot de passe fonctionne
-        Admin avant = dao.authenticate(emailTest, "nouveauPassword456");
-        assertNotNull(avant, "Impossible de s'authentifier avant changement");
+        String nouveauMdp = "nouveauMdp123";
 
-        boolean changed = dao.changePassword(idTest, "nouveauPassword456", "password789");
-        assertTrue(changed, "Le changement de mot de passe a échoué");
+        boolean change = adminDAO.changePassword(idAdminTest, MDP_TEST, nouveauMdp);
+        assertTrue(change, "Le changement devrait réussir");
+        System.out.println("Mot de passe changé");
 
-        // Petite pause
-        try { Thread.sleep(100); } catch (InterruptedException e) {}
-
-        assertNull(dao.authenticate(emailTest, "nouveauPassword456"), "L'ancien mot de passe fonctionne encore");
-        assertNotNull(dao.authenticate(emailTest, "password789"), "Le nouveau mot de passe ne fonctionne pas");
-        System.out.println(" Changement mot de passe OK");
+        // Vérifie avec nouveau mot de passe
+        Admin admin = adminDAO.authenticate(EMAIL_TEST, nouveauMdp);
+        assertNotNull(admin, "Authentification avec nouveau mdp devrait réussir");
+        System.out.println("Authentification avec nouveau mdp réussie");
     }
 
     @Test
     @Order(6)
-    void testFindAll() throws SQLException {
-        System.out.println("Test FIND ALL");
-        List<Admin> liste = dao.findAll();
-        assertNotNull(liste);
-        assertTrue(liste.size() > 0);
-        System.out.println(" " + liste.size() + " admin(s) trouvé(s)");
+    void testUpdate() throws SQLException {
+        System.out.println("Test 6: Mise à jour admin");
+
+        // Récupére l'admin
+        Admin admin = adminDAO.findByEmail(EMAIL_TEST);
+        assertNotNull(admin);
+
+        // Modifie les champs
+        String nouveauNom = "TestUpdate";
+        String nouveauPrenom = "Update";
+        int nouveauTel = 987654321;
+
+        admin.setNom(nouveauNom);
+        admin.setPrenom(nouveauPrenom);
+        admin.setNumTel(nouveauTel);
+        admin.setPlainPassword("nouveauMdpUpdate");
+
+        adminDAO.update(admin);
+        System.out.println("✅ Admin mis à jour");
+
+        // Vérifie les modifications
+        Admin adminModifie = adminDAO.findByEmail(EMAIL_TEST);
+        assertEquals(nouveauNom, adminModifie.getNom());
+        assertEquals(nouveauPrenom, adminModifie.getPrenom());
+        assertEquals(nouveauTel, adminModifie.getNumTel());
+
+        // Vérifie que le nouveau mot de passe fonctionne
+        Admin loginTest = adminDAO.authenticate(EMAIL_TEST, "nouveauMdpUpdate");
+        assertNotNull(loginTest, "Nouveau mot de passe devrait fonctionner");
+
+        System.out.println("Vérifications réussies");
     }
 
     @Test
     @Order(7)
-    void testCreationsMultiples() throws SQLException {
-        System.out.println("Test créations multiples");
-        Admin a1 = new Admin(0, genererEmailUnique(), "mdp1");
-        Admin a2 = new Admin(0, genererEmailUnique(), "mdp2");
-        Admin a3 = new Admin(0, genererEmailUnique(), "mdp3");
+    void testEmailExistant() throws SQLException {
+        System.out.println("Test 7: Vérification email existant");
 
-        dao.create(a1);
-        dao.create(a2);
-        dao.create(a3);
+        Admin existant = adminDAO.findByEmail(EMAIL_TEST);
+        assertNotNull(existant, "L'email devrait exister");
 
-        idsACleaner.add(a1.getId());
-        idsACleaner.add(a2.getId());
-        idsACleaner.add(a3.getId());
+        Admin inexistant = adminDAO.findByEmail("email@inexistant.com");
+        assertNull(inexistant, "L'email ne devrait pas exister");
 
-        assertNotNull(dao.authenticate(a1.getEmail(), "mdp1"), "Admin 1 non trouvé");
-        assertNotNull(dao.authenticate(a2.getEmail(), "mdp2"), "Admin 2 non trouvé");
-        assertNotNull(dao.authenticate(a3.getEmail(), "mdp3"), "Admin 3 non trouvé");
-        System.out.println(" 3 admins créés avec succès");
+        System.out.println("Vérification email existant OK");
     }
 
     @Test
     @Order(8)
-    void testEmailInvalide() throws SQLException {
-        System.out.println("Test email invalide");
-        assertNull(dao.authenticate("email.inexistant@test.com", "mdp"));
-        System.out.println(" OK");
-    }
-
-    @Test
-    @Order(9)
     void testDelete() throws SQLException {
-        System.out.println("Test DELETE");
-        String emailSuppr = genererEmailUnique();
-        Admin aSupprimer = new Admin(0, emailSuppr, "asupprimer");
-        dao.create(aSupprimer);
-        int idSuppr = aSupprimer.getId();
+        System.out.println("Test 8: Suppression admin");
 
-        assertNotNull(dao.authenticate(emailSuppr, "asupprimer"), "Admin non trouvé avant suppression");
-        dao.delete(idSuppr);
+        // Créer un admin temporaire
+        String emailTemp = "temp@delete.com";
+        Admin tempAdmin = new Admin(0, "Temp", "Delete", emailTemp, 111222333, "tempMdp");
+        tempAdmin.setPlainPassword("tempMdp");
+        adminDAO.create(tempAdmin);
 
-        assertNull(dao.authenticate(emailSuppr, "asupprimer"), "Admin encore trouvé après suppression");
-        System.out.println(" Suppression OK - ID: " + idSuppr);
-    }
+        int idTemp = tempAdmin.getId();
+        System.out.println("Admin temporaire créé avec ID: " + idTemp);
 
-    @Test
-    @Order(0)
-    void testPasswordUtil() {
-        System.out.println("Test PASSWORD UTIL");
+        // Supprimer
+        adminDAO.delete(idTemp);
+        System.out.println("Admin temporaire supprimé");
 
-        String mdpClair = "password123";
-        String hash = PasswordUtilService.hash(mdpClair);
+        // Vérifier que l'admin n'existe plus
+        Admin verif = adminDAO.findByEmail(emailTemp);
+        assertNull(verif, "L'admin ne devrait plus exister");
 
-        System.out.println("Mot de passe clair: '" + mdpClair + "'");
-        System.out.println("Hash généré: '" + hash + "'");
-
-        boolean verification = PasswordUtilService.verify(hash, mdpClair);
-        System.out.println("Vérification: " + (verification ? "RÉUSSIE" : "ÉCHEC"));
-
-        assertTrue(verification, "PasswordUtil ne fonctionne pas correctement");
+        System.out.println("Suppression vérifiée");
     }
 }

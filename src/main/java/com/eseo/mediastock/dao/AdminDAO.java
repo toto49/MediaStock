@@ -7,17 +7,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class AdminDAO {
+
     /**
      * AUTHENTIFICATION DE L'ADMIN
-     * @param email - L'email de l'admin
-     * @param password - Le mot de passe
-     * @return Admin si trouvé, null sinon
-     * @throws SQLException - Si erreur SQL
      */
     public Admin authenticate(String email, String password) throws SQLException {
-        // Nettoie les entrées (supprime les espaces invisibles)
         email = email != null ? email.trim() : null;
         password = password != null ? password.trim() : null;
 
@@ -37,73 +32,78 @@ public class AdminDAO {
                 if (rs.next()) {
                     String hash = rs.getString("mdp");
 
-                    // Vérification avec le mot de passe en clair
                     if (PasswordUtilService.verify(hash, password)) {
+                        //constructeur
                         Admin admin = new Admin(
                                 rs.getInt("id"),
+                                rs.getString("nom"),
+                                rs.getString("prenom"),
                                 rs.getString("email"),
-                                hash  // Retourne le hash, pas le mot de passe
+                                rs.getInt("num_tel"),
+                                hash
                         );
-                        System.out.println(" Authentification réussie pour: " + email);
+                        System.out.println("Authentification réussie pour: " + email);
                         return admin;
                     } else {
-                        System.out.println(" Échec: mot de passe incorrect pour: " + email);
+                        System.out.println("Échec: mot de passe incorrect pour: " + email);
                     }
                 } else {
-                    System.out.println(" Échec: email non trouvé: " + email);
+                    System.out.println("Échec: email non trouvé: " + email);
                 }
             }
-        } catch (SQLException e) {
-            System.err.println(" Erreur SQL dans authenticate: " + e.getMessage());
-            throw e;
         }
         return null;
     }
 
     /**
-     * METHODE CREATE = Crée un nouvel administrateur
-     * @param admin - L'admin à ajouter
-     * @throws SQLException - Si erreur
+     * CREATE - Crée un nouvel administrateur
      */
     public void create(Admin admin) throws SQLException {
-        String sql = "INSERT INTO ADMINISTRATEUR (email, mdp) VALUES (?, ?)";
+        String sql = "INSERT INTO ADMINISTRATEUR (nom, prenom, email, num_tel, mdp) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
-            stmt.setString(1, admin.getEmail());
-            stmt.setString(2, PasswordUtilService.hash(admin.getPlainPassword()));
+            stmt.setString(1, admin.getNom());
+            stmt.setString(2, admin.getPrenom());
+            stmt.setString(3, admin.getEmail());
+            stmt.setInt(4, admin.getNumTel());  // ← getNumTel() sans underscore
+            stmt.setString(5, PasswordUtilService.hash(admin.getPlainPassword()));
+
             stmt.executeUpdate();
 
-            // Récupérer l'ID généré
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
                     int generatedId = rs.getInt(1);
                     admin.setId(generatedId);
-                    System.out.println("id generee pour admin " +  generatedId);
+                    System.out.println("ID généré pour admin: " + generatedId);
                 }
             }
         }
     }
+
     /**
-     * METHODE UPDATE = Met à jour un administrateur
-     * @param admin - L'admin avec les nouvelles valeurs
-     * @throws SQLException - Si erreur
+     * UPDATE - Met à jour un administrateur
      */
     public void update(Admin admin) throws SQLException {
-        String sql = "UPDATE ADMINISTRATEUR SET email = ?, mdp = ? WHERE id = ?";
+        String sql = "UPDATE ADMINISTRATEUR SET nom = ?, prenom = ?, email = ?, num_tel = ?, mdp = ? WHERE id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, admin.getEmail());
-            if (admin.getPlainPassword() != null  && !admin.getPlainPassword().isEmpty()) {
-                stmt.setString(2, PasswordUtilService.hash(admin.getPlainPassword()));
+            stmt.setString(1, admin.getNom());
+            stmt.setString(2, admin.getPrenom());
+            stmt.setString(3, admin.getEmail());
+            stmt.setInt(4, admin.getNumTel());
+
+            // Gestion du mot de passe
+            if (admin.getPlainPassword() != null && !admin.getPlainPassword().isEmpty()) {
+                stmt.setString(5, PasswordUtilService.hash(admin.getPlainPassword()));
             } else {
-                stmt.setString(2, admin.getPasswordHash());
+                stmt.setString(5, admin.getPasswordHash()); // Garde l'ancien hash
             }
 
-            stmt.setInt(3, admin.getId());
+            stmt.setInt(6, admin.getId());
 
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected == 0) {
@@ -113,9 +113,7 @@ public class AdminDAO {
     }
 
     /**
-     * METHODE DELETE = Supprime un admin
-     * @param id - L'ID de l'admin à supprimer
-     * @throws SQLException - Si erreur
+     * DELETE - Supprime un admin
      */
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM ADMINISTRATEUR WHERE id = ?";
@@ -135,13 +133,11 @@ public class AdminDAO {
     }
 
     /**
-     * METHODE READ = findall = Récupère tous les administrateurs
-     * @return List<Admin> - Liste des admins
-     * @throws SQLException - Si erreur
+     * FIND ALL - Récupère tous les administrateurs
      */
     public List<Admin> findAll() throws SQLException {
         List<Admin> admins = new ArrayList<>();
-        String sql = "SELECT * FROM ADMINISTRATEUR ORDER BY email";
+        String sql = "SELECT * FROM ADMINISTRATEUR ORDER BY nom, prenom";
 
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement();
@@ -150,7 +146,10 @@ public class AdminDAO {
             while (rs.next()) {
                 admins.add(new Admin(
                         rs.getInt("id"),
+                        rs.getString("nom"),
+                        rs.getString("prenom"),
                         rs.getString("email"),
+                        rs.getInt("num_tel"),
                         rs.getString("mdp")
                 ));
             }
@@ -158,7 +157,10 @@ public class AdminDAO {
         return admins;
     }
 
-    public Admin findByEmail (String email) throws SQLException {
+    /**
+     * FIND BY EMAIL - Récupère un admin par son email
+     */
+    public Admin findByEmail(String email) throws SQLException {
         String sql = "SELECT * FROM ADMINISTRATEUR WHERE email = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -170,7 +172,10 @@ public class AdminDAO {
                 if (rs.next()) {
                     return new Admin(
                             rs.getInt("id"),
+                            rs.getString("nom"),
+                            rs.getString("prenom"),
                             rs.getString("email"),
+                            rs.getInt("num_tel"),
                             rs.getString("mdp")
                     );
                 }
@@ -180,15 +185,9 @@ public class AdminDAO {
     }
 
     /**
-     * Change le mot de passe d'un admin METHODE UPDATE
-     * @param id - L'ID de l'admin
-     * @param ancienMdp - Ancien mot de passe (vérification)
-     * @param nouveauMdp - Nouveau mot de passe
-     * @return boolean - true si changement réussi
-     * @throws SQLException - Si erreur
+     * CHANGE PASSWORD - Change le mot de passe
      */
     public boolean changePassword(int id, String ancienMdp, String nouveauMdp) throws SQLException {
-
         String selectSql = "SELECT mdp FROM ADMINISTRATEUR WHERE id = ?";
         String updateSql = "UPDATE ADMINISTRATEUR SET mdp = ? WHERE id = ?";
 
@@ -196,6 +195,7 @@ public class AdminDAO {
             conn.setAutoCommit(false);
 
             try {
+                // Vérifie l'ancien mot de passe
                 try (PreparedStatement selectStmt = conn.prepareStatement(selectSql)) {
                     selectStmt.setInt(1, id);
 
@@ -204,17 +204,25 @@ public class AdminDAO {
                             conn.rollback();
                             return false;
                         }
+
+                        String hash = rs.getString("mdp");
+                        if (!PasswordUtilService.verify(hash, ancienMdp)) {
+                            conn.rollback();
+                            return false; // Ancien mot de passe incorrect
+                        }
                     }
                 }
 
+                // Mettre à jour le nouveau mot de passe
                 try (PreparedStatement updateStmt = conn.prepareStatement(updateSql)) {
                     updateStmt.setString(1, PasswordUtilService.hash(nouveauMdp));
                     updateStmt.setInt(2, id);
                     int rowsAffected = updateStmt.executeUpdate();
 
                     conn.commit();
-                    return (rowsAffected > 0);
+                    return rowsAffected > 0;
                 }
+
             } catch (SQLException e) {
                 conn.rollback();
                 throw e;
