@@ -16,8 +16,10 @@ public class JeuSocieteDAO {
     public static void addProduit(Produit p) throws SQLException {
         JeuSociete j = (JeuSociete) p;
         String sql = "INSERT INTO PRODUIT (type_produit, titre, description, editeur, annee_sortie, nb_joueurs_min,nb_joueurs_max, age_min, duree_partie) VALUES (?,?,?,?,?,?,?,?,?)";
+
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)){
+             PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)){
+
             stmt.setString(1, "Jeu");
             stmt.setString(2, j.getTitre());
             stmt.setString(3, j.getDescription());
@@ -27,9 +29,18 @@ public class JeuSocieteDAO {
             stmt.setInt(7, j.getNbJoueursMax());
             stmt.setInt(8, j.getAgeMin());
             stmt.setInt(9, j.getDureePartie());
-            stmt.executeUpdate();
-        }
 
+            stmt.executeUpdate();
+
+            // On récupère l'ID et on met à jour l'objet
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    p.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("La création du jeu de société a échoué, aucun ID n'a été retourné.");
+                }
+            }
+        }
     }
 
     public void updateProduit(Produit p) throws SQLException {

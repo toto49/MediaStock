@@ -15,9 +15,11 @@ public class LivreDAO {
 
     public static void addProduit(Produit p) throws SQLException {
         Livre l = (Livre) p;
-        String sql = "INSERT INTO PRODUIT (type_produit, titre, description, editeur, annee_sortie, isbn, auteur, nb_pages, format)VALUES (?, ?, ?, ?, ?,?,?,?,?)";
+        String sql = "INSERT INTO PRODUIT (type_produit, titre, description, editeur, annee_sortie, isbn, auteur, nb_pages, format) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+
             stmt.setString(1, "Livre");
             stmt.setString(2, l.getTitre());
             stmt.setString(3, l.getDescription());
@@ -27,7 +29,17 @@ public class LivreDAO {
             stmt.setString(7, l.getAuteur());
             stmt.setInt(8, l.getNbPages());
             stmt.setString(9, l.getFormat());
+
             stmt.executeUpdate();
+
+            // On récupère l'ID que la base de données vient de créer
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    p.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("La création du livre a échoué, aucun ID n'a été retourné.");
+                }
+            }
         }
     }
 
@@ -106,6 +118,7 @@ public class LivreDAO {
 
         return livre;
     }
+
     public int countLivres() throws SQLException {
         String sql = "SELECT COUNT(*) FROM PRODUIT WHERE type_produit = 'Livre'";
         int count = 0;

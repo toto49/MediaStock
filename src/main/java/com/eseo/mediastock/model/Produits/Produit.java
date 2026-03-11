@@ -29,6 +29,9 @@ public abstract class  Produit {
         this.exemplaires = exemplaires;
     }
 
+
+    public void setId(int id){this.id = id;}
+
     public int getId() {
         return id;
     }

@@ -17,8 +17,10 @@ public class DvdDAO {
     public static void addProduit(Produit p) throws SQLException {
         DVD d = (DVD) p;
         String sql = "INSERT INTO PRODUIT (type_produit, titre, description, editeur, annee_sortie, realisateur, duree_minutes, audio_langues, sous_titres) VALUES (?,?,?,?,?,?,?,?,?)";
+
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)){
+             PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)){
+
             stmt.setString(1, "DVD");
             stmt.setString(2, d.getTitre());
             stmt.setString(3, d.getDescription());
@@ -28,7 +30,17 @@ public class DvdDAO {
             stmt.setInt(7, d.getDureeMinutes());
             stmt.setString(8, String.join(",", d.getAudioLangues()));
             stmt.setString(9, d.getSousTitres() == null ? null : String.join(",", d.getSousTitres()));
+
             stmt.executeUpdate();
+
+            // On récupère l'ID et on le donne à l'objet
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    p.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("La création du DVD a échoué, aucun ID n'a été retourné.");
+                }
+            }
         }
     }
 

@@ -18,7 +18,7 @@ import java.util.List;
 
 public class StockService {
 
-    ExemplaireDAO exemplaireDAO;
+    ExemplaireDAO exemplaireDAO = new ExemplaireDAO();
 
     // --- AJOUT DES PRODUITS ---
 
@@ -38,6 +38,7 @@ public class StockService {
         livre.setFormat(format);
 
         LivreDAO.addProduit(livre);
+
         for (int i = 0; i < nbExemplaires; i++) {
             ajouterExemplaire(livre);
         }
