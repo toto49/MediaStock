@@ -87,13 +87,13 @@ public class AjouterProduitController implements Initializable {
                                 txtDesc.getText(),
                                 txtEditeur.getText(),
                                 spinAnnee.getValue(),
-                                txtIsbn.getText(), // ISBN est un String dans le service
+                                txtIsbn.getText(),
                                 txtAuteur.getText(),
                                 spinPages.getValue(),
-                                txtFormat.getText()
+                                txtFormat.getText(),
+                                spinStock.getValue()
                         );
 
-                        // TODO: Gérer l'ajout du stock (exemplaires) via spinStock.getValue() plus tard
 
                         afficherMessage(lblOutput, "Le Livre a été ajouté avec succès !", true);
                         viderChamps(txtTitre, txtDesc, txtEditeur, txtAuteur, txtIsbn, txtFormat);
@@ -141,10 +141,11 @@ public class AjouterProduitController implements Initializable {
                                 txtReal.getText(),
                                 spinDuree.getValue(),
                                 pistesAudio,
-                                sousTitres
+                                sousTitres,
+                                spinStock.getValue()
                         );
 
-                        // TODO: Gérer l'ajout du stock (exemplaires) via spinStock.getValue() plus tard
+
 
                         afficherMessage(lblOutput, "Le DVD a été ajouté avec succès !", true);
                         viderChamps(txtTitre, txtDesc, txtEditeur, txtReal, txtAudio, txtSousTitres);
@@ -189,10 +190,10 @@ public class AjouterProduitController implements Initializable {
                                 spinJMin.getValue(),
                                 spinJMax.getValue(),
                                 spinAgeMin.getValue(),
-                                spinDureeJeux.getValue()
+                                spinDureeJeux.getValue(),
+                                spinStock.getValue()
                         );
 
-                        // TODO: Gérer l'ajout du stock (exemplaires) via spinStock.getValue() plus tard
 
                         afficherMessage(lblOutput, "Le Jeu a été ajouté avec succès !", true);
                         viderChamps(txtTitre, txtDesc, txtEditeur);
