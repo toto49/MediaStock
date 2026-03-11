@@ -86,6 +86,7 @@
                             <TableColumn text="Format" fx:id="colFormat" minWidth="80" style="-fx-alignment: CENTER;">
                                 <cellValueFactory><PropertyValueFactory property="format"/></cellValueFactory>
                             </TableColumn>
+                            <TableColumn fx:id="colAction" text="Actions" prefWidth="120"/>
                         </columns>
 
                         <placeholder>

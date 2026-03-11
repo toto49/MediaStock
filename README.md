@@ -2,7 +2,7 @@
 
 **MediaStock** est un logiciel de bureau moderne conçu pour la gestion complète d'une médiathèque : bibliothèque,
 ludothèque et vidéothèque.  
-Développée en **Java 21** avec **JavaFX**, l'application propose une interface fluide, intuitive et pensée pour les
+Développée en **Java 25** avec **JavaFX**, l'application propose une interface fluide, intuitive et pensée pour les
 bibliothécaires.
 
 ---
