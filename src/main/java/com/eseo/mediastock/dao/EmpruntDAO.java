@@ -3,7 +3,9 @@ package com.eseo.mediastock.dao;
 import com.eseo.mediastock.model.Adherent;
 import com.eseo.mediastock.model.Emprunt;
 import com.eseo.mediastock.model.Enum.EnumDispo;
+import com.eseo.mediastock.model.Enum.EnumEtat;
 import com.eseo.mediastock.model.Exemplaire;
+import com.eseo.mediastock.model.Produits.Produit;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -12,11 +14,17 @@ import java.util.List;
 
 public class EmpruntDAO {
 
-    private final AdherentDAO adherentDAO = new AdherentDAO();
-    private final ExemplaireDAO exemplaireDAO = new ExemplaireDAO();
-
     public List<Emprunt> findAllEmprunts() throws SQLException {
-        String sql = "SELECT * FROM EMPRUNT";
+        String sql = "SELECT " +
+                "emp.id AS emp_id, emp.date_debut, emp.date_retour, emp.statut AS emp_statut, " +
+                "ad.id AS ad_id, ad.nom, ad.prenom, ad.email, ad.num_tel, " +
+                "ex.id AS ex_id, ex.code_barre, ex.etat, ex.statut AS ex_statut, " +
+                "pr.id AS pr_id " +
+                "FROM EMPRUNT emp " +
+                "INNER JOIN ADHERENT ad ON emp.id_adherent = ad.id " +
+                "INNER JOIN EXEMPLAIRE ex ON emp.id_exemplaire = ex.id " +
+                "INNER JOIN PRODUIT pr ON ex.id_produit = pr.id";
+
         List<Emprunt> emprunts = new ArrayList<>();
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -24,43 +32,104 @@ public class EmpruntDAO {
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
-                emprunts.add(createEmprunt(rs));
+                emprunts.add(createEmpruntFromJoin(rs));
             }
         }
         return emprunts;
     }
 
-    private Emprunt createEmprunt(ResultSet rs) throws SQLException {
-        int id = rs.getInt("id");
+    public List<Emprunt> trouverRetards(LocalDate date) throws SQLException {
+        String sql = "SELECT " +
+                "emp.id AS emp_id, emp.date_debut, emp.date_retour, emp.statut AS emp_statut, " +
+                "ad.id AS ad_id, ad.nom, ad.prenom, ad.email, ad.num_tel, " +
+                "ex.id AS ex_id, ex.code_barre, ex.etat, ex.statut AS ex_statut, " +
+                "pr.id AS pr_id " +
+                "FROM EMPRUNT emp " +
+                "INNER JOIN ADHERENT ad ON emp.id_adherent = ad.id " +
+                "INNER JOIN EXEMPLAIRE ex ON emp.id_exemplaire = ex.id " +
+                "INNER JOIN PRODUIT pr ON ex.id_produit = pr.id " +
+                "WHERE emp.date_retour < ? AND emp.statut = ?";
 
-        java.sql.Date sqlDateDebut = rs.getDate("date_debut");
-        java.sql.Date sqlDateRetour = rs.getDate("date_retour");
-        LocalDate dateDebut = sqlDateDebut != null ? sqlDateDebut.toLocalDate() : null;
-        LocalDate dateRetour = sqlDateRetour != null ? sqlDateRetour.toLocalDate() : null;
+        List<Emprunt> retards = new ArrayList<>();
 
-        String statutStr = rs.getString("statut");
-        EnumDispo statut = statutStr != null ? EnumDispo.valueOf(statutStr) : EnumDispo.EMPRUNTE;
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-        String idAdherent = rs.getString("id_adherent");
-        int idExemplaire = rs.getInt("id_exemplaire");
+            stmt.setDate(1, java.sql.Date.valueOf(date));
+            stmt.setString(2, EnumDispo.EMPRUNTE.name());
 
-        Adherent adherent = adherentDAO.GetByID(idAdherent);
-        Exemplaire exemplaire = exemplaireDAO.GetByID(idExemplaire);
-
-        Emprunt emprunt = new Emprunt(id, adherent, exemplaire, dateDebut, dateRetour);
-        emprunt.setStatusDispo(statut);
-
-        return emprunt;
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    retards.add(createEmpruntFromJoin(rs));
+                }
+            }
+        }
+        return retards;
     }
 
-    public void createEmprunt(Adherent adherent, Exemplaire exemplaire) throws SQLException {
+    public List<Emprunt> getEmpruntsByAdherent(Adherent adherent) throws SQLException {
+        String sql = "SELECT " +
+                "emp.id AS emp_id, emp.date_debut, emp.date_retour, emp.statut AS emp_statut, " +
+                "ad.id AS ad_id, ad.nom, ad.prenom, ad.email, ad.num_tel, " +
+                "ex.id AS ex_id, ex.code_barre, ex.etat, ex.statut AS ex_statut, " +
+                "pr.id AS pr_id " +
+                "FROM EMPRUNT emp " +
+                "INNER JOIN ADHERENT ad ON emp.id_adherent = ad.id " +
+                "INNER JOIN EXEMPLAIRE ex ON emp.id_exemplaire = ex.id " +
+                "INNER JOIN PRODUIT pr ON ex.id_produit = pr.id " +
+                "WHERE emp.id_adherent = ?";
+
+        List<Emprunt> emprunts = new ArrayList<>();
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, adherent.getId());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    emprunts.add(createEmpruntFromJoin(rs));
+                }
+            }
+        }
+        return emprunts;
+    }
+
+    public Emprunt trouverEmpruntEnCours(String codeBarre) throws SQLException {
+        String sql = "SELECT " +
+                "emp.id AS emp_id, emp.date_debut, emp.date_retour, emp.statut AS emp_statut, " +
+                "ad.id AS ad_id, ad.nom, ad.prenom, ad.email, ad.num_tel, " +
+                "ex.id AS ex_id, ex.code_barre, ex.etat, ex.statut AS ex_statut, " +
+                "pr.id AS pr_id " +
+                "FROM EMPRUNT emp " +
+                "INNER JOIN ADHERENT ad ON emp.id_adherent = ad.id " +
+                "INNER JOIN EXEMPLAIRE ex ON emp.id_exemplaire = ex.id " +
+                "INNER JOIN PRODUIT pr ON ex.id_produit = pr.id " +
+                "WHERE ex.code_barre = ? AND emp.statut = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, codeBarre);
+            stmt.setString(2, EnumDispo.EMPRUNTE.name());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return createEmpruntFromJoin(rs);
+                }
+            }
+        }
+        return null;
+    }
+
+    public void addEmprunt(Adherent adherent, Exemplaire exemplaire) throws SQLException {
         String sql = "INSERT INTO EMPRUNT (date_debut, date_retour, id_adherent, id_exemplaire, statut) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setDate(1, Date.valueOf(LocalDate.now()));
-            stmt.setDate(2, Date.valueOf(LocalDate.now().plusMonths(2))); // Date de retour prévue
+            stmt.setDate(2, Date.valueOf(LocalDate.now().plusMonths(2)));
             stmt.setString(3, adherent.getId());
             stmt.setInt(4, exemplaire.getId());
             stmt.setString(5, EnumDispo.EMPRUNTE.name());
@@ -75,7 +144,7 @@ public class EmpruntDAO {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setDate(1, java.sql.Date.valueOf(LocalDate.now())); // Date effective de retour
+            stmt.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
             stmt.setString(2, EnumDispo.RENDU.name());
             stmt.setInt(3, emprunt.getId());
 
@@ -83,43 +152,45 @@ public class EmpruntDAO {
         }
     }
 
-    public List<Emprunt> trouverRetards(LocalDate date) throws SQLException {
-        List<Emprunt> retards = new ArrayList<>();
-        String sql = "SELECT * FROM EMPRUNT WHERE date_retour < ? AND statut = ?";
+    // --- LA MÉTHODE COMMUNE DE CRÉATION ---
+    private Emprunt createEmpruntFromJoin(ResultSet rs) throws SQLException {
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        // 1. Instanciation de l'Adhérent
+        String idAdherent = rs.getString("ad_id");
+        String nomAdherent = rs.getString("nom");
+        String prenomAdherent = rs.getString("prenom");
+        String emailAdherent = rs.getString("email");
+        String telAdherent = rs.getString("num_tel");
 
-            stmt.setDate(1, java.sql.Date.valueOf(date));
-            stmt.setString(2, EnumDispo.EMPRUNTE.name());
+        Adherent adherent = new Adherent(idAdherent, nomAdherent, prenomAdherent, emailAdherent, telAdherent);
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    retards.add(createEmprunt(rs));
-                }
-            }
-        }
-        return retards;
-    }
+        // 2. Instanciation du Produit avec une classe anonyme (Solution pour classe abstraite)
+        int idProduit = rs.getInt("pr_id");
+        Produit produit = new Produit() {};
+        produit.setId(idProduit);
 
-    // --- NOUVELLE MÉTHODE ---
-    public Emprunt trouverEmpruntEnCours(String codeBarre) throws SQLException {
-        String sql = "SELECT emp.* FROM EMPRUNT emp " +
-                "JOIN EXEMPLAIRE ex ON emp.id_exemplaire = ex.id " +
-                "WHERE ex.code_barre = ? AND emp.statut = ?";
+        // 3. Instanciation de l'Exemplaire
+        int idExemplaire = rs.getInt("ex_id");
+        String codeBarre = rs.getString("code_barre");
+        EnumEtat etatPhysique = EnumEtat.valueOf(rs.getString("etat"));
+        EnumDispo statutExemplaire = EnumDispo.valueOf(rs.getString("ex_statut"));
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        Exemplaire exemplaire = new Exemplaire(idExemplaire, produit, codeBarre, etatPhysique, statutExemplaire);
 
-            stmt.setString(1, codeBarre);
-            stmt.setString(2, EnumDispo.EMPRUNTE.name());
+        // 4. Création finale de l'Emprunt
+        int idEmprunt = rs.getInt("emp_id");
 
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return createEmprunt(rs);
-                }
-            }
-        }
-        return null;
+        java.sql.Date sqlDateDebut = rs.getDate("date_debut");
+        java.sql.Date sqlDateRetour = rs.getDate("date_retour");
+        LocalDate dateDebut = sqlDateDebut != null ? sqlDateDebut.toLocalDate() : null;
+        LocalDate dateRetour = sqlDateRetour != null ? sqlDateRetour.toLocalDate() : null;
+
+        String statutEmpStr = rs.getString("emp_statut");
+        EnumDispo statutEmprunt = statutEmpStr != null ? EnumDispo.valueOf(statutEmpStr) : EnumDispo.EMPRUNTE;
+
+        Emprunt emprunt = new Emprunt(idEmprunt, adherent, exemplaire, dateDebut, dateRetour);
+        emprunt.setStatusDispo(statutEmprunt);
+
+        return emprunt;
     }
 }

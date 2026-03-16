@@ -33,7 +33,7 @@ public class EmpruntService {
             exemplaire.setStatusDispo(EnumDispo.EMPRUNTE);
 
             try{
-                empruntDAO.createEmprunt(adherent,exemplaire);
+                empruntDAO.addEmprunt(adherent,exemplaire);
                 exemplaireDAO.updateExemplaire(exemplaire);
             }
             catch (SQLException e){
@@ -57,6 +57,9 @@ public class EmpruntService {
         }
     }
 
+    public List<Emprunt> getEmpruntsFromAdherent(Adherent adherent) throws SQLException {
+        return  empruntDAO.getEmpruntsByAdherent(adherent);
+    }
 
     public List<Emprunt> getEmpruntsEnRetards() throws SQLException {
         return empruntDAO.trouverRetards(LocalDate.now());
