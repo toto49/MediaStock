@@ -50,6 +50,10 @@ public class CreateAccountController {
             showErrorAlert("Erreur", "Les mots de passe ne correspondent pas ");
             return;
         }
+        if (field_password_co.getText().length() < 6) {
+            showErrorAlert("Erreur", "Le mot de passe doit contenir au moins 6 caractères.");
+            return;
+        }
         if (!field_email_co.getText().contains("@")) {
             showErrorAlert("Erreur", "Format d'email invalide !");
             return;
