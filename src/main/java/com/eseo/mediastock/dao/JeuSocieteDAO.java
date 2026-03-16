@@ -94,10 +94,11 @@ public class JeuSocieteDAO {
             int dureePartie = rs.getInt("duree_partie");
 
             // EN attendant
-            List<Exemplaire> exemplaires = null;
+            List<Exemplaire> exemplaires = new ArrayList<>();
 
             // Création de l'objet
             JeuSociete jeu = new JeuSociete(id, titre, description, editeur, anneeSortie , exemplaires, nbJoueursMin, nbJoueursMax, ageMin, dureePartie);
+            jeu.setExemplaires(ExemplaireDAO.getExemplairesByProduit(jeu));
             jeux.add(jeu);
         }
         return jeux;

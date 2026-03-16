@@ -99,10 +99,11 @@ public class DvdDAO {
             List<String> sousTitres = (rawSub == null || rawSub.isEmpty()) ? new ArrayList<>() : new ArrayList<>(Arrays.asList(rawSub.split(",")));
 
             // EN attendant
-            List<Exemplaire> exemplaires = null;
+            List<Exemplaire> exemplaires = new ArrayList<>();
 
             // Création de l'objet
             DVD dvd = new DVD(id, titre, description, editeur, anneeSortie , exemplaires,realisateur, dureeMinutes, audioLangues, sousTitres);
+            dvd.setExemplaires(ExemplaireDAO.getExemplairesByProduit(dvd));
             dvds.add(dvd);
         }
         return dvds;
