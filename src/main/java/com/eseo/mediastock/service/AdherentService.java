@@ -73,4 +73,13 @@ public class AdherentService {
     public List<Adherent> getAllAdherents() throws SQLException {
         return adherentDAO.findAll();
     }
+
+    public Adherent getAdherentById(String id) throws SQLException {
+        for (Adherent a : adherentDAO.findAll()) {
+            if (a.getId().equals(id)) {
+                return a;
+            }
+        }
+        return null;
+    }
 }

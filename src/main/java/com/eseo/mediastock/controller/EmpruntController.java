@@ -1,5 +1,11 @@
 package com.eseo.mediastock.controller;
 
+import com.eseo.mediastock.model.Adherent;
+import com.eseo.mediastock.model.Emprunt;
+import com.eseo.mediastock.model.Exemplaire;
+import com.eseo.mediastock.service.AdherentService;
+import com.eseo.mediastock.service.EmpruntService;
+import com.eseo.mediastock.service.StockService;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,12 +14,19 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
 public class EmpruntController {
 
     private final int LIGNES_PAR_PAGE = 50;
+
+    // --- INSTANCIATION EXCLUSIVE DES SERVICES ---
+    private final EmpruntService empruntService = new EmpruntService();
+    private final AdherentService adherentService = new AdherentService();
+    private final StockService stockService = new StockService();
 
     // --- Champs de formulaire ---
     @FXML
@@ -56,7 +69,6 @@ public class EmpruntController {
         colDateLimite.setCellValueFactory(new PropertyValueFactory<>("dateLimite"));
         colJours.setCellValueFactory(new PropertyValueFactory<>("joursRetard"));
 
-        // Message affiché quand le tableau est vide
         Label placeholder = new Label("Aucun emprunt en retard.");
         placeholder.setStyle("-fx-text-fill: #aaaaaa; -fx-font-style: italic; -fx-font-size: 14px;");
         tableRetard.setPlaceholder(placeholder);
@@ -95,15 +107,24 @@ public class EmpruntController {
         }
     }
 
-    // --- PLUS DE FAUSSES DONNÉES ICI ---
     private void chargerEmpruntsEnRetard() {
         new Thread(() -> {
             try {
-                // TODO: Appeler plus tard ton EmpruntService ici :
-                // List<RetardItem> listeDepuisBdd = empruntService.getEmpruntsEnRetards();
-
-                // Pour l'instant, la liste est vide au démarrage
+                List<Emprunt> empruntsEnRetard = empruntService.getEmpruntsEnRetards();
                 List<RetardItem> listeDepuisBdd = new ArrayList<>();
+
+                for (Emprunt emp : empruntsEnRetard) {
+
+                    long joursRetard = ChronoUnit.DAYS.between(emp.getDateRetour(), LocalDate.now());
+
+                    listeDepuisBdd.add(new RetardItem(
+                            emp.getEmprunteur().getId(),
+                            emp.getEmprunteur().getNom() + " " + emp.getEmprunteur().getPrenom(),
+                            emp.getExemplaire().getCodeBarre(),
+                            emp.getDateRetour().toString(),
+                            (int) joursRetard
+                    ));
+                }
 
                 Platform.runLater(() -> {
                     masterData.setAll(listeDepuisBdd);
@@ -112,7 +133,7 @@ public class EmpruntController {
 
             } catch (Exception e) {
                 Platform.runLater(() -> {
-                    afficherMessage("Erreur de chargement des retards.", true);
+                    afficherMessage("Erreur lors du chargement des retards.", true);
                     e.printStackTrace();
                 });
             }
@@ -123,34 +144,70 @@ public class EmpruntController {
     private void handleEmprunter(ActionEvent event) {
         lblMessage.setText("");
 
-        String numAdherent = fieldAdherent.getText();
-        String codeExemplaire = fieldExemplaire.getText();
+        String idAdherent = fieldAdherent.getText();
+        String codeBarreExemplaire = fieldExemplaire.getText();
 
-        if (numAdherent.isEmpty() || codeExemplaire.isEmpty()) {
+        if (idAdherent.isEmpty() || codeBarreExemplaire.isEmpty()) {
             afficherMessage("Erreur : Veuillez remplir tous les champs.", true);
             return;
         }
 
+        try {
+            Adherent adherent = adherentService.getAdherentById(idAdherent);
+            Exemplaire exemplaire = stockService.getExemplaireParCodeBarre(codeBarreExemplaire);
 
-        afficherMessage("Emprunt validé pour l'adhérent " + numAdherent, false);
-        fieldAdherent.clear();
-        fieldExemplaire.clear();
+            if (adherent == null) {
+                afficherMessage("Erreur : Adhérent introuvable.", true);
+                return;
+            }
+            if (exemplaire == null) {
+                afficherMessage("Erreur : Exemplaire introuvable.", true);
+                return;
+            }
+
+            if (!empruntService.peutEmprunter(adherent, exemplaire)) {
+                afficherMessage("Refusé : Quota atteint, retards, ou exemplaire indisponible.", true);
+                return;
+            }
+
+            empruntService.enregistrerEmprunt(adherent, exemplaire);
+            afficherMessage("Emprunt validé pour " + adherent.getNom(), false);
+
+            fieldAdherent.clear();
+            fieldExemplaire.clear();
+
+        } catch (Exception e) {
+            afficherMessage("Erreur : " + e.getMessage(), true);
+        }
     }
 
     @FXML
     private void handleRendre(ActionEvent event) {
         lblMessage.setText("");
+        String codeBarreExemplaire = fieldExemplaire.getText();
 
-        String codeExemplaire = fieldExemplaire.getText();
-
-        if (codeExemplaire.isEmpty()) {
-            afficherMessage("Erreur : Veuillez scanner le code de l'exemplaire pour le rendre.", true);
+        if (codeBarreExemplaire.isEmpty()) {
+            afficherMessage("Erreur : Veuillez scanner le code barre de l'exemplaire.", true);
             return;
         }
 
-        // TODO: Appeler ton EmpruntService (enregistrerRetour)
-        afficherMessage("Retour validé pour l'exemplaire : " + codeExemplaire, false);
-        fieldExemplaire.clear();
+        try {
+            Emprunt empruntActif = empruntService.getEmpruntActif(codeBarreExemplaire);
+
+            if (empruntActif == null) {
+                afficherMessage("Erreur : Aucun emprunt en cours pour cet exemplaire.", true);
+                return;
+            }
+
+            empruntService.enregistrerRetour(empruntActif.getEmprunteur(), empruntActif);
+            afficherMessage("Retour validé pour l'exemplaire : " + codeBarreExemplaire, false);
+
+            fieldExemplaire.clear();
+            chargerEmpruntsEnRetard();
+
+        } catch (Exception e) {
+            afficherMessage("Erreur système : " + e.getMessage(), true);
+        }
     }
 
     private void afficherMessage(String message, boolean estErreur) {
@@ -161,7 +218,6 @@ public class EmpruntController {
             lblMessage.setStyle("-fx-text-fill: #2ecc71; -fx-font-weight: bold; -fx-padding: 10 0 0 0;");
         }
     }
-
 
     public record RetardItem(String numAdherent, String nomAdherent, String exemplaire, String dateLimite,
                              int joursRetard) {

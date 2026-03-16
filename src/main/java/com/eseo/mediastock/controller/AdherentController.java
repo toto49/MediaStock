@@ -1,7 +1,9 @@
 package com.eseo.mediastock.controller;
 
 import com.eseo.mediastock.model.Adherent;
+import com.eseo.mediastock.model.Emprunt;
 import com.eseo.mediastock.service.AdherentService;
+import com.eseo.mediastock.service.EmpruntService;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,6 +21,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class AdherentController {
@@ -95,7 +98,11 @@ public class AdherentController {
                         btn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand;");
                         btn.setOnAction((ActionEvent event) -> {
                             Adherent adherentSelectionne = getTableView().getItems().get(getIndex());
-                            afficherPopupHistorique(adherentSelectionne);
+                            try {
+                                afficherPopupHistorique(adherentSelectionne);
+                            } catch (SQLException e) {
+                                afficherMessage("Erreur lors de l'ouverture de l'historique : " + e.getMessage(), true);
+                            }
                         });
                     }
 
@@ -116,8 +123,8 @@ public class AdherentController {
         colAction.setCellFactory(cellFactory);
     }
 
-    // --- LE POPUP SANS SIMULATION DE DONNÉES ---
-    private void afficherPopupHistorique(Adherent adherent) {
+    // --- LE POPUP AVEC LES DONNÉES FORMATÉES ---
+    private void afficherPopupHistorique(Adherent adherent) throws SQLException {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.setTitle("Profil de " + adherent.getNom() + " " + adherent.getPrenom());
@@ -130,10 +137,16 @@ public class AdherentController {
         lblTitre.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #ffcc00;");
         Label lblContact = new Label("Tel: " + adherent.getNumTel() + " | Email: " + adherent.getEmailContact());
         lblContact.setStyle("-fx-text-fill: white;");
-
-        // TODO: C'est ici que tu appelleras ton service plus tard pour remplir cette liste
-        // Exemple : ObservableList<EmpruntHistorique> donneesHistorique = FXCollections.observableArrayList(adherentService.getHistorique(adherent.getId()));
+        EmpruntService empruntService = new EmpruntService();
+        List<Emprunt> empruntsBruts = empruntService.getEmpruntsFromAdherent(adherent);
         ObservableList<EmpruntHistorique> donneesHistorique = FXCollections.observableArrayList();
+        for (Emprunt emp : empruntsBruts) {
+            String produitInfo = emp.getExemplaire() != null ? emp.getExemplaire().getCodeBarre() : "Inconnu";
+            String dateEmp = emp.getDateDebut() != null ? emp.getDateDebut().toString() : "Inconnue";
+            String statut = emp.getStatusDispo() != null ? emp.getStatusDispo().name() : "Inconnu";
+
+            donneesHistorique.add(new EmpruntHistorique(produitInfo, dateEmp, statut));
+        }
 
         Pagination paginationHisto = new Pagination();
         int lignesParPagePopup = 10;
@@ -143,13 +156,11 @@ public class AdherentController {
         paginationHisto.setPageFactory(pageIndex -> {
             TableView<EmpruntHistorique> tablePage = new TableView<>();
             tablePage.setStyle("-fx-background-color: #383838;");
-
-            // Message affiché quand le tableau est vide
             Label placeholder = new Label("Aucun historique d'emprunt.");
             placeholder.setStyle("-fx-text-fill: #aaaaaa; -fx-font-style: italic;");
             tablePage.setPlaceholder(placeholder);
 
-            TableColumn<EmpruntHistorique, String> colTitre = new TableColumn<>("Produit");
+            TableColumn<EmpruntHistorique, String> colTitre = new TableColumn<>("Produit (Code Barre)");
             colTitre.setCellValueFactory(new PropertyValueFactory<>("titreProduit"));
             colTitre.setPrefWidth(200);
 
@@ -162,8 +173,6 @@ public class AdherentController {
             colStatut.setPrefWidth(100);
 
             tablePage.getColumns().addAll(colTitre, colDateEmp, colStatut);
-
-            // Gestion propre d'une liste vide pour éviter les erreurs
             if (donneesHistorique.isEmpty()) {
                 tablePage.setItems(FXCollections.observableArrayList());
             } else {
@@ -186,7 +195,7 @@ public class AdherentController {
         popup.showAndWait();
     }
 
-    // --- LE RESTE DU CODE NE CHANGE PAS ---
+    // --- GESTION ADHÉRENTS PRINCIPALE ---
 
     private void chargerAdherents() {
         new Thread(() -> {
