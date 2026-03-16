@@ -13,8 +13,8 @@ import java.util.List;
 
 public class EmpruntService {
 
-    private EmpruntDAO empruntDAO = new EmpruntDAO();
-    private ExemplaireDAO exemplaireDAO = new ExemplaireDAO();
+    private final EmpruntDAO empruntDAO = new EmpruntDAO();
+    private final ExemplaireDAO exemplaireDAO = new ExemplaireDAO();
     private static final int MAX_EMPRUNTS = 5 ;
 
     public boolean peutEmprunter(Adherent adherent, Exemplaire exemplaire){
@@ -65,4 +65,7 @@ public class EmpruntService {
         return empruntDAO.trouverRetards(LocalDate.now());
     }
 
+    public Emprunt getEmpruntActif(String codeBarre) throws SQLException {
+        return empruntDAO.trouverEmpruntEnCours(codeBarre);
+    }
 }

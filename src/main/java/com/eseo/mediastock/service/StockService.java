@@ -195,4 +195,8 @@ public class StockService {
             return 0;
         }
     }
+
+    public Exemplaire getExemplaireParCodeBarre(String codeBarre) throws SQLException {
+        return exemplaireDAO.findByCodeBarre(codeBarre);
+    }
 }
