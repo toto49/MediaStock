@@ -1,58 +1,85 @@
 package com.eseo.mediastock.controller;
 
+import com.eseo.mediastock.model.Admin;
+import com.eseo.mediastock.service.AdminService;
+import com.eseo.mediastock.service.UserSession;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.stage.StageStyle;
 
+import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Optional;
 
 public class ParametreController {
 
-    // Méthode utilitaire pour styliser les champs de texte
+    private final AdminService adminService = new AdminService();
     private void styliserChamp(TextField field, String promptText) {
         field.setPromptText(promptText);
         field.getStyleClass().add("text_input");
     }
 
-    // Méthode utilitaire pour créer et styliser les labels (nouveau !)
     private Label creerLabel(String texte) {
         Label label = new Label(texte);
-        label.getStyleClass().add("label-or"); // On utilise le CSS au lieu du style en ligne
+        label.getStyleClass().add("label-or");
         return label;
     }
 
-    // Méthode utilitaire pour styliser les boutons avec le CSS
     private void styliserBoutonsDialog(DialogPane dialogPane, ButtonType loginButtonType) {
-        // --- Bouton Valider ---
         Button validerButton = (Button) dialogPane.lookupButton(loginButtonType);
         if (validerButton != null) {
             validerButton.getStyleClass().add("bouton-valider");
         }
 
-        // --- Bouton Annuler ---
         Button annulerButton = (Button) dialogPane.lookupButton(ButtonType.CANCEL);
         if (annulerButton != null) {
             annulerButton.getStyleClass().add("bouton-annuler");
         }
     }
 
+    private void afficherAlerte(Alert.AlertType type, String titre, String message) {
+        Alert alert = new Alert(type);
+        alert.setHeaderText(titre);
+        alert.setContentText(message);
+        alert.initStyle(StageStyle.TRANSPARENT);
+        DialogPane dialogPane = alert.getDialogPane();
+
+        try {
+            String cssPath = Objects.requireNonNull(getClass().getResource("/style/alert.css")).toExternalForm();
+            dialogPane.getStylesheets().add(cssPath);
+        } catch (Exception ignored) {
+        }
+
+        if (dialogPane.getScene() != null && dialogPane.getScene().getWindow() != null) {
+            dialogPane.getScene().setFill(Color.TRANSPARENT);
+        }
+        alert.showAndWait();
+    }
+
+
+
     @FXML
     public void ButtonEditParam(ActionEvent actionEvent) {
+        Admin adminActuel = UserSession.getAdminConnecte();
+        if (adminActuel == null) {
+            afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Aucun utilisateur n'est connecté.");
+            return;
+        }
+
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Modifier les Paramètres");
         DialogPane dialogPane = dialog.getDialogPane();
 
-        // On lie le CSS et on met le fond
         dialogPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/style/button.css")).toExternalForm());
         dialogPane.setStyle("-fx-background-color: #2b2b2b;");
 
         ButtonType loginButtonType = new ButtonType("Valider", ButtonBar.ButtonData.OK_DONE);
         dialogPane.getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
-
         dialog.setOnShown(e -> styliserBoutonsDialog(dialogPane, loginButtonType));
 
         GridPane grid = new GridPane();
@@ -71,6 +98,11 @@ public class ParametreController {
         styliserChamp(email, "Votre email");
         styliserChamp(tel, "Votre téléphone");
 
+        username.setText(adminActuel.getNom());
+        prenom.setText(adminActuel.getPrenom());
+        email.setText(adminActuel.getEmail());
+        tel.setText(String.valueOf(adminActuel.getNumTel()));
+
         grid.add(creerLabel("Nom d'utilisateur :"), 0, 0);
         grid.add(username, 1, 0);
         grid.add(creerLabel("Prénom d'utilisateur :"), 0, 1);
@@ -85,28 +117,50 @@ public class ParametreController {
 
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get() == loginButtonType) {
-            String nomSaisi = username.getText();
-            String emailSaisi = email.getText();
-            String prenomSaisi = prenom.getText();
-            String telSaisi = tel.getText();
+            try {
+                int telephone = Integer.parseInt(tel.getText());
 
-            System.out.println("Sauvegarde : " + nomSaisi + ", " + prenomSaisi);
+                adminService.mettreAJourAdmin(
+                        adminActuel.getId(),
+                        email.getText(),
+                        null,
+                        username.getText(),
+                        prenom.getText(),
+                        telephone
+                );
+
+                adminActuel.setNom(username.getText());
+                adminActuel.setPrenom(prenom.getText());
+                adminActuel.setEmail(email.getText());
+                adminActuel.setNumTel(telephone);
+
+                afficherAlerte(Alert.AlertType.INFORMATION, "Succès", "Vos informations ont été mises à jour.");
+
+            } catch (NumberFormatException e) {
+                afficherAlerte(Alert.AlertType.ERROR, "Erreur de saisie", "Le numéro de téléphone doit contenir uniquement des chiffres.");
+            } catch (IllegalArgumentException | SQLException e) {
+                afficherAlerte(Alert.AlertType.ERROR, "Erreur de mise à jour", e.getMessage());
+            }
         }
     }
 
     @FXML
     public void ButtonEditPassword(ActionEvent actionEvent) {
+        Admin adminActuel = UserSession.getAdminConnecte();
+        if (adminActuel == null) {
+            afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Aucun utilisateur n'est connecté.");
+            return;
+        }
+
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Modifier le mot de passe");
         DialogPane dialogPane = dialog.getDialogPane();
 
-        // IMPORTANT : Liaison du CSS pour la deuxième popup
         dialogPane.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/style/button.css")).toExternalForm());
         dialogPane.setStyle("-fx-background-color: #2b2b2b;");
 
         ButtonType loginButtonType = new ButtonType("Valider", ButtonBar.ButtonData.OK_DONE);
         dialogPane.getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
-
         dialog.setOnShown(e -> styliserBoutonsDialog(dialogPane, loginButtonType));
 
         GridPane grid = new GridPane();
@@ -139,10 +193,26 @@ public class ParametreController {
             String nouveauMdp = new_password.getText();
             String confirmMdp = confirm_password.getText();
 
-            if (nouveauMdp.equals(confirmMdp)) {
-                System.out.println("Mot de passe changé !");
-            } else {
-                System.out.println("Les mots de passe ne correspondent pas.");
+
+            if (!nouveauMdp.equals(confirmMdp)) {
+                afficherAlerte(Alert.AlertType.WARNING, "Erreur", "Les nouveaux mots de passe ne correspondent pas.");
+                return;
+            }
+
+
+            if (nouveauMdp.length() < 6) {
+                afficherAlerte(Alert.AlertType.WARNING, "Erreur", "Le nouveau mot de passe doit faire au moins 6 caractères.");
+                return;
+            }
+
+
+            try {
+                adminService.changerMotDePasse(adminActuel.getId(), ancienMdp, nouveauMdp);
+                afficherAlerte(Alert.AlertType.INFORMATION, "Succès", "Votre mot de passe a été modifié avec succès.");
+            } catch (IllegalArgumentException e) {
+                afficherAlerte(Alert.AlertType.ERROR, "Erreur", "L'ancien mot de passe est incorrect.");
+            } catch (SQLException e) {
+                afficherAlerte(Alert.AlertType.ERROR, "Erreur système", "Impossible de mettre à jour le mot de passe.");
             }
         }
     }
