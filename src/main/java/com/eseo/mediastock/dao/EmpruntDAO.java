@@ -138,6 +138,36 @@ public class EmpruntDAO {
         }
     }
 
+    public Emprunt trouverEmpruntEnCours(String codeBarre) throws SQLException {
+        String sql = "SELECT " +
+                "emp.id AS emp_id, emp.date_debut, emp.date_retour, emp.statut AS emp_statut, " +
+                "ad.id AS ad_id, ad.nom, ad.prenom, ad.email, ad.num_tel, " +
+                "ex.id AS ex_id, ex.code_barre, ex.etat, ex.statut AS ex_statut, " +
+                "pr.id AS pr_id " +
+                "FROM EMPRUNT emp " +
+                "INNER JOIN ADHERENT ad ON emp.id_adherent = ad.id " +
+                "INNER JOIN EXEMPLAIRE ex ON emp.id_exemplaire = ex.id " +
+                "INNER JOIN PRODUIT pr ON ex.id_produit = pr.id " +
+                "WHERE ex.code_barre = ? AND emp.statut = ?";
+
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, codeBarre);
+            stmt.setString(2, EnumDispo.EMPRUNTE.name());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return createEmpruntFromJoin(rs);
+                }
+            }
+        }
+        return null;
+    }
+
+
+
     public void saveRetour(Emprunt emprunt) throws SQLException {
         String sql = "UPDATE EMPRUNT SET date_retour = ?, statut = ? WHERE id = ?";
 
