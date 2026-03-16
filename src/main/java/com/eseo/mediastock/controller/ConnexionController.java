@@ -2,6 +2,9 @@ package com.eseo.mediastock.controller;
 
 import com.eseo.mediastock.HelloApplication;
 import com.eseo.mediastock.Launcher;
+import com.eseo.mediastock.model.Admin;
+import com.eseo.mediastock.service.AdminService;
+import com.eseo.mediastock.service.UserSession;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,27 +27,45 @@ public class ConnexionController {
         FXMLLoader loader = new FXMLLoader(
                 Launcher.class.getResource("view/bienvenue-view.fxml"));
         Parent root = loader.load();
-
         HelloApplication.changerPageGlobale(root, "Bienvenue");
     }
-
     public void Buttonsend(ActionEvent actionEvent) throws IOException {
         if (field_mail_co.getText().isEmpty() || field_password_co.getText().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setHeaderText("Erreur");
-            alert.setContentText("Veuillez remplir tous les champs !");
-            alert.initStyle(StageStyle.TRANSPARENT);
-            DialogPane dialogPane = alert.getDialogPane();
+            afficherAlerte(Alert.AlertType.WARNING, "Erreur", "Veuillez remplir tous les champs !");
+        } else {
+            String email = field_mail_co.getText();
+            String password = field_password_co.getText();
+
+            AdminService adminService = new AdminService();
+            Admin adminConnecte = adminService.login(email, password);
+            if (adminConnecte != null) {
+                UserSession.setAdminConnecte(adminConnecte);
+                FXMLLoader fxmlLoader = new FXMLLoader(Launcher.class.getResource("view/menu-view.fxml"));
+                Parent root = fxmlLoader.load();
+                HelloApplication.changerPageGlobale(root, "Menu Principal");
+            } else {
+
+                afficherAlerte(Alert.AlertType.ERROR, "Erreur d'authentification", "Email ou mot de passe incorrect.");
+            }
+        }
+    }
+
+    private void afficherAlerte(Alert.AlertType type, String titre, String message) {
+        Alert alert = new Alert(type);
+        alert.setHeaderText(titre);
+        alert.setContentText(message);
+        alert.initStyle(StageStyle.TRANSPARENT);
+        DialogPane dialogPane = alert.getDialogPane();
+
+        try {
             String cssPath = Objects.requireNonNull(getClass().getResource("/style/alert.css")).toExternalForm();
             dialogPane.getStylesheets().add(cssPath);
-            Stage stage = (Stage) dialogPane.getScene().getWindow();
-            stage.getScene().setFill(Color.TRANSPARENT);
-            alert.showAndWait();
-
-        } else {
-            FXMLLoader fxmlLoader = new FXMLLoader(Launcher.class.getResource("view/menu-view.fxml"));
-            Parent root = fxmlLoader.load();
-            HelloApplication.changerPageGlobale(root, "Menu Principal");
+        } catch (NullPointerException e) {
+            System.err.println("Attention : Le fichier CSS pour l'alerte est introuvable.");
         }
+
+        Stage stage = (Stage) dialogPane.getScene().getWindow();
+        stage.getScene().setFill(Color.TRANSPARENT);
+        alert.showAndWait();
     }
 }
