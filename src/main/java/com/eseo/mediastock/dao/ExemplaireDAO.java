@@ -3,6 +3,7 @@ package com.eseo.mediastock.dao;
 import com.eseo.mediastock.model.Enum.EnumDispo;
 import com.eseo.mediastock.model.Enum.EnumEtat;
 import com.eseo.mediastock.model.Exemplaire;
+import com.eseo.mediastock.model.Produits.Livre;
 import com.eseo.mediastock.model.Produits.Produit;
 
 import java.sql.Connection;
@@ -13,6 +14,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExemplaireDAO {
+
+    public static List<Exemplaire> getExemplairesByProduit(Produit produit) throws SQLException {
+        String sql = "SELECT * FROM EXEMPLAIRE WHERE id_produit = ?";
+        List<Exemplaire> exemplaires = new ArrayList<>();
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, produit.getId());
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String codeBarre = rs.getString("code_barre");
+                    EnumEtat etatPhysique = EnumEtat.valueOf(rs.getString("etat"));
+                    EnumDispo statusDispo = EnumDispo.valueOf(rs.getString("statut"));
+
+                    Exemplaire exemplaire = new Exemplaire(id, produit, codeBarre, etatPhysique, statusDispo);
+
+                    exemplaires.add(exemplaire);
+                }
+            }
+        }
+        return exemplaires;
+    }
 
     public void addExemplaire(Exemplaire exemplaire) throws SQLException {
         String sql = "INSERT INTO EXEMPLAIRE (code_barre, etat, statut, id_produit) VALUES (?, ?, ?, ?)";

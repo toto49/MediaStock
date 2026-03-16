@@ -92,12 +92,14 @@ public class LivreDAO {
             int nb_pages = rs.getInt("nb_pages");
             String format = rs.getString("format");
 
-            // EN attendant
-            List<Exemplaire> exemplaires = null;
+            List<Exemplaire> exemplaires = new ArrayList<>();
 
             // Création de l'objet
             Livre livre = new Livre(id, titre, description, editeur, anneeSortie , exemplaires, isbn, auteur, nb_pages, format);
+            livre.setExemplaires(ExemplaireDAO.getExemplairesByProduit(livre));
             livres.add(livre);
+
+
         }
         return livres;
     }
