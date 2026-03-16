@@ -73,11 +73,12 @@ public class CreateAccountController {
 
             redirectToBienvenue(actionEvent);
 
+        } catch (IllegalArgumentException e) {
+            showErrorAlert("Erreur", e.getMessage());
         } catch (Exception e) {
             showErrorAlert("Erreur technique",
                     "Une erreur est survenue lors de la création du compte.\n" +
-                            "Veuillez réessayer plus tard.\n\n" +
-                            "Détail: " + e.getMessage());
+                            "Veuillez réessayer plus tard.");
             e.printStackTrace();
         }
     }
