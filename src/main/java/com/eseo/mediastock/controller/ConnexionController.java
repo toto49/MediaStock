@@ -4,6 +4,7 @@ import com.eseo.mediastock.HelloApplication;
 import com.eseo.mediastock.Launcher;
 import com.eseo.mediastock.model.Admin;
 import com.eseo.mediastock.service.AdminService;
+import com.eseo.mediastock.service.UserSession;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -38,6 +39,7 @@ public class ConnexionController {
             AdminService adminService = new AdminService();
             Admin adminConnecte = adminService.login(email, password);
             if (adminConnecte != null) {
+                UserSession.setAdminConnecte(adminConnecte);
                 FXMLLoader fxmlLoader = new FXMLLoader(Launcher.class.getResource("view/menu-view.fxml"));
                 Parent root = fxmlLoader.load();
                 HelloApplication.changerPageGlobale(root, "Menu Principal");

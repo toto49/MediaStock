@@ -63,6 +63,7 @@ public class AdminService {
         nouvelAdmin.setPlainPassword(mdp);//pour definir le mot de passe avant hashage
         adminDAO.create(nouvelAdmin);
 
+
         System.out.println("Admin créé avec succès - ID: " + nouvelAdmin.getId());
         System.out.println("Email: " + email);
         System.out.println("Nom: " + nom + " " + prenom);
