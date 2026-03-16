@@ -86,14 +86,7 @@ public class AdherentDAO {
             stmt.setString(1, id);
 
             int rowsAffected = stmt.executeUpdate();
-
-            if (rowsAffected > 0) {
-                System.out.println(" Adhérent " + id + " supprimé avec succès");
-                return true;
-            } else {
-                System.out.println(" Aucun adhérent trouvé avec l'ID: " + id);
-                return false;
-            }
+            return rowsAffected > 0;
         }
     }
 

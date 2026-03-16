@@ -16,15 +16,8 @@ public class AdminService {
      */
     public Admin login(String email, String password) {
         try {
-            Admin admin = adminDAO.authenticate(email, password);
-            if (admin != null) {
-                System.out.println("Connexion réussie pour: " + email);
-            } else {
-                System.out.println("Échec de connexion pour: " + email);
-            }
-            return admin;
+            return adminDAO.authenticate(email, password);
         } catch (SQLException e) {
-            System.err.println("Erreur lors de la connexion: " + e.getMessage());
             return null;
         }
     }
@@ -62,11 +55,6 @@ public class AdminService {
         Admin nouvelAdmin = new Admin(0, nom.trim(), prenom.trim(), email.trim(), numTel, mdp);
         nouvelAdmin.setPlainPassword(mdp);//pour definir le mot de passe avant hashage
         adminDAO.create(nouvelAdmin);
-
-
-        System.out.println("Admin créé avec succès - ID: " + nouvelAdmin.getId());
-        System.out.println("Email: " + email);
-        System.out.println("Nom: " + nom + " " + prenom);
     }
 
     /**
@@ -80,10 +68,8 @@ public class AdminService {
                     return a;
                 }
             }
-            System.out.println("Aucun admin trouvé avec l'ID: " + id);
             return null;
         } catch (SQLException e) {
-            System.err.println("Erreur lors de la recherche: " + e.getMessage());
             return null;
         }
     }
@@ -108,7 +94,6 @@ public class AdminService {
         admin.setNumTel(nouveauNumTel);
 
         adminDAO.update(admin);
-        System.out.println("Admin mis à jour avec succès");
     }
 
     /**
@@ -121,8 +106,6 @@ public class AdminService {
         if (!success) {
             throw new IllegalArgumentException("Ancien mot de passe incorrect");
         }
-
-        System.out.println("Mot de passe changé avec succès");
     }
 
     /**
@@ -135,8 +118,6 @@ public class AdminService {
         if (admin == null) {
             throw new IllegalArgumentException("Aucun admin trouvé avec l'ID: " + id);
         }
-
         adminDAO.delete(id);
-        System.out.println("Admin supprimé avec succès");
     }
 }

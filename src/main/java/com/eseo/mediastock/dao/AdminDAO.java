@@ -17,7 +17,6 @@ public class AdminDAO {
         password = password != null ? password.trim() : null;
 
         if (email == null || password == null || email.isEmpty() || password.isEmpty()) {
-            System.out.println("Email ou mot de passe vide");
             return null;
         }
 
@@ -42,13 +41,8 @@ public class AdminDAO {
                                 rs.getInt("num_tel"),
                                 hash
                         );
-                        System.out.println("Authentification réussie pour: " + email);
                         return admin;
-                    } else {
-                        System.out.println("Échec: mot de passe incorrect pour: " + email);
                     }
-                } else {
-                    System.out.println("Échec: email non trouvé: " + email);
                 }
             }
         }
@@ -76,7 +70,6 @@ public class AdminDAO {
                 if (rs.next()) {
                     int generatedId = rs.getInt(1);
                     admin.setId(generatedId);
-                    System.out.println("ID généré pour admin: " + generatedId);
                 }
             }
         }
@@ -107,7 +100,6 @@ public class AdminDAO {
 
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected == 0) {
-                System.out.println("Aucun admin trouvé avec l'ID: " + admin.getId());
             }
         }
     }
@@ -123,11 +115,10 @@ public class AdminDAO {
 
             stmt.setInt(1, id);
 
+
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected == 0) {
-                System.out.println("Aucun admin trouvé avec l'ID: " + id);
-            } else {
-                System.out.println("Admin supprimé avec succès");
+                throw new SQLException("Aucun admin trouvé avec l'ID: " + id);
             }
         }
     }
