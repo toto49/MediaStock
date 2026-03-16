@@ -1,28 +1,18 @@
 package com.eseo.mediastock.service;
 
-import de.mkammerer.argon2.Argon2;
-import de.mkammerer.argon2.Argon2Factory;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class PasswordUtilService {
 
-    private static final Argon2 argon2 =
-            Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2id);
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public static String hash(String password) {
-        char[] passwordChars = password.toCharArray();
-        try {
-            return argon2.hash(3, 65536, 1, passwordChars);
-        } finally {
-            argon2.wipeArray(passwordChars);
-        }
+        return encoder.encode(password);
     }
 
     public static boolean verify(String hash, String password) {
-        char[] passwordChars = password.toCharArray();
-        try {
-            return argon2.verify(hash, passwordChars);
-        } finally {
-            argon2.wipeArray(passwordChars);
-        }
+        return encoder.matches(password, hash);
     }
 }
+
