@@ -2,16 +2,14 @@ package com.eseo.mediastock.service;
 
 import com.eseo.mediastock.dao.AdminDAO;
 import com.eseo.mediastock.model.Admin;
+
 import java.sql.SQLException;
 import java.util.List;
 
 public class AdminService {
 
-    private AdminDAO adminDAO;
+    private static final AdminDAO adminDAO = new AdminDAO();
 
-    public AdminService() {
-        this.adminDAO = new AdminDAO();
-    }
 
     /**
      * Authentifie un administrateur
@@ -34,7 +32,7 @@ public class AdminService {
     /**
      * Crée un nouvel administrateur
      */
-    public void creerAdmin(String email, String mdp, String nom, String prenom, int numTel)
+    public static void creerAdmin(String email, String mdp, String nom, String prenom, int numTel)
             throws SQLException, IllegalArgumentException {
 
         // Validation

@@ -3,6 +3,7 @@ package com.eseo.mediastock.controller;
 import com.eseo.mediastock.HelloApplication;
 import com.eseo.mediastock.Launcher;
 import com.eseo.mediastock.service.AdherentService;
+import com.eseo.mediastock.service.AdminService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -54,11 +55,13 @@ public class CreateAccountController {
             return;
         }
         try {
-            adherentService.inscrireAdherent(
+            int telephone = Integer.parseInt(field_telephone_co.getText());
+            AdminService.creerAdmin(
+                    field_email_co.getText(),
+                    field_password_co.getText(),
                     field_nom_co.getText(),
                     field_prenom_co.getText(),
-                    field_email_co.getText(),
-                    field_telephone_co.getText()
+                    telephone
             );
             showSuccessAlert("Succès",
                     "Compte créé avec succès !\n" +
