@@ -6,12 +6,14 @@ import com.eseo.mediastock.model.Admin;
 import com.eseo.mediastock.service.AdminService;
 import com.eseo.mediastock.service.UserSession;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DialogPane;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -20,8 +22,25 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class ConnexionController {
+    @FXML
     public TextField field_mail_co;
+    @FXML
     public PasswordField field_password_co;
+
+    @FXML
+    public void initialize() {
+        field_password_co.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                try {
+                    lancerConnexion();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+
+    }
 
     public void Buttonreturnco(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(
@@ -30,6 +49,10 @@ public class ConnexionController {
         HelloApplication.changerPageGlobale(root, "Bienvenue");
     }
     public void Buttonsend(ActionEvent actionEvent) throws IOException {
+        lancerConnexion();
+    }
+
+    private void lancerConnexion() throws IOException {
         if (field_mail_co.getText().isEmpty() || field_password_co.getText().isEmpty()) {
             afficherAlerte(Alert.AlertType.WARNING, "Erreur", "Veuillez remplir tous les champs !");
         } else {
@@ -44,7 +67,6 @@ public class ConnexionController {
                 Parent root = fxmlLoader.load();
                 HelloApplication.changerPageGlobale(root, "Menu Principal");
             } else {
-
                 afficherAlerte(Alert.AlertType.ERROR, "Erreur d'authentification", "Email ou mot de passe incorrect.");
             }
         }
