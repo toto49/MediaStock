@@ -128,7 +128,7 @@ public abstract class AbstractProduitController<T extends Produit> {
         spinner.setPrefSize(40, 40);
         spinner.setStyle("-fx-progress-color: #ffcc00;");
 
-        Label loadingLabel = new Label("Chargement des " + getCategorieProduit().toLowerCase() + "s en cours...");
+        Label loadingLabel = new Label("Chargement des " + getCategorieProduit().toLowerCase() + " en cours...");
         loadingLabel.setStyle("-fx-text-fill: #888888; -fx-font-size: 14px;");
 
         loadingBox.getChildren().addAll(spinner, loadingLabel);

@@ -77,7 +77,7 @@
                         <placeholder>
                             <VBox alignment="CENTER" spacing="10">
                                 <ProgressIndicator fx:id="loadingIcon" prefWidth="40" prefHeight="40"/>
-                                <Label fx:id="placeholderLabel" text="Recherche des DVD en cours..."
+                                <Label fx:id="placeholderLabel" text="Recherche des JEUX en cours..."
                                        style="-fx-text-fill: #888; -fx-font-size: 14px;"/>
                             </VBox>
                         </placeholder>
