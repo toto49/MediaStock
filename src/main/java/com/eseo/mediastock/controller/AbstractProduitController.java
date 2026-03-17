@@ -81,6 +81,8 @@ public abstract class AbstractProduitController<T extends Produit> {
     }
 
     private void chargerDonneesDansTableau() {
+        afficherPlaceholderChargement();
+
         new Thread(() -> {
             try {
                 List<Produit> listeProduits = stockService.SearchProduit("", getCategorieProduit());
@@ -95,13 +97,51 @@ public abstract class AbstractProduitController<T extends Produit> {
                 Platform.runLater(() -> {
                     masterData.setAll(listeDepuisBdd);
                     mettreAJourPagination();
+
+
+                    afficherPlaceholderVide();
                 });
 
             } catch (Exception e) {
                 System.err.println("Erreur lors du chargement des " + getCategorieProduit() + " via le service !");
                 e.printStackTrace();
+
+                Platform.runLater(() -> {
+                    if (getTable() != null) {
+                        Label lblErreur = new Label("Erreur de connexion à la base de données.");
+                        lblErreur.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
+                        getTable().setPlaceholder(lblErreur);
+                    }
+                });
             }
         }).start();
+    }
+
+
+    private void afficherPlaceholderChargement() {
+        if (getTable() == null) return;
+
+        VBox loadingBox = new VBox(10);
+        loadingBox.setAlignment(Pos.CENTER);
+
+        ProgressIndicator spinner = new ProgressIndicator();
+        spinner.setPrefSize(40, 40);
+        spinner.setStyle("-fx-progress-color: #ffcc00;");
+
+        Label loadingLabel = new Label("Chargement des " + getCategorieProduit().toLowerCase() + " en cours...");
+        loadingLabel.setStyle("-fx-text-fill: #888888; -fx-font-size: 14px;");
+
+        loadingBox.getChildren().addAll(spinner, loadingLabel);
+        getTable().setPlaceholder(loadingBox);
+    }
+
+    private void afficherPlaceholderVide() {
+        if (getTable() == null) return;
+
+        Label emptyLabel = new Label("Aucun " + getCategorieProduit().toLowerCase() + " trouvé dans la bibliothèque.");
+        emptyLabel.setStyle("-fx-text-fill: #888888; -fx-font-size: 14px; -fx-font-style: italic;");
+
+        getTable().setPlaceholder(emptyLabel);
     }
 
     @FXML

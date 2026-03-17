@@ -55,44 +55,65 @@
                         </columnResizePolicy>
 
                         <columns>
-                            <TableColumn text="#" fx:id="colId" minWidth="40" maxWidth="60" style="-fx-alignment: CENTER;">
-                                <cellValueFactory><PropertyValueFactory property="id"/></cellValueFactory>
+                            <TableColumn text="#" fx:id="colId" minWidth="40" maxWidth="60"
+                                         style="-fx-alignment: CENTER;">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="id"/>
+                                </cellValueFactory>
                             </TableColumn>
 
                             <TableColumn text="Titre" fx:id="colTitre" minWidth="180" style="-fx-font-weight: bold;">
-                                <cellValueFactory><PropertyValueFactory property="titre"/></cellValueFactory>
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="titre"/>
+                                </cellValueFactory>
                             </TableColumn>
 
                             <TableColumn text="Réalisateur" fx:id="colRealisateur" minWidth="130">
-                                <cellValueFactory><PropertyValueFactory property="realisateur"/></cellValueFactory>
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="realisateur"/>
+                                </cellValueFactory>
                             </TableColumn>
 
-                            <TableColumn text="Année" fx:id="colAnnee" minWidth="60" maxWidth="80" style="-fx-alignment: CENTER;">
-                                <cellValueFactory><PropertyValueFactory property="anneeSortie"/></cellValueFactory>
+                            <TableColumn text="Année" fx:id="colAnnee" minWidth="60" maxWidth="80"
+                                         style="-fx-alignment: CENTER;">
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="anneeSortie"/>
+                                </cellValueFactory>
                             </TableColumn>
 
-                            <TableColumn text="Durée" fx:id="colDuree" minWidth="60" maxWidth="80" style="-fx-alignment: CENTER;">
+                            <TableColumn text="Durée" fx:id="colDuree" minWidth="60" maxWidth="80"
+                                         style="-fx-alignment: CENTER;">
                                 <cellValueFactory>
                                     <PropertyValueFactory property="dureeMinutes"/>
                                 </cellValueFactory>
                             </TableColumn>
 
                             <TableColumn text="Éditeur" fx:id="colEditeur" minWidth="100">
-                                <cellValueFactory><PropertyValueFactory property="editeur"/></cellValueFactory>
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="editeur"/>
+                                </cellValueFactory>
                             </TableColumn>
 
                             <TableColumn text="Audio" fx:id="colLangues" minWidth="90">
-                                <cellValueFactory><PropertyValueFactory property="audioLangues"/></cellValueFactory>
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="audioLangues"/>
+                                </cellValueFactory>
                             </TableColumn>
 
                             <TableColumn text="Sous-titres" fx:id="colSousTitres" minWidth="90">
-                                <cellValueFactory><PropertyValueFactory property="sousTitres"/></cellValueFactory>
+                                <cellValueFactory>
+                                    <PropertyValueFactory property="sousTitres"/>
+                                </cellValueFactory>
                             </TableColumn>
                             <TableColumn fx:id="colAction" text="Actions" prefWidth="120"/>
                         </columns>
 
                         <placeholder>
-                            <Label text="Aucun DVD trouvé dans la bibliothèque" style="-fx-text-fill: #888; -fx-font-size: 14px;"/>
+                            <VBox alignment="CENTER" spacing="10">
+                                <ProgressIndicator fx:id="loadingIcon" prefWidth="40" prefHeight="40"/>
+                                <Label fx:id="placeholderLabel" text="Recherche des DVD en cours..."
+                                       style="-fx-text-fill: #888; -fx-font-size: 14px;"/>
+                            </VBox>
                         </placeholder>
 
                     </TableView>

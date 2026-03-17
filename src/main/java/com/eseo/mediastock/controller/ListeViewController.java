@@ -8,7 +8,7 @@ public class ListeViewController {
     @FXML
     public void ButtonViewLivre(ActionEvent actionEvent) {
         // On passe le nom du fichier FXML ET le titre à afficher
-        naviguerVers("livre", "Gestion des Livres");
+        naviguerVers("livres", "Gestion des Livres");
     }
 
     @FXML

@@ -11,8 +11,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -63,15 +64,21 @@ public class EmpruntController {
 
     @FXML
     public void initialize() {
-        colNumAdherent.setCellValueFactory(new PropertyValueFactory<>("numAdherent"));
-        colNomAdherent.setCellValueFactory(new PropertyValueFactory<>("nomAdherent"));
-        colExemplaire.setCellValueFactory(new PropertyValueFactory<>("exemplaire"));
-        colDateLimite.setCellValueFactory(new PropertyValueFactory<>("dateLimite"));
-        colJours.setCellValueFactory(new PropertyValueFactory<>("joursRetard"));
-
-        Label placeholder = new Label("Aucun emprunt en retard.");
-        placeholder.setStyle("-fx-text-fill: #aaaaaa; -fx-font-style: italic; -fx-font-size: 14px;");
-        tableRetard.setPlaceholder(placeholder);
+        colNumAdherent.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(cellData.getValue().numAdherent())
+        );
+        colNomAdherent.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(cellData.getValue().nomAdherent())
+        );
+        colExemplaire.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(cellData.getValue().exemplaire())
+        );
+        colDateLimite.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(cellData.getValue().dateLimite())
+        );
+        colJours.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleObjectProperty<>(cellData.getValue().joursRetard())
+        );
 
         configurerPagination();
         chargerEmpruntsEnRetard();
@@ -107,7 +114,36 @@ public class EmpruntController {
         }
     }
 
+    private void afficherPlaceholderChargement() {
+        if (tableRetard == null) return;
+
+        VBox loadingBox = new VBox(10);
+        loadingBox.setAlignment(Pos.CENTER);
+
+        ProgressIndicator spinner = new ProgressIndicator();
+        spinner.setPrefSize(40, 40);
+        spinner.setStyle("-fx-progress-color: #ffcc00;");
+
+        Label loadingLabel = new Label("Vérification des retards en cours...");
+        loadingLabel.setStyle("-fx-text-fill: #888888; -fx-font-size: 14px;");
+
+        loadingBox.getChildren().addAll(spinner, loadingLabel);
+        tableRetard.setPlaceholder(loadingBox);
+    }
+
+    private void afficherPlaceholderVide() {
+        if (tableRetard == null) return;
+
+        Label emptyLabel = new Label("Super ! Aucun emprunt n'est en retard.");
+        emptyLabel.setStyle("-fx-text-fill: #2ecc71; -fx-font-size: 14px; -fx-font-style: italic;");
+        tableRetard.setPlaceholder(emptyLabel);
+    }
+
+    // --- MODIFICATION DU CHARGEMENT ---
+
     private void chargerEmpruntsEnRetard() {
+        afficherPlaceholderChargement();
+
         new Thread(() -> {
             try {
                 List<Emprunt> empruntsEnRetard = empruntService.getEmpruntsEnRetards();
@@ -129,10 +165,14 @@ public class EmpruntController {
                 Platform.runLater(() -> {
                     masterData.setAll(listeDepuisBdd);
                     mettreAJourPagination();
+                    afficherPlaceholderVide();
                 });
 
             } catch (Exception e) {
                 Platform.runLater(() -> {
+                    Label lblErreur = new Label("Erreur de récupération des retards.");
+                    lblErreur.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
+                    tableRetard.setPlaceholder(lblErreur);
                     afficherMessage("Erreur lors du chargement des retards.", true);
                     e.printStackTrace();
                 });

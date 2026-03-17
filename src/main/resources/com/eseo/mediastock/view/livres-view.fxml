@@ -90,8 +90,11 @@
                         </columns>
 
                         <placeholder>
-                            <Label text="Aucun livre trouvé dans la bibliothèque"
-                                   style="-fx-text-fill: #888; -fx-font-size: 14px;"/>
+                            <VBox alignment="CENTER" spacing="10">
+                                <ProgressIndicator fx:id="loadingIcon" prefWidth="40" prefHeight="40"/>
+                                <Label fx:id="placeholderLabel" text="Recherche des LIVRES en cours..."
+                                       style="-fx-text-fill: #888; -fx-font-size: 14px;"/>
+                            </VBox>
                         </placeholder>
 
                     </TableView>
