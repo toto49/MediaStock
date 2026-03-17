@@ -5,7 +5,7 @@ import com.eseo.mediastock.model.Emprunt;
 import com.eseo.mediastock.service.AdherentService;
 import com.eseo.mediastock.service.EmpruntService;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty; // <-- IMPORT AJOUTÉ ICI
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -22,7 +22,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public class AdherentController {
@@ -55,7 +54,7 @@ public class AdherentController {
 
     // --- Tableau et Colonnes ---
     @FXML
-    private TableView<Adherent> tableRetard; // Pense à renommer ça dans ton FXML plus tard :)
+    private TableView<Adherent> tableRetard;
     @FXML
     private TableColumn<Adherent, String> colidAdherent;
     @FXML
@@ -99,11 +98,7 @@ public class AdherentController {
                         btn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand;");
                         btn.setOnAction((ActionEvent event) -> {
                             Adherent adherentSelectionne = getTableView().getItems().get(getIndex());
-                            try {
-                                afficherPopupHistorique(adherentSelectionne);
-                            } catch (SQLException e) {
-                                afficherMessage("Erreur lors de l'ouverture de l'historique : " + e.getMessage(), true);
-                            }
+                            afficherPopupHistorique(adherentSelectionne);
                         });
                     }
 
@@ -125,7 +120,7 @@ public class AdherentController {
     }
 
     // --- LE POPUP AVEC LES DONNÉES FORMATÉES ---
-    private void afficherPopupHistorique(Adherent adherent) throws SQLException {
+    private void afficherPopupHistorique(Adherent adherent) {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.setTitle("Profil de " + adherent.getNom() + " " + adherent.getPrenom());
@@ -139,79 +134,110 @@ public class AdherentController {
         Label lblContact = new Label("Tel: " + adherent.getNumTel() + " | Email: " + adherent.getEmailContact());
         lblContact.setStyle("-fx-text-fill: white;");
 
-        EmpruntService empruntService = new EmpruntService();
-        List<Emprunt> empruntsBruts = empruntService.getEmpruntsFromAdherent(adherent);
-        ObservableList<EmpruntHistorique> donneesHistorique = FXCollections.observableArrayList();
-
-        for (Emprunt emp : empruntsBruts) {
-            String produitInfo = emp.getExemplaire() != null ? emp.getExemplaire().getCodeBarre() : "Inconnu";
-            String dateEmp = emp.getDateDebut() != null ? emp.getDateDebut().toString() : "Inconnue";
-            String statut = emp.getStatusDispo() != null ? emp.getStatusDispo().name() : "Inconnu";
-
-            donneesHistorique.add(new EmpruntHistorique(produitInfo, dateEmp, statut));
-        }
-
         Pagination paginationHisto = new Pagination();
-        int lignesParPagePopup = 10;
-        int nbPages = (int) Math.ceil((double) donneesHistorique.size() / lignesParPagePopup);
-        paginationHisto.setPageCount(nbPages == 0 ? 1 : nbPages);
-
-        paginationHisto.setPageFactory(pageIndex -> {
-            TableView<EmpruntHistorique> tablePage = new TableView<>();
-            tablePage.setStyle("-fx-background-color: #383838;");
-            Label placeholder = new Label("Aucun historique d'emprunt.");
-            placeholder.setStyle("-fx-text-fill: #aaaaaa; -fx-font-style: italic;");
-            tablePage.setPlaceholder(placeholder);
-
-            // --- CORRECTION DES COLONNES AVEC LAMBDAS POUR LE RECORD ---
-            TableColumn<EmpruntHistorique, String> colTitre = new TableColumn<>("Produit (Code Barre)");
-            colTitre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().titreProduit()));
-            colTitre.setPrefWidth(200);
-
-            TableColumn<EmpruntHistorique, String> colDateEmp = new TableColumn<>("Date Emprunt");
-            colDateEmp.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().dateEmprunt()));
-            colDateEmp.setPrefWidth(120);
-
-            TableColumn<EmpruntHistorique, String> colStatut = new TableColumn<>("Statut");
-            colStatut.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().statut()));
-            colStatut.setPrefWidth(100);
-
-            tablePage.getColumns().addAll(colTitre, colDateEmp, colStatut);
-
-            if (donneesHistorique.isEmpty()) {
-                tablePage.setItems(FXCollections.observableArrayList());
-            } else {
-                int fromIndex = pageIndex * lignesParPagePopup;
-                int toIndex = Math.min(fromIndex + lignesParPagePopup, donneesHistorique.size());
-                tablePage.setItems(FXCollections.observableArrayList(donneesHistorique.subList(fromIndex, toIndex)));
-            }
-
-            return tablePage;
-        });
+        ObservableList<EmpruntHistorique> donneesHistorique = FXCollections.observableArrayList();
+        VBox loadingBox = new VBox(10);
+        loadingBox.setAlignment(Pos.CENTER);
+        ProgressIndicator spinner = new ProgressIndicator();
+        spinner.setPrefSize(40, 40);
+        spinner.setStyle("-fx-progress-color: #ffcc00;");
+        Label loadingLabel = new Label("Chargement de l'historique...");
+        loadingLabel.setStyle("-fx-text-fill: #888888; -fx-font-size: 14px;");
+        loadingBox.getChildren().addAll(spinner, loadingLabel);
+        root.getChildren().addAll(lblTitre, lblContact, loadingBox);
 
         Button btnFermer = new Button("Fermer");
         btnFermer.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-cursor: hand;");
         btnFermer.setOnAction(e -> popup.close());
 
-        root.getChildren().addAll(lblTitre, lblContact, paginationHisto, btnFermer);
-
         Scene scene = new Scene(root, 550, 500);
         popup.setScene(scene);
-        popup.showAndWait();
+        popup.show();
+
+        new Thread(() -> {
+            try {
+                EmpruntService empruntService = new EmpruntService();
+                List<Emprunt> empruntsBruts = empruntService.getEmpruntsFromAdherent(adherent);
+
+                Platform.runLater(() -> {
+                    for (Emprunt emp : empruntsBruts) {
+                        String produitInfo = emp.getExemplaire() != null ? emp.getExemplaire().getCodeBarre() : "Inconnu";
+                        String dateEmp = emp.getDateDebut() != null ? emp.getDateDebut().toString() : "Inconnue";
+                        String statut = emp.getStatusDispo() != null ? emp.getStatusDispo().name() : "Inconnu";
+                        donneesHistorique.add(new EmpruntHistorique(produitInfo, dateEmp, statut));
+                    }
+
+                    int lignesParPagePopup = 10;
+                    int nbPages = (int) Math.ceil((double) donneesHistorique.size() / lignesParPagePopup);
+                    paginationHisto.setPageCount(nbPages == 0 ? 1 : nbPages);
+
+                    paginationHisto.setPageFactory(pageIndex -> {
+                        TableView<EmpruntHistorique> tablePage = new TableView<>();
+                        tablePage.setStyle("-fx-background-color: #383838;");
+
+                        Label placeholder = new Label("Aucun historique d'emprunt.");
+                        placeholder.setStyle("-fx-text-fill: #aaaaaa; -fx-font-style: italic;");
+                        tablePage.setPlaceholder(placeholder);
+
+                        TableColumn<EmpruntHistorique, String> colTitre = new TableColumn<>("Produit (Code Barre)");
+                        colTitre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().titreProduit()));
+                        colTitre.setPrefWidth(200);
+
+                        TableColumn<EmpruntHistorique, String> colDateEmp = new TableColumn<>("Date Emprunt");
+                        colDateEmp.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().dateEmprunt()));
+                        colDateEmp.setPrefWidth(120);
+
+                        TableColumn<EmpruntHistorique, String> colStatut = new TableColumn<>("Statut");
+                        colStatut.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().statut()));
+                        colStatut.setPrefWidth(100);
+
+                        tablePage.getColumns().addAll(colTitre, colDateEmp, colStatut);
+
+                        if (donneesHistorique.isEmpty()) {
+                            tablePage.setItems(FXCollections.observableArrayList());
+                        } else {
+                            int fromIndex = pageIndex * lignesParPagePopup;
+                            int toIndex = Math.min(fromIndex + lignesParPagePopup, donneesHistorique.size());
+                            tablePage.setItems(FXCollections.observableArrayList(donneesHistorique.subList(fromIndex, toIndex)));
+                        }
+
+                        return tablePage;
+                    });
+
+
+                    root.getChildren().remove(loadingBox);
+                    root.getChildren().addAll(paginationHisto, btnFermer);
+                });
+
+            } catch (Exception e) {
+                Platform.runLater(() -> {
+                    root.getChildren().remove(loadingBox);
+                    Label errorLabel = new Label("Erreur lors du chargement de l'historique.");
+                    errorLabel.setStyle("-fx-text-fill: #e74c3c;");
+                    root.getChildren().addAll(errorLabel, btnFermer);
+                });
+            }
+        }).start();
     }
 
     // --- GESTION ADHÉRENTS PRINCIPALE ---
 
     private void chargerAdherents() {
+        afficherPlaceholderChargement();
+
         new Thread(() -> {
             try {
                 List<Adherent> listeDepuisBdd = adherentService.getAllAdherents();
                 Platform.runLater(() -> {
                     masterData.setAll(listeDepuisBdd);
                     mettreAJourPagination();
+                    afficherPlaceholderVide();
                 });
             } catch (Exception e) {
                 Platform.runLater(() -> {
+                    Label lblErreur = new Label("Erreur de chargement des adhérents.");
+                    lblErreur.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
+                    tableRetard.setPlaceholder(lblErreur);
                     afficherMessage("Erreur de chargement des données : " + e.getMessage(), true);
                     e.printStackTrace();
                 });
@@ -219,6 +245,30 @@ public class AdherentController {
         }).start();
     }
 
+    private void afficherPlaceholderChargement() {
+        if (tableRetard == null) return;
+
+        VBox loadingBox = new VBox(10);
+        loadingBox.setAlignment(Pos.CENTER);
+
+        ProgressIndicator spinner = new ProgressIndicator();
+        spinner.setPrefSize(40, 40);
+        spinner.setStyle("-fx-progress-color: #ffcc00;");
+
+        Label loadingLabel = new Label("Chargement des adhérents en cours...");
+        loadingLabel.setStyle("-fx-text-fill: #888888; -fx-font-size: 14px;");
+
+        loadingBox.getChildren().addAll(spinner, loadingLabel);
+        tableRetard.setPlaceholder(loadingBox);
+    }
+
+    private void afficherPlaceholderVide() {
+        if (tableRetard == null) return;
+
+        Label emptyLabel = new Label("Aucun adhérent trouvé.");
+        emptyLabel.setStyle("-fx-text-fill: #888888; -fx-font-size: 14px; -fx-font-style: italic;");
+        tableRetard.setPlaceholder(emptyLabel);
+    }
     private void configurerRechercheEtPagination() {
         filteredData = new FilteredList<>(masterData, p -> true);
 
@@ -231,6 +281,13 @@ public class AdherentController {
                 return adherent.getPrenom().toLowerCase().contains(lowerCaseFilter);
             });
             mettreAJourPagination();
+            if (filteredData.isEmpty() && !masterData.isEmpty()) {
+                Label noResultLabel = new Label("Aucun adhérent ne correspond à la recherche.");
+                noResultLabel.setStyle("-fx-text-fill: #888888; -fx-font-size: 14px; -fx-font-style: italic;");
+                tableRetard.setPlaceholder(noResultLabel);
+            } else if (filteredData.isEmpty() && masterData.isEmpty()) {
+                afficherPlaceholderVide();
+            }
         });
 
         paginationAdherents.currentPageIndexProperty().addListener((obs, oldIndex, newIndex) -> {

@@ -126,6 +126,7 @@ public abstract class AbstractProduitController<T extends Produit> {
 
         ProgressIndicator spinner = new ProgressIndicator();
         spinner.setPrefSize(40, 40);
+        spinner.setStyle("-fx-progress-color: #ffcc00;");
 
         Label loadingLabel = new Label("Chargement des " + getCategorieProduit().toLowerCase() + "s en cours...");
         loadingLabel.setStyle("-fx-text-fill: #888888; -fx-font-size: 14px;");
