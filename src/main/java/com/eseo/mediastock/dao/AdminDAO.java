@@ -61,7 +61,7 @@ public class AdminDAO {
             stmt.setString(1, admin.getNom());
             stmt.setString(2, admin.getPrenom());
             stmt.setString(3, admin.getEmail());
-            stmt.setInt(4, admin.getNumTel());  // ← getNumTel() sans underscore
+            stmt.setInt(4, admin.getNumTel());
             stmt.setString(5, PasswordUtilService.hash(admin.getPlainPassword()));
 
             stmt.executeUpdate();
