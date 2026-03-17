@@ -63,16 +63,25 @@ public class EmpruntController {
 
     @FXML
     public void initialize() {
-        colNumAdherent.setCellValueFactory(new PropertyValueFactory<>("numAdherent"));
-        colNomAdherent.setCellValueFactory(new PropertyValueFactory<>("nomAdherent"));
-        colExemplaire.setCellValueFactory(new PropertyValueFactory<>("exemplaire"));
-        colDateLimite.setCellValueFactory(new PropertyValueFactory<>("dateLimite"));
-        colJours.setCellValueFactory(new PropertyValueFactory<>("joursRetard"));
+        colNumAdherent.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(cellData.getValue().numAdherent())
+        );
+        colNomAdherent.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(cellData.getValue().nomAdherent())
+        );
+        colExemplaire.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(cellData.getValue().exemplaire())
+        );
+        colDateLimite.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleStringProperty(cellData.getValue().dateLimite())
+        );
+        colJours.setCellValueFactory(cellData ->
+                new javafx.beans.property.SimpleObjectProperty<>(cellData.getValue().joursRetard())
+        );
 
         Label placeholder = new Label("Aucun emprunt en retard.");
         placeholder.setStyle("-fx-text-fill: #aaaaaa; -fx-font-style: italic; -fx-font-size: 14px;");
         tableRetard.setPlaceholder(placeholder);
-
         configurerPagination();
         chargerEmpruntsEnRetard();
     }

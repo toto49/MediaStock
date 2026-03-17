@@ -5,6 +5,7 @@ import com.eseo.mediastock.model.Emprunt;
 import com.eseo.mediastock.service.AdherentService;
 import com.eseo.mediastock.service.EmpruntService;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty; // <-- IMPORT AJOUTÉ ICI
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -54,7 +55,7 @@ public class AdherentController {
 
     // --- Tableau et Colonnes ---
     @FXML
-    private TableView<Adherent> tableRetard;
+    private TableView<Adherent> tableRetard; // Pense à renommer ça dans ton FXML plus tard :)
     @FXML
     private TableColumn<Adherent, String> colidAdherent;
     @FXML
@@ -137,9 +138,11 @@ public class AdherentController {
         lblTitre.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #ffcc00;");
         Label lblContact = new Label("Tel: " + adherent.getNumTel() + " | Email: " + adherent.getEmailContact());
         lblContact.setStyle("-fx-text-fill: white;");
+
         EmpruntService empruntService = new EmpruntService();
         List<Emprunt> empruntsBruts = empruntService.getEmpruntsFromAdherent(adherent);
         ObservableList<EmpruntHistorique> donneesHistorique = FXCollections.observableArrayList();
+
         for (Emprunt emp : empruntsBruts) {
             String produitInfo = emp.getExemplaire() != null ? emp.getExemplaire().getCodeBarre() : "Inconnu";
             String dateEmp = emp.getDateDebut() != null ? emp.getDateDebut().toString() : "Inconnue";
@@ -160,19 +163,21 @@ public class AdherentController {
             placeholder.setStyle("-fx-text-fill: #aaaaaa; -fx-font-style: italic;");
             tablePage.setPlaceholder(placeholder);
 
+            // --- CORRECTION DES COLONNES AVEC LAMBDAS POUR LE RECORD ---
             TableColumn<EmpruntHistorique, String> colTitre = new TableColumn<>("Produit (Code Barre)");
-            colTitre.setCellValueFactory(new PropertyValueFactory<>("titreProduit"));
+            colTitre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().titreProduit()));
             colTitre.setPrefWidth(200);
 
             TableColumn<EmpruntHistorique, String> colDateEmp = new TableColumn<>("Date Emprunt");
-            colDateEmp.setCellValueFactory(new PropertyValueFactory<>("dateEmprunt"));
+            colDateEmp.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().dateEmprunt()));
             colDateEmp.setPrefWidth(120);
 
             TableColumn<EmpruntHistorique, String> colStatut = new TableColumn<>("Statut");
-            colStatut.setCellValueFactory(new PropertyValueFactory<>("statut"));
+            colStatut.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().statut()));
             colStatut.setPrefWidth(100);
 
             tablePage.getColumns().addAll(colTitre, colDateEmp, colStatut);
+
             if (donneesHistorique.isEmpty()) {
                 tablePage.setItems(FXCollections.observableArrayList());
             } else {
