@@ -42,9 +42,9 @@ public class EmpruntService {
         }
     }
 
-    public void enregistrerRetour(Adherent adherent, Emprunt emprunt){
-        if (adherent.getEmpruntsEnCours().contains(emprunt)){
-            adherent.cloturerEmprunt(emprunt);
+    public void enregistrerRetour(Adherent adherent, Emprunt emprunt) {
+        if (adherent != null && emprunt != null && adherent.getId().equals(emprunt.getEmprunteur().getId())) {
+
             emprunt.setStatusDispo(EnumDispo.RENDU);
             emprunt.getExemplaire().setStatusDispo(EnumDispo.DISPONIBLE);
 
@@ -52,8 +52,10 @@ public class EmpruntService {
                 empruntDAO.saveRetour(emprunt);
                 exemplaireDAO.updateExemplaire(emprunt.getExemplaire());
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Erreur SQL lors du retour : " + e.getMessage(), e);
             }
+        } else {
+            throw new IllegalArgumentException("Cet emprunt ne correspond pas à cet adhérent.");
         }
     }
 

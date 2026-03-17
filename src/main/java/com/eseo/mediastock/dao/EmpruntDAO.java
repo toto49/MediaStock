@@ -15,11 +15,12 @@ import java.util.List;
 public class EmpruntDAO {
 
     public List<Emprunt> findAllEmprunts() throws SQLException {
+        // Ajout de pr.type_produit à la fin du SELECT
         String sql = "SELECT " +
                 "emp.id AS emp_id, emp.date_debut, emp.date_retour, emp.statut AS emp_statut, " +
                 "ad.id AS ad_id, ad.nom, ad.prenom, ad.email, ad.num_tel, " +
                 "ex.id AS ex_id, ex.code_barre, ex.etat, ex.statut AS ex_statut, " +
-                "pr.id AS pr_id " +
+                "pr.id AS pr_id, pr.type_produit " +
                 "FROM EMPRUNT emp " +
                 "INNER JOIN ADHERENT ad ON emp.id_adherent = ad.id " +
                 "INNER JOIN EXEMPLAIRE ex ON emp.id_exemplaire = ex.id " +
@@ -39,11 +40,12 @@ public class EmpruntDAO {
     }
 
     public List<Emprunt> trouverRetards(LocalDate date) throws SQLException {
+        // Ajout de pr.type_produit à la fin du SELECT
         String sql = "SELECT " +
                 "emp.id AS emp_id, emp.date_debut, emp.date_retour, emp.statut AS emp_statut, " +
                 "ad.id AS ad_id, ad.nom, ad.prenom, ad.email, ad.num_tel, " +
                 "ex.id AS ex_id, ex.code_barre, ex.etat, ex.statut AS ex_statut, " +
-                "pr.id AS pr_id " +
+                "pr.id AS pr_id, pr.type_produit " +
                 "FROM EMPRUNT emp " +
                 "INNER JOIN ADHERENT ad ON emp.id_adherent = ad.id " +
                 "INNER JOIN EXEMPLAIRE ex ON emp.id_exemplaire = ex.id " +
@@ -67,13 +69,12 @@ public class EmpruntDAO {
         return retards;
     }
 
-    // --- MÉTHODE CORRIGÉE ---
     public List<Emprunt> getEmpruntsByAdherent(Adherent adherent) throws SQLException {
-        // Suppression de la jointure sur ADHERENT, on n'en a plus besoin !
+        // Ajout de pr.type_produit dans le SELECT
         String sql = "SELECT " +
                 "emp.id AS emp_id, emp.date_debut, emp.date_retour, emp.statut AS emp_statut, " +
                 "ex.id AS ex_id, ex.code_barre, ex.etat, ex.statut AS ex_statut, " +
-                "pr.id AS pr_id " +
+                "pr.id AS pr_id, pr.type_produit " +
                 "FROM EMPRUNT emp " +
                 "INNER JOIN EXEMPLAIRE ex ON emp.id_exemplaire = ex.id " +
                 "INNER JOIN PRODUIT pr ON ex.id_produit = pr.id " +
@@ -88,12 +89,26 @@ public class EmpruntDAO {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    // 1. Instanciation du Produit (Classe anonyme)
+                    // 1. Récupération du VRAI Produit grâce à son type
                     int idProduit = rs.getInt("pr_id");
-                    Produit produit = new Produit() {};
-                    produit.setId(idProduit);
+                    String typeProduit = rs.getString("type_produit");
+                    Produit produit = null;
 
-                    // 2. Instanciation de l'Exemplaire
+                    switch (typeProduit) {
+                        case "Livre":
+                            produit = LivreDAO.GetByID(idProduit);
+                            break;
+                        case "DVD":
+                            produit = DvdDAO.GetByID(idProduit);
+                            break;
+                        case "JeuSociete":
+                            produit = JeuSocieteDAO.GetByID(idProduit);
+                            break;
+                        default:
+                            throw new SQLException("Type de produit inconnu en base : " + typeProduit);
+                    }
+
+                    // 2. Instanciation de l'Exemplaire avec le produit complet
                     int idExemplaire = rs.getInt("ex_id");
                     String codeBarre = rs.getString("code_barre");
                     EnumEtat etatPhysique = EnumEtat.valueOf(rs.getString("etat"));
@@ -101,7 +116,7 @@ public class EmpruntDAO {
 
                     Exemplaire exemplaire = new Exemplaire(idExemplaire, produit, codeBarre, etatPhysique, statutExemplaire);
 
-                    // 3. Création de l'Emprunt en utilisant l'Adherent passé en paramètre !
+                    // 3. Création de l'Emprunt
                     int idEmprunt = rs.getInt("emp_id");
 
                     java.sql.Date sqlDateDebut = rs.getDate("date_debut");
@@ -139,17 +154,17 @@ public class EmpruntDAO {
     }
 
     public Emprunt trouverEmpruntEnCours(String codeBarre) throws SQLException {
+        // Ajout de pr.type_produit à la fin du SELECT
         String sql = "SELECT " +
                 "emp.id AS emp_id, emp.date_debut, emp.date_retour, emp.statut AS emp_statut, " +
                 "ad.id AS ad_id, ad.nom, ad.prenom, ad.email, ad.num_tel, " +
                 "ex.id AS ex_id, ex.code_barre, ex.etat, ex.statut AS ex_statut, " +
-                "pr.id AS pr_id " +
+                "pr.id AS pr_id, pr.type_produit " +
                 "FROM EMPRUNT emp " +
                 "INNER JOIN ADHERENT ad ON emp.id_adherent = ad.id " +
                 "INNER JOIN EXEMPLAIRE ex ON emp.id_exemplaire = ex.id " +
                 "INNER JOIN PRODUIT pr ON ex.id_produit = pr.id " +
                 "WHERE ex.code_barre = ? AND emp.statut = ?";
-
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -166,23 +181,20 @@ public class EmpruntDAO {
         return null;
     }
 
-
-
     public void saveRetour(Emprunt emprunt) throws SQLException {
-        String sql = "UPDATE EMPRUNT SET date_retour = ?, statut = ? WHERE id = ?";
+        String sql = "UPDATE EMPRUNT SET statut = ? WHERE id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setDate(1, java.sql.Date.valueOf(LocalDate.now()));
-            stmt.setString(2, EnumDispo.RENDU.name());
-            stmt.setInt(3, emprunt.getId());
+            stmt.setString(1, EnumDispo.RENDU.name());
+            stmt.setInt(2, emprunt.getId());
 
             stmt.executeUpdate();
         }
     }
 
-    // --- LA MÉTHODE COMMUNE DE CRÉATION (pour findAll et trouverRetards) ---
+    // --- LA MÉTHODE COMMUNE DE CRÉATION ---
     private Emprunt createEmpruntFromJoin(ResultSet rs) throws SQLException {
 
         // 1. Instanciation de l'Adhérent
@@ -194,12 +206,25 @@ public class EmpruntDAO {
 
         Adherent adherent = new Adherent(idAdherent, nomAdherent, prenomAdherent, emailAdherent, telAdherent);
 
-        // 2. Instanciation du Produit avec une classe anonyme (Solution pour classe abstraite)
         int idProduit = rs.getInt("pr_id");
-        Produit produit = new Produit() {};
-        produit.setId(idProduit);
+        String typeProduit = rs.getString("type_produit");
+        Produit produit = null;
 
-        // 3. Instanciation de l'Exemplaire
+        switch (typeProduit) {
+            case "Livre":
+                produit = new LivreDAO().GetByID(idProduit);
+                break;
+            case "DVD":
+                produit = new DvdDAO().GetByID(idProduit);
+                break;
+            case "JeuSociete":
+                produit = new JeuSocieteDAO().GetByID(idProduit);
+                break;
+            default:
+                throw new SQLException("Type de produit inconnu en base : " + typeProduit);
+        }
+
+        // 3. Instanciation de l'Exemplaire avec le produit complet
         int idExemplaire = rs.getInt("ex_id");
         String codeBarre = rs.getString("code_barre");
         EnumEtat etatPhysique = EnumEtat.valueOf(rs.getString("etat"));
