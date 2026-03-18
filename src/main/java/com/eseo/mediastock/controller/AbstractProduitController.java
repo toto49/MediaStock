@@ -205,6 +205,12 @@ public abstract class AbstractProduitController<T extends Produit> {
     }
 
     private void afficherPopupExemplaire(T produit) {
+        try {
+            produit.setExemplaires(com.eseo.mediastock.dao.ExemplaireDAO.getExemplairesByProduit(produit));
+        } catch (java.sql.SQLException e) {
+            System.err.println("Erreur lors du chargement des exemplaires depuis la base de données.");
+            e.printStackTrace();
+        }
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.setTitle("Exemplaires - " + getCategorieProduit() + " n°" + produit.getId());

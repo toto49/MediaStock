@@ -31,8 +31,6 @@ public class JeuSocieteDAO {
             stmt.setInt(9, j.getDureePartie());
 
             stmt.executeUpdate();
-
-            // On récupère l'ID et on met à jour l'objet
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     p.setId(generatedKeys.getInt(1));
@@ -43,22 +41,25 @@ public class JeuSocieteDAO {
         }
     }
 
-    public void updateProduit(Produit p) throws SQLException {
-        JeuSociete j = (JeuSociete) p;
-        String sql = "UPDATE PRODUIT SET titre = ?, description = ?, annee_sortie = ?, nb_joueurs_min = ?, nb_joueurs_max = ?, age_min = ?, duree_partie = ? WHERE id = ? AND type_produit = 'Jeu'";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)){
-            stmt.setString(1, j.getTitre());
-            stmt.setString(2, j.getDescription());
-            stmt.setInt(3, j.getAnneeSortie());
-            stmt.setInt(4, j.getNbJoueursMin());
-            stmt.setInt(5, j.getNbJoueursMax());
-            stmt.setInt(6, j.getAgeMin());
-            stmt.setInt(7, j.getDureePartie());
-            stmt.setInt(8, j.getId());
-            stmt.executeUpdate();
+    public static JeuSociete GetByID(int id) throws SQLException {
+        JeuSociete jeu = null;
+        String sql = "SELECT * FROM PRODUIT WHERE id = ?";
 
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                List<JeuSociete> temp = CreateJeux(rs);
+                if (!temp.isEmpty()) {
+                    jeu = temp.getFirst();
+                    jeu.setExemplaires(ExemplaireDAO.getExemplairesByProduit(jeu));
+                }
+            }
         }
+
+        return jeu;
     }
 
     public static List<JeuSociete> ProduitObjectList() throws SQLException {
@@ -71,7 +72,6 @@ public class JeuSocieteDAO {
             stmt.setString(1, "Jeu");
 
             try (ResultSet rs = stmt.executeQuery()) {
-                // On transforme le ResultSet en liste d'objets AVANT de fermer la connexion
                 jeux = CreateJeux(rs);
             }
         }
@@ -87,42 +87,37 @@ public class JeuSocieteDAO {
             String description = rs.getString("description");
             String editeur = rs.getString("editeur");
             int anneeSortie = rs.getInt("annee_sortie");
-
             int nbJoueursMin = rs.getInt("nb_joueurs_min");
             int nbJoueursMax = rs.getInt("nb_joueurs_max");
             int ageMin = rs.getInt("age_min");
             int dureePartie = rs.getInt("duree_partie");
-
-            // EN attendant
             List<Exemplaire> exemplaires = new ArrayList<>();
-
-            // Création de l'objet
             JeuSociete jeu = new JeuSociete(id, titre, description, editeur, anneeSortie , exemplaires, nbJoueursMin, nbJoueursMax, ageMin, dureePartie);
-            jeu.setExemplaires(ExemplaireDAO.getExemplairesByProduit(jeu));
             jeux.add(jeu);
         }
         return jeux;
     }
 
-    public static JeuSociete GetByID(int id) throws SQLException {
-        JeuSociete jeu = null;
-        String sql = "SELECT * FROM PRODUIT WHERE id = ?";
-
+    public void updateProduit(Produit p) throws SQLException {
+        JeuSociete j = (JeuSociete) p;
+        String sql = "UPDATE PRODUIT SET titre = ?, description = ?, editeur = ?, annee_sortie = ?, nb_joueurs_min = ?, nb_joueurs_max = ?, age_min = ?, duree_partie = ? WHERE id = ? AND type_produit = 'Jeu'";
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, id);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                jeu = CreateJeux(rs).getFirst();
-            }
+             PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setString(1, j.getTitre());
+            stmt.setString(2, j.getDescription());
+            stmt.setString(3, j.getEditeur());
+            stmt.setInt(4, j.getAnneeSortie());
+            stmt.setInt(5, j.getNbJoueursMin());
+            stmt.setInt(6, j.getNbJoueursMax());
+            stmt.setInt(7, j.getAgeMin());
+            stmt.setInt(8, j.getDureePartie());
+            stmt.setInt(9, j.getId());
+            stmt.executeUpdate();
         }
-
-        return jeu;
     }
 
     public int countJeux() throws SQLException {
-        String sql = "SELECT COUNT(*) FROM PRODUIT WHERE type_produit = 'JeuSociete'";
+        String sql = "SELECT COUNT(*) FROM PRODUIT WHERE type_produit = 'Jeu'";
         int count = 0;
 
         try (Connection conn = DatabaseConnection.getConnection();

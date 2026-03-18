@@ -32,7 +32,6 @@ public class LivreDAO {
 
             stmt.executeUpdate();
 
-            // On récupère l'ID que la base de données vient de créer
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     p.setId(generatedKeys.getInt(1));
@@ -43,21 +42,25 @@ public class LivreDAO {
         }
     }
 
-    public void updateProduit(Produit p) throws SQLException {
-        Livre l = (Livre) p;
-        String sql = "UPDATE PRODUIT SET titre = ?, description = ?, annee_sortie = ?, isbn = ?, auteur = ?, nb_pages = ?, format = ? WHERE id = ? AND type_produit = 'Livre'";
+    public static Livre GetByID(int id) throws SQLException {
+        Livre livre = null;
+        String sql = "SELECT * FROM PRODUIT WHERE id = ?";
+
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, l.getTitre());
-            stmt.setString(2, l.getDescription());
-            stmt.setInt(3, l.getAnneeSortie());
-            stmt.setInt(4, l.getIsbn());
-            stmt.setString(5, l.getAuteur());
-            stmt.setInt(6, l.getNbPages());
-            stmt.setString(7, l.getFormat());
-            stmt.setInt(8, l.getId());
-            stmt.executeUpdate();
+
+            stmt.setInt(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                List<Livre> temp = CreateLivres(rs);
+                if (!temp.isEmpty()) {
+                    livre = temp.getFirst();
+                    livre.setExemplaires(ExemplaireDAO.getExemplairesByProduit(livre));
+                }
+            }
         }
+
+        return livre;
     }
 
     public static List<Livre> ProduitObjectList() throws SQLException {
@@ -70,7 +73,6 @@ public class LivreDAO {
             stmt.setString(1, "Livre");
 
             try (ResultSet rs = stmt.executeQuery()) {
-                // On transforme le ResultSet en liste d'objets AVANT de fermer la connexion
                 livres = CreateLivres(rs);
             }
         }
@@ -91,34 +93,29 @@ public class LivreDAO {
             String auteur = rs.getString("auteur");
             int nb_pages = rs.getInt("nb_pages");
             String format = rs.getString("format");
-
             List<Exemplaire> exemplaires = new ArrayList<>();
-
-            // Création de l'objet
             Livre livre = new Livre(id, titre, description, editeur, anneeSortie , exemplaires, isbn, auteur, nb_pages, format);
-            livre.setExemplaires(ExemplaireDAO.getExemplairesByProduit(livre));
             livres.add(livre);
-
-
         }
         return livres;
     }
 
-    public static Livre GetByID(int id) throws SQLException {
-        Livre livre = null;
-        String sql = "SELECT * FROM PRODUIT WHERE id = ?";
-
+    public void updateProduit(Produit p) throws SQLException {
+        Livre l = (Livre) p;
+        String sql = "UPDATE PRODUIT SET titre = ?, description = ?, editeur = ?, annee_sortie = ?, isbn = ?, auteur = ?, nb_pages = ?, format = ? WHERE id = ? AND type_produit = 'Livre'";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, id);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                livre = CreateLivres(rs).getFirst();
-            }
+            stmt.setString(1, l.getTitre());
+            stmt.setString(2, l.getDescription());
+            stmt.setString(3, l.getEditeur());
+            stmt.setInt(4, l.getAnneeSortie());
+            stmt.setInt(5, l.getIsbn());
+            stmt.setString(6, l.getAuteur());
+            stmt.setInt(7, l.getNbPages());
+            stmt.setString(8, l.getFormat());
+            stmt.setInt(9, l.getId());
+            stmt.executeUpdate();
         }
-
-        return livre;
     }
 
     public int countLivres() throws SQLException {
