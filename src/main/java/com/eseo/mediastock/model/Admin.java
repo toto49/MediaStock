@@ -4,13 +4,13 @@ public class Admin {
     private int id;
     private String nom;
     private String prenom;
-    private int numTel;
+    private String numTel;
     private String email;
     private String passwordHash;
     private String plainPassword;
 
     // Constructeur
-    public Admin(int id, String nom, String prenom, String email, int numTel, String passwordHash) {
+    public Admin(int id, String nom, String prenom, String email, String numTel, String passwordHash) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -29,8 +29,13 @@ public class Admin {
     public String getPrenom() { return prenom; }
     public void setPrenom(String prenom) { this.prenom = prenom; }
 
-    public int getNumTel() { return numTel; }  //
-    public void setNumTel(int num_Tel) { this.numTel = num_Tel; }
+    public String getNumTel() {
+        return numTel;
+    }  //
+
+    public void setNumTel(String num_Tel) {
+        this.numTel = num_Tel;
+    }
 
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }

@@ -25,7 +25,7 @@ public class AdminService {
     /**
      * Crée un nouvel administrateur
      */
-    public static void creerAdmin(String email, String mdp, String nom, String prenom, int numTel)
+    public static void creerAdmin(String email, String mdp, String nom, String prenom, String numTel)
             throws SQLException, IllegalArgumentException {
 
         // Validation
@@ -41,7 +41,7 @@ public class AdminService {
         if (prenom == null || prenom.trim().isEmpty()) {
             throw new IllegalArgumentException("Le prénom ne peut pas être vide");
         }
-        if (numTel <= 0) {
+        if (numTel == null || numTel.length() < 10) {
             throw new IllegalArgumentException("Le numéro de téléphone doit être valide");
         }
 
@@ -78,7 +78,7 @@ public class AdminService {
      * Met à jour les informations d'un admin
      */
     public void mettreAJourAdmin(int id, String nouvelEmail, String nouveauMdp,
-                                 String nouveauNom, String nouveauPrenom, int nouveauNumTel)
+                                 String nouveauNom, String nouveauPrenom, String nouveauNumTel)
             throws SQLException, IllegalArgumentException {
 
         Admin admin = getAdminParId(id);

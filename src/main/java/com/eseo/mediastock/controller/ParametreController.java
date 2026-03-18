@@ -118,7 +118,6 @@ public class ParametreController {
         Optional<ButtonType> result = dialog.showAndWait();
         if (result.isPresent() && result.get() == loginButtonType) {
             try {
-                int telephone = Integer.parseInt(tel.getText());
 
                 adminService.mettreAJourAdmin(
                         adminActuel.getId(),
@@ -126,13 +125,13 @@ public class ParametreController {
                         null,
                         username.getText(),
                         prenom.getText(),
-                        telephone
+                        tel.getText()
                 );
 
                 adminActuel.setNom(username.getText());
                 adminActuel.setPrenom(prenom.getText());
                 adminActuel.setEmail(email.getText());
-                adminActuel.setNumTel(telephone);
+                adminActuel.setNumTel(tel.getText());
 
                 afficherAlerte(Alert.AlertType.INFORMATION, "Succès", "Vos informations ont été mises à jour.");
 

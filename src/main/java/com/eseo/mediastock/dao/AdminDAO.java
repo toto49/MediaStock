@@ -38,7 +38,7 @@ public class AdminDAO {
                                 rs.getString("nom"),
                                 rs.getString("prenom"),
                                 rs.getString("email"),
-                                rs.getInt("num_tel"),
+                                rs.getString("num_tel"),
                                 hash
                         );
                         return admin;
@@ -61,7 +61,7 @@ public class AdminDAO {
             stmt.setString(1, admin.getNom());
             stmt.setString(2, admin.getPrenom());
             stmt.setString(3, admin.getEmail());
-            stmt.setInt(4, admin.getNumTel());
+            stmt.setString(4, admin.getNumTel());
             stmt.setString(5, PasswordUtilService.hash(admin.getPlainPassword()));
 
             stmt.executeUpdate();
@@ -87,7 +87,7 @@ public class AdminDAO {
             stmt.setString(1, admin.getNom());
             stmt.setString(2, admin.getPrenom());
             stmt.setString(3, admin.getEmail());
-            stmt.setInt(4, admin.getNumTel());
+            stmt.setString(4, admin.getNumTel());
 
             // Gestion du mot de passe
             if (admin.getPlainPassword() != null && !admin.getPlainPassword().isEmpty()) {
@@ -140,7 +140,7 @@ public class AdminDAO {
                         rs.getString("nom"),
                         rs.getString("prenom"),
                         rs.getString("email"),
-                        rs.getInt("num_tel"),
+                        rs.getString("num_tel"),
                         rs.getString("mdp")
                 ));
             }
@@ -166,7 +166,7 @@ public class AdminDAO {
                             rs.getString("nom"),
                             rs.getString("prenom"),
                             rs.getString("email"),
-                            rs.getInt("num_tel"),
+                            rs.getString("num_tel"),
                             rs.getString("mdp")
                     );
                 }

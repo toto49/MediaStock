@@ -58,14 +58,18 @@ public class CreateAccountController {
             showErrorAlert("Erreur", "Format d'email invalide !");
             return;
         }
+        if (!field_telephone_co.getText().matches("\\d{10}")) {
+            showErrorAlert("Erreur", "Le numéro de téléphone doit contenir exactement 10 chiffres !");
+            return;
+        }
         try {
-            int telephone = Integer.parseInt(field_telephone_co.getText());
+
             AdminService.creerAdmin(
                     field_email_co.getText(),
                     field_password_co.getText(),
                     field_nom_co.getText(),
                     field_prenom_co.getText(),
-                    telephone
+                    field_telephone_co.getText()
             );
             showSuccessAlert("Succès",
                     "Compte créé avec succès !\n" +
