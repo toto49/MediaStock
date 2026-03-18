@@ -1,6 +1,7 @@
 package com.eseo.mediastock.controller;
 
 import com.eseo.mediastock.service.StockService;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -8,10 +9,12 @@ import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.CompletableFuture;
 
 public class AjouterProduitController implements Initializable {
 
@@ -22,17 +25,17 @@ public class AjouterProduitController implements Initializable {
 
     private final String STYLE_LABEL = "-fx-font-size: 15px; -fx-text-fill: #ffcc00;";
 
-    // Ajout de l'instance du service
+    // Instance du service
     private StockService stockService;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // Initialisation du service
         stockService = new StockService();
 
         ChoiceAddProduit.valueProperty().addListener((observable, oldValue, newValue) -> {
             detecterSelection(newValue);
         });
+        ChoiceAddProduit.setValue("LIVRES");
     }
 
     private void detecterSelection(String choix) {
@@ -80,28 +83,25 @@ public class AjouterProduitController implements Initializable {
                 TextField txtFormat = createTextField("Ex: Poche, Broché...");
 
                 btnValider.setOnAction(event -> {
-                    try {
-                        // On utilise le StockService au lieu de créer l'objet Livre et d'appeler le DAO
-                        stockService.ajouterLivre(
-                                txtTitre.getText(),
-                                txtDesc.getText(),
-                                txtEditeur.getText(),
-                                spinAnnee.getValue(),
-                                txtIsbn.getText(),
-                                txtAuteur.getText(),
-                                spinPages.getValue(),
-                                txtFormat.getText(),
-                                spinStock.getValue()
-                        );
-
-
-                        afficherMessage(lblOutput, "Le Livre a été ajouté avec succès !", true);
-                        viderChamps(txtTitre, txtDesc, txtEditeur, txtAuteur, txtIsbn, txtFormat);
-                    } catch (IllegalArgumentException e) {
-                        afficherMessage(lblOutput, "Erreur : " + e.getMessage(), false);
-                    } catch (Exception e) {
-                        afficherMessage(lblOutput, "Erreur inattendue : " + e.getMessage(), false);
-                    }
+                    String titre = txtTitre.getText();
+                    String desc = txtDesc.getText();
+                    String editeur = txtEditeur.getText();
+                    int annee = spinAnnee.getValue();
+                    String isbn = txtIsbn.getText();
+                    String auteur = txtAuteur.getText();
+                    int pages = spinPages.getValue();
+                    String format = txtFormat.getText();
+                    int stock = spinStock.getValue();
+                    executerActionAsync(btnValider, "Ajouter le Livre", lblOutput, "Le Livre a été ajouté avec succès !",
+                            () -> {
+                                try {
+                                    stockService.ajouterLivre(titre, desc, editeur, annee, isbn, auteur, pages, format, stock);
+                                } catch (SQLException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            },
+                            () -> viderChamps(txtTitre, txtDesc, txtEditeur, txtAuteur, txtIsbn, txtFormat)
+                    );
                 });
 
                 containerFormulaire.getChildren().addAll(
@@ -128,32 +128,25 @@ public class AjouterProduitController implements Initializable {
                 TextField txtSousTitres = createTextField("Ex: Français, Espagnol");
 
                 btnValider.setOnAction(event -> {
-                    try {
-                        List<String> pistesAudio = Arrays.asList(txtAudio.getText().split("\\s*,\\s*"));
-                        List<String> sousTitres = Arrays.asList(txtSousTitres.getText().split("\\s*,\\s*"));
-
-                        // Appel au service
-                        stockService.ajouterDVD(
-                                txtTitre.getText(),
-                                txtDesc.getText(),
-                                txtEditeur.getText(),
-                                spinAnnee.getValue(),
-                                txtReal.getText(),
-                                spinDuree.getValue(),
-                                pistesAudio,
-                                sousTitres,
-                                spinStock.getValue()
-                        );
-
-
-
-                        afficherMessage(lblOutput, "Le DVD a été ajouté avec succès !", true);
-                        viderChamps(txtTitre, txtDesc, txtEditeur, txtReal, txtAudio, txtSousTitres);
-                    } catch (IllegalArgumentException e) {
-                        afficherMessage(lblOutput, "Erreur : " + e.getMessage(), false);
-                    } catch (Exception e) {
-                        afficherMessage(lblOutput, "Erreur inattendue : " + e.getMessage(), false);
-                    }
+                    String titre = txtTitre.getText();
+                    String desc = txtDesc.getText();
+                    String editeur = txtEditeur.getText();
+                    int annee = spinAnnee.getValue();
+                    String real = txtReal.getText();
+                    int duree = spinDuree.getValue();
+                    List<String> pistesAudio = Arrays.asList(txtAudio.getText().split("\\s*,\\s*"));
+                    List<String> sousTitres = Arrays.asList(txtSousTitres.getText().split("\\s*,\\s*"));
+                    int stock = spinStock.getValue();
+                    executerActionAsync(btnValider, "Ajouter le DVD", lblOutput, "Le DVD a été ajouté avec succès !",
+                            () -> {
+                                try {
+                                    stockService.ajouterDVD(titre, desc, editeur, annee, real, duree, pistesAudio, sousTitres, stock);
+                                } catch (SQLException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            },
+                            () -> viderChamps(txtTitre, txtDesc, txtEditeur, txtReal, txtAudio, txtSousTitres)
+                    );
                 });
 
                 containerFormulaire.getChildren().addAll(
@@ -180,28 +173,25 @@ public class AjouterProduitController implements Initializable {
                 Spinner<Integer> spinDureeJeux = createSpinner(5, 600, 30);
 
                 btnValider.setOnAction(event -> {
-                    try {
-                        // Appel au service
-                        stockService.ajouterJeuSociete(
-                                txtTitre.getText(),
-                                txtDesc.getText(),
-                                txtEditeur.getText(),
-                                spinAnnee.getValue(),
-                                spinJMin.getValue(),
-                                spinJMax.getValue(),
-                                spinAgeMin.getValue(),
-                                spinDureeJeux.getValue(),
-                                spinStock.getValue()
-                        );
-
-
-                        afficherMessage(lblOutput, "Le Jeu a été ajouté avec succès !", true);
-                        viderChamps(txtTitre, txtDesc, txtEditeur);
-                    } catch (IllegalArgumentException e) {
-                        afficherMessage(lblOutput, "Erreur : " + e.getMessage(), false);
-                    } catch (Exception e) {
-                        afficherMessage(lblOutput, "Erreur inattendue : " + e.getMessage(), false);
-                    }
+                    String titre = txtTitre.getText();
+                    String desc = txtDesc.getText();
+                    String editeur = txtEditeur.getText();
+                    int annee = spinAnnee.getValue();
+                    int jMin = spinJMin.getValue();
+                    int jMax = spinJMax.getValue();
+                    int ageMin = spinAgeMin.getValue();
+                    int dureeJeux = spinDureeJeux.getValue();
+                    int stock = spinStock.getValue();
+                    executerActionAsync(btnValider, "Ajouter le Jeu", lblOutput, "Le Jeu a été ajouté avec succès !",
+                            () -> {
+                                try {
+                                    stockService.ajouterJeuSociete(titre, desc, editeur, annee, jMin, jMax, ageMin, dureeJeux, stock);
+                                } catch (SQLException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            },
+                            () -> viderChamps(txtTitre, txtDesc, txtEditeur)
+                    );
                 });
 
                 containerFormulaire.getChildren().addAll(
@@ -212,6 +202,29 @@ public class AjouterProduitController implements Initializable {
                 );
                 break;
         }
+    }
+
+    private void executerActionAsync(Button bouton, String texteBoutonNormal, Label lblOutput, String messageSucces, Runnable tacheEnArrierePlan, Runnable actionSuccesUI) {
+        bouton.setDisable(true);
+        bouton.setText("Ajout en cours...");
+        lblOutput.setText("");
+        CompletableFuture.runAsync(tacheEnArrierePlan).whenComplete((resultat, erreur) -> {
+            Platform.runLater(() -> {
+                bouton.setDisable(false);
+                bouton.setText(texteBoutonNormal);
+
+                if (erreur == null) {
+                    // Succès !
+                    afficherMessage(lblOutput, messageSucces, true);
+                    if (actionSuccesUI != null) {
+                        actionSuccesUI.run();
+                    }
+                } else {
+                    String messageErreur = erreur.getCause() != null ? erreur.getCause().getMessage() : erreur.getMessage();
+                    afficherMessage(lblOutput, "Erreur : " + messageErreur, false);
+                }
+            });
+        });
     }
 
     // --- Méthodes utilitaires ---

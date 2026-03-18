@@ -33,7 +33,6 @@ public class DvdDAO {
 
             stmt.executeUpdate();
 
-            // On récupère l'ID et on le donne à l'objet
             try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     p.setId(generatedKeys.getInt(1));
@@ -44,21 +43,25 @@ public class DvdDAO {
         }
     }
 
-    public void updateProduit(Produit p) throws SQLException {
-        DVD d = (DVD) p;
-        String sql = "UPDATE PRODUIT SET titre = ?, description = ?, annee_sortie = ?, realisateur = ?, duree_minutes = ?, audio_langues = ?, sous_titres = ? WHERE id = ? AND type_produit = 'DVD'";
+    public static DVD GetByID(int id) throws SQLException {
+        DVD dvd = null;
+        String sql = "SELECT * FROM PRODUIT WHERE id = ?";
+
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)){
-            stmt.setString(1, d.getTitre());
-            stmt.setString(2, d.getDescription());
-            stmt.setInt(3, d.getAnneeSortie());
-            stmt.setString(4, d.getRealisateur());
-            stmt.setInt(5, d.getDureeMinutes());
-            stmt.setString(6, String.join(",", d.getAudioLangues()));
-            stmt.setString(7, d.getSousTitres() == null ? null : String.join(",", d.getSousTitres()));
-            stmt.setInt(8, d.getId());
-            stmt.executeUpdate();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                List<DVD> temp = CreateDVD(rs);
+                if (!temp.isEmpty()) {
+                    dvd = temp.getFirst();
+                    dvd.setExemplaires(ExemplaireDAO.getExemplairesByProduit(dvd));
+                }
+            }
         }
+
+        return dvd;
     }
 
     public static List<DVD> ProduitObjectList() throws SQLException {
@@ -71,7 +74,6 @@ public class DvdDAO {
             stmt.setString(1, "DVD");
 
             try (ResultSet rs = stmt.executeQuery()) {
-                // On transforme le ResultSet en liste d'objets AVANT de fermer la connexion
                 dvds = CreateDVD(rs);
             }
         }
@@ -87,43 +89,35 @@ public class DvdDAO {
             String description = rs.getString("description");
             String editeur = rs.getString("editeur");
             int anneeSortie = rs.getInt("annee_sortie");
-
             String realisateur = rs.getString("realisateur");
             int dureeMinutes = rs.getInt("duree_minutes");
-
-            // Conversion du String de la base de données en List<String>
             String rawAudio = rs.getString("audio_langues");
             List<String> audioLangues = (rawAudio == null || rawAudio.isEmpty()) ? new ArrayList<>() : new ArrayList<>(Arrays.asList(rawAudio.split(",")));
-
             String rawSub = rs.getString("sous_titres");
             List<String> sousTitres = (rawSub == null || rawSub.isEmpty()) ? new ArrayList<>() : new ArrayList<>(Arrays.asList(rawSub.split(",")));
-
-            // EN attendant
             List<Exemplaire> exemplaires = new ArrayList<>();
-
-            // Création de l'objet
             DVD dvd = new DVD(id, titre, description, editeur, anneeSortie , exemplaires,realisateur, dureeMinutes, audioLangues, sousTitres);
-            dvd.setExemplaires(ExemplaireDAO.getExemplairesByProduit(dvd));
             dvds.add(dvd);
         }
         return dvds;
     }
 
-    public static DVD GetByID(int id) throws SQLException {
-        DVD dvd = null;
-        String sql = "SELECT * FROM PRODUIT WHERE id = ?";
-
+    public void updateProduit(Produit p) throws SQLException {
+        DVD d = (DVD) p;
+        String sql = "UPDATE PRODUIT SET titre = ?, description = ?, editeur = ?, annee_sortie = ?, realisateur = ?, duree_minutes = ?, audio_langues = ?, sous_titres = ? WHERE id = ? AND type_produit = 'DVD'";
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, id);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                dvd = CreateDVD(rs).getFirst();
-            }
+             PreparedStatement stmt = conn.prepareStatement(sql)){
+            stmt.setString(1, d.getTitre());
+            stmt.setString(2, d.getDescription());
+            stmt.setString(3, d.getEditeur());
+            stmt.setInt(4, d.getAnneeSortie());
+            stmt.setString(5, d.getRealisateur());
+            stmt.setInt(6, d.getDureeMinutes());
+            stmt.setString(7, String.join(",", d.getAudioLangues()));
+            stmt.setString(8, d.getSousTitres() == null ? null : String.join(",", d.getSousTitres()));
+            stmt.setInt(9, d.getId());
+            stmt.executeUpdate();
         }
-
-        return dvd;
     }
 
     public int countDVDs() throws SQLException {
