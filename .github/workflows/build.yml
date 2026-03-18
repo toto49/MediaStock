@@ -22,14 +22,20 @@ jobs:
           - os: windows-latest
             os_name: Windows-x64
             jfx_classifier: win
+            # Icône pour Windows (.ico)
+            icon_path: src/main/resources/images/logo.ico
 
           - os: ubuntu-latest
             os_name: Linux-x64
             jfx_classifier: linux
+            # Icône pour Linux (.png)
+            icon_path: src/main/resources/images/logo.png
 
           - os: macos-latest
             os_name: macOS-Silicon-ARM64
             jfx_classifier: mac-aarch64
+            # Icône pour Mac (.icns)
+            icon_path: src/main/resources/images/logo.icns
 
     runs-on: ${{ matrix.os }}
 
@@ -41,7 +47,7 @@ jobs:
       - name: Checkout du code
         uses: actions/checkout@v4
 
-      - name: Configuration du JDK 21
+      - name: Configuration du JDK
         uses: actions/setup-java@v4
         with:
           java-version: '25'
@@ -52,10 +58,10 @@ jobs:
         run: mvn -B clean compile "-Djfx.os=${{ matrix.jfx_classifier }}"
 
       # - name: Tests Unitaires
-      # run: mvn -B test "-Djfx.os=${{ matrix.jfx_classifier }}"
+      #   run: mvn -B test "-Djfx.os=${{ matrix.jfx_classifier }}"
 
       - name: Création de l'exécutable (Packaging)
-        run: mvn -B package -DskipTests "-Djfx.os=${{ matrix.jfx_classifier }}"
+        run: mvn -B package -DskipTests "-Djfx.os=${{ matrix.jfx_classifier }}" "-Dapp.icon=${{ matrix.icon_path }}"
 
       - name: Archivage de l'application (Artifact)
         uses: actions/upload-artifact@v4

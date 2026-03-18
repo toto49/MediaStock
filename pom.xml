@@ -160,6 +160,7 @@
                     <mainClass>com.eseo.mediastock.Launcher</mainClass>
 
                     <winConsole>true</winConsole>
+                    <icon>${app.icon}</icon>
 
                     <javaOptions>
                         <option>-Dfile.encoding=UTF-8</option>
