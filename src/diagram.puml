@@ -1,0 +1,86 @@
+@startuml
+
+' ======================
+' PACKAGES
+' ======================
+
+package controller {
+  class AbstractProduitController
+  class AccueilController
+  class AdherentController
+  class AjouterProduitController
+  class BienvenueController
+  class ConnexionController
+  class CreateAccountController
+  class DVDController
+  class EmpruntController
+  class JeuxController
+  class ListeViewController
+  class LivresController
+  class MenuController
+  class ParametreController
+  class StockController
+}
+
+package service {
+  class AdherentService
+  class AdminService
+  class EmpruntService
+  class PasswordUtilService
+  class StockService
+  class UserSession
+}
+
+package dao {
+  class AdherentDAO
+  class AdminDAO
+  class DatabaseConnection
+  class DvdDAO
+  class EmpruntDAO
+  class ExemplaireDAO
+  class JeuSocieteDAO
+  class LivreDAO
+}
+
+package model {
+  class Adherent
+  class Admin
+  class Emprunt
+  class Exemplaire
+}
+
+' ======================
+' RELATIONS
+' ======================
+
+' Controller -> Service
+AbstractProduitController --> StockService
+AdherentController --> AdherentService
+AjouterProduitController --> StockService
+ConnexionController --> AdminService
+CreateAccountController --> AdherentService
+DVDController --> StockService
+EmpruntController --> EmpruntService
+JeuxController --> StockService
+LivresController --> StockService
+StockController --> StockService
+
+' Service -> DAO
+AdherentService --> AdherentDAO
+AdminService --> AdminDAO
+EmpruntService --> EmpruntDAO
+StockService --> DvdDAO
+StockService --> LivreDAO
+StockService --> JeuSocieteDAO
+StockService --> ExemplaireDAO
+
+' DAO -> Model
+AdherentDAO --> Adherent
+AdminDAO --> Admin
+EmpruntDAO --> Emprunt
+ExemplaireDAO --> Exemplaire
+DvdDAO --> Exemplaire
+LivreDAO --> Exemplaire
+JeuSocieteDAO --> Exemplaire
+
+@enduml
