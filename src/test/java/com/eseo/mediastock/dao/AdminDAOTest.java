@@ -7,6 +7,34 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * PLAN DE TEST - AdminDAOTest
+ * ===================================================
+ *
+ * OBJECTIF : Vérifier le bon fonctionnement de toutes les méthodes CRUD
+ *            de la classe AdminDAO (Create, Read, Update, Delete, Authentification)
+ *
+ * ENVIRONNEMENT DE TEST :
+ * - Base de données : test (nettoyage après exécution)
+ * - Données : constantes définies (EMAIL_TEST, MDP_TEST, etc.)
+ * - Nettoyage : suppression de l'admin de test après tous les tests
+ * - Ordre : défini par @Order (dépendances entre tests)
+ *
+ * COUVERTURE DES TESTS :
+ * - testCreate           → CREATE
+ * - testFindByEmail      → READ (par email)
+ * - testAuthenticate     → AUTHENTIFICATION (réussite/échec)
+ * - testFindAll          → READ (tous)
+ * - testChangePassword   → UPDATE (mot de passe)
+ * - testUpdate           → UPDATE (tous champs)
+ * - testEmailExistant    → READ (email existant/inexistant)
+ * - testDelete           → DELETE
+ *
+ * NETTOYAGE AUTOMATIQUE :
+ * - L'admin créé au test 1 est supprimé à la fin
+ * - Un admin temporaire est créé et supprimé dans testDelete
+ * ===================================================
+ */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdminDAOTest {
 
@@ -26,6 +54,11 @@ public class AdminDAOTest {
         System.out.println("DÉMARRAGE DES TESTS ADMIN DAO ");
     }
 
+    /**
+     * NETTOYAGE FINAL
+     * Supprime l'admin créé pendant les tests (si existant)
+     * Exécuté une seule fois après tous les tests
+     */
     @AfterAll
     static void cleanup() {
         System.out.println("NETTOYAGE ");
@@ -39,6 +72,31 @@ public class AdminDAOTest {
         }
     }
 
+    /**
+     * ===================================================
+     * TEST 1 : CREATE - Création d'un administrateur
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier l'insertion d'un nouvel administrateur
+     *
+     * DONNÉES :
+     * - ID : 0 (auto-généré par la base)
+     * - Nom : NOM_TEST ("Test")
+     * - Prénom : PRENOM_TEST ("DAO")
+     * - Email : EMAIL_TEST ("testdao@admin.com")
+     * - Téléphone : TEL_TEST (123456789)
+     * - Mot de passe : MDP_TEST ("password123") + setPlainPassword()
+     *
+     * RÉSULTAT ATTENDU :
+     * - L'admin est créé avec un ID > 0 généré par la base
+     *
+     * VÉRIFICATIONS :
+     * - assertTrue(admin.getId() > 0) → ID généré
+     *
+     * DÉPENDANCES :
+     * - Aucune (premier test)
+     * ===================================================
+     */
     @Test
     @Order(1)
     void testCreate() throws SQLException {
@@ -56,6 +114,27 @@ public class AdminDAOTest {
         System.out.println("Admin créé avec ID: " + idAdminTest);
     }
 
+    /**
+     * ===================================================
+     * TEST 2 : READ - Recherche par email
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier la récupération d'un admin par son email
+     *
+     * DONNÉES :
+     * - Email : EMAIL_TEST ("testdao@admin.com")
+     *
+     * RÉSULTAT ATTENDU :
+     * - Admin trouvé avec toutes ses données intactes
+     *
+     * VÉRIFICATIONS :
+     * - assertNotNull(admin) → admin trouvé
+     * - assertEquals sur tous les champs (email, nom, prénom, téléphone)
+     *
+     * PRÉ-REQUIS :
+     * - Le test 1 doit avoir réussi (admin créé avec EMAIL_TEST)
+     * ===================================================
+     */
     @Test
     @Order(2)
     void testFindByEmail() throws SQLException {
@@ -72,6 +151,34 @@ public class AdminDAOTest {
         System.out.println("Admin trouvé: " + admin.getEmail());
     }
 
+    /**
+     * ===================================================
+     * TEST 3 : AUTHENTIFICATION - Connexion admin
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier l'authentification avec hash de mot de passe
+     *
+     * SCÉNARIOS TESTÉS :
+     * 1. Authentification réussie (bons identifiants)
+     * 2. Authentification échouée (mauvais mot de passe)
+     *
+     * DONNÉES :
+     * - Email correct : EMAIL_TEST
+     * - Bon mot de passe : MDP_TEST
+     * - Mauvais mot de passe : "mauvaisMdp"
+     *
+     * RÉSULTATS ATTENDUS :
+     * - Bons identifiants → admin retourné
+     * - Mauvais mot de passe → null
+     *
+     * VÉRIFICATIONS :
+     * - assertNotNull(admin)
+     * - assertNull(adminFail)
+     *
+     * PRÉ-REQUIS :
+     * - Le test 1 doit avoir réussi (admin créé)
+     * ===================================================
+     */
     @Test
     @Order(3)
     void testAuthenticate() throws SQLException {
@@ -89,6 +196,27 @@ public class AdminDAOTest {
         System.out.println("Échec authentification avec mauvais mdp");
     }
 
+    /**
+     * ===================================================
+     * TEST 4 : READ - Liste de tous les administrateurs
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier la récupération de tous les admins
+     *
+     * RÉSULTAT ATTENDU :
+     * - Liste non null
+     * - Liste non vide
+     * - L'admin de test est présent dans la liste
+     *
+     * VÉRIFICATIONS :
+     * - assertNotNull(admins)
+     * - assertTrue(admins.size() > 0)
+     * - anyMatch(a -> a.getId() == idAdminTest)
+     *
+     * PRÉ-REQUIS :
+     * - Le test 1 doit avoir réussi (au moins un admin en base)
+     * ===================================================
+     */
     @Test
     @Order(4)
     void testFindAll() throws SQLException {
@@ -105,6 +233,36 @@ public class AdminDAOTest {
         System.out.println("✅ " + admins.size() + " admin(s) trouvé(s)");
     }
 
+    /**
+     * ===================================================
+     * TEST 5 : UPDATE - Changement de mot de passe
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier le changement de mot de passe avec hash
+     *
+     * DONNÉES :
+     * - ID : idAdminTest
+     * - Ancien mot de passe : MDP_TEST
+     * - Nouveau mot de passe : "nouveauMdp123"
+     *
+     * PROCÉDURE :
+     * 1. Changer le mot de passe
+     * 2. Vérifier le succès (true)
+     * 3. Authentifier avec le nouveau mot de passe
+     * 4. Vérifier que ça fonctionne
+     *
+     * RÉSULTATS ATTENDUS :
+     * - change = true
+     * - Authentification avec nouveau mdp réussie
+     *
+     * VÉRIFICATIONS :
+     * - assertTrue(change)
+     * - assertNotNull(admin) après auth avec nouveau mdp
+     *
+     * PRÉ-REQUIS :
+     * - Le test 1 doit avoir réussi (idAdminTest défini)
+     * ===================================================
+     */
     @Test
     @Order(5)
     void testChangePassword() throws SQLException {
@@ -122,6 +280,33 @@ public class AdminDAOTest {
         System.out.println("Authentification avec nouveau mdp réussie");
     }
 
+    /**
+     * ===================================================
+     * TEST 6 : UPDATE - Mise à jour de tous les champs
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier la mise à jour de toutes les informations d'un admin
+     *
+     * DONNÉES MODIFIÉES :
+     * - Nom : "TestUpdate" (au lieu de NOM_TEST)
+     * - Prénom : "Update" (au lieu de PRENOM_TEST)
+     * - Téléphone : 987654321 (au lieu de TEL_TEST)
+     * - Mot de passe : "nouveauMdpUpdate"
+     *
+     * PROCÉDURE :
+     * 1. Récupérer l'admin
+     * 2. Modifier tous les champs
+     * 3. Appeler update()
+     * 4. Vérifier que les modifications sont persistées
+     *
+     * VÉRIFICATIONS :
+     * - assertEquals sur nom, prénom, téléphone
+     * - Authentification réussie avec nouveau mot de passe
+     *
+     * PRÉ-REQUIS :
+     * - Le test 1 doit avoir réussi (admin existant)
+     * ===================================================
+     */
     @Test
     @Order(6)
     void testUpdate() throws SQLException {
@@ -157,6 +342,30 @@ public class AdminDAOTest {
         System.out.println("Vérifications réussies");
     }
 
+    /**
+     * ===================================================
+     * TEST 7 : READ - Vérification email existant/inexistant
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier le comportement de findByEmail avec
+     *            emails existants et inexistants
+     *
+     * DONNÉES :
+     * - Email existant : EMAIL_TEST
+     * - Email inexistant : "email@inexistant.com"
+     *
+     * RÉSULTATS ATTENDUS :
+     * - Email existant → admin trouvé
+     * - Email inexistant → null
+     *
+     * VÉRIFICATIONS :
+     * - assertNotNull(existant)
+     * - assertNull(inexistant)
+     *
+     * PRÉ-REQUIS :
+     * - Le test 1 doit avoir réussi (admin avec EMAIL_TEST créé)
+     * ===================================================
+     */
     @Test
     @Order(7)
     void testEmailExistant() throws SQLException {
@@ -171,6 +380,36 @@ public class AdminDAOTest {
         System.out.println("Vérification email existant OK");
     }
 
+    /**
+     * ===================================================
+     * TEST 8 : DELETE - Suppression d'un administrateur
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier la suppression d'un admin
+     *
+     * PROCÉDURE :
+     * 1. Créer un admin temporaire (emailTemp)
+     * 2. Vérifier qu'il existe
+     * 3. Le supprimer avec delete()
+     * 4. Vérifier qu'il n'existe plus
+     *
+     * DONNÉES TEMPORAIRES :
+     * - Email : "temp@delete.com"
+     * - Nom : "Temp", Prénom : "Delete"
+     * - Téléphone : 111222333
+     * - Mot de passe : "tempMdp"
+     *
+     * RÉSULTATS ATTENDUS :
+     * - Suppression réussie (pas d'exception)
+     * - Admin introuvable après suppression
+     *
+     * VÉRIFICATIONS :
+     * - assertNull(verif) après suppression
+     *
+     * PRÉ-REQUIS :
+     * - Aucun (test indépendant)
+     * ===================================================
+     */
     @Test
     @Order(8)
     void testDelete() throws SQLException {

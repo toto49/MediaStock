@@ -9,6 +9,33 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * PLAN DE TEST - AdherentDAOTest
+ * ===================================================
+ *
+ * OBJECTIF : Vérifier le bon fonctionnement de toutes les méthodes CRUD
+ *            de la classe AdherentDAO (Create, Read, Update, Delete)
+ *
+ * ENVIRONNEMENT DE TEST :
+ * - Base de données : test (nettoyage automatique après exécution)
+ * - Données : générées dynamiquement avec timestamps uniques
+ * - Nettoyage : automatique via @AfterAll
+ * - Ordre : défini par @Order (dépendances entre tests)
+ *
+ * COUVERTURE DES TESTS :
+ * - testCreateAdherent    → CREATE
+ * - testGetByID           → READ (existant)
+ * - testGetByIDInexistant → READ (inexistant)
+ * - testUpdateAdherent    → UPDATE
+ * - testValeursSpeciales  → CREATE (cas limites)
+ * - testCreationsMultiples→ CREATE (batch)
+ * - testDeleteAdherent    → DELETE
+ * - testFindAll           → READ (tous)
+ *
+ * NETTOYAGE AUTOMATIQUE :
+ * Les IDs créés sont stockés dans idsACleaner et supprimés après tous les tests
+ * ===================================================
+ */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdherentDAOTest {
 
@@ -23,6 +50,11 @@ public class AdherentDAOTest {
         dao = new AdherentDAO();
     }
 
+    /**
+     * NETTOYAGE FINAL
+     * Supprime tous les adhérents créés pendant les tests
+     * Exécuté une seule fois après tous les tests
+     */
     @AfterAll
     static void nettoyage() throws SQLException {
         System.out.println("NETTOYAGE AUTOMATIQUE");
@@ -64,7 +96,29 @@ public class AdherentDAOTest {
     }
 
     /**
-     * Test : Création d'un adhérent
+     * ===================================================
+     * TEST 1 : CREATE - Création d'un adhérent
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier l'insertion d'un nouvel adhérent
+     *
+     * DONNÉES :
+     * - ID : généré automatiquement (timestamp)
+     * - Nom : "LicornTest"
+     * - Prénom : "MorgianeTest"
+     * - Email : "email@test.com"
+     * - Téléphone : "0123456789"
+     *
+     * RÉSULTAT ATTENDU :
+     * - L'adhérent est créé avec un ID non null
+     * - Toutes les données sont correctement sauvegardées
+     *
+     * VÉRIFICATIONS :
+     * - assertNotNull(a.getId()) → ID généré
+     *
+     * DÉPENDANCES :
+     * - Aucune (premier test)
+     * ===================================================
      */
     @Test
     @Order(1)
@@ -93,8 +147,26 @@ public class AdherentDAOTest {
     }
 
     /**
-     * Test: Recherche par ID
-     * Vérifie qu'on retrouve l'adhérent créé
+     * ===================================================
+     * TEST 2 : READ - Recherche par ID (existant)
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier la récupération d'un adhérent existant
+     *
+     * DONNÉES :
+     * - ID : idTest (créé au test 1)
+     *
+     * RÉSULTAT ATTENDU :
+     * - Adhérent trouvé
+     * - Toutes ses données sont identiques à la création
+     *
+     * VÉRIFICATIONS :
+     * - assertNotNull(trouve) → adhérent trouvé
+     * - assertEquals sur tous les champs (id, nom, prénom, email, tel)
+     *
+     * PRÉ-REQUIS :
+     * - Le test 1 doit avoir réussi (idTest défini)
+     * ===================================================
      */
     @Test
     @Order(2)
@@ -119,7 +191,24 @@ public class AdherentDAOTest {
     }
 
     /**
-     * Test: Recherche avec ID inexistant
+     * ===================================================
+     * TEST 3 : READ - Recherche par ID (inexistant)
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier le comportement avec un ID inexistant
+     *
+     * DONNÉES :
+     * - ID : "ID-QUI-NEXISTE-PAS" (ID fictif)
+     *
+     * RÉSULTAT ATTENDU :
+     * - Retour null (pas d'exception)
+     *
+     * VÉRIFICATIONS :
+     * - assertNull(trouve) → aucun adhérent trouvé
+     *
+     * PRÉ-REQUIS :
+     * - Aucun (test indépendant)
+     * ===================================================
      */
     @Test
     @Order(3)
@@ -134,8 +223,26 @@ public class AdherentDAOTest {
     }
 
     /**
-     * Test : Mise à jour d'un adhérent
-     * Modifie les données de l'adhérent créé
+     * ===================================================
+     * TEST 4 : UPDATE - Mise à jour d'un adhérent
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier la modification des données d'un adhérent
+     *
+     * DONNÉES :
+     * - ID : idTest (créé au test 1)
+     * - Modification : nom → "LicornTestModif"
+     *
+     * RÉSULTAT ATTENDU :
+     * - Nom modifié avec succès
+     * - Les autres données restent inchangées
+     *
+     * VÉRIFICATIONS :
+     * - assertEquals("LicornTestModif", modifie.getNom())
+     *
+     * PRÉ-REQUIS :
+     * - Le test 1 doit avoir réussi (idTest défini)
+     * ===================================================
      */
     @Test
     @Order(4)
@@ -167,7 +274,28 @@ public class AdherentDAOTest {
     }
 
     /**
-     * Test: Test avec différentes valeurs
+     * ===================================================
+     * TEST 5 : CREATE - Données spéciales (accents, chiffres, longs)
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier que les données avec caractères spéciaux sont bien gérées
+     *
+     * SCÉNARIOS TESTÉS :
+     * 1. Caractères accentués (Étienne, François)
+     * 2. Chiffres dans le nom (User123, Test456)
+     * 3. Email très long (email.tres.tres.long@test.domain.com)
+     * 4. Téléphone avec format spécial (+33 6 12 34 56 78)
+     *
+     * RÉSULTAT ATTENDU :
+     * - Tous les adhérents sont créés avec succès
+     * - Leurs données sont correctement sauvegardées
+     *
+     * VÉRIFICATIONS :
+     * - assertNotNull(id) pour chaque création
+     *
+     * PRÉ-REQUIS :
+     * - Aucun (test indépendant)
+     * ===================================================
      */
     @Test
     @Order(5)
@@ -202,7 +330,26 @@ public class AdherentDAOTest {
     }
 
     /**
-     * Test : Création de plusieurs adhérents
+     * ===================================================
+     * TEST 6 : CREATE - Créations multiples
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier l'insertion de plusieurs adhérents à la suite
+     *
+     * DONNÉES :
+     * - 3 adhérents avec des IDs et données différents
+     *
+     * RÉSULTAT ATTENDU :
+     * - Les 3 adhérents sont créés avec des IDs non null
+     * - On peut les retrouver individuellement
+     *
+     * VÉRIFICATIONS :
+     * - assertNotNull pour chaque ID
+     * - Récupération individuelle réussie pour chacun
+     *
+     * PRÉ-REQUIS :
+     * - Aucun (test indépendant)
+     * ===================================================
      */
     @Test
     @Order(6)
@@ -248,7 +395,29 @@ public class AdherentDAOTest {
     }
 
     /**
-     * Test  : Test de suppression directe
+     * ===================================================
+     * TEST 7 : DELETE - Suppression d'un adhérent
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier la suppression d'un adhérent
+     *
+     * PROCÉDURE :
+     * 1. Créer un adhérent temporaire
+     * 2. Vérifier qu'il existe
+     * 3. Le supprimer
+     * 4. Vérifier qu'il n'existe plus
+     *
+     * RÉSULTAT ATTENDU :
+     * - Suppression réussie (true)
+     * - Adhérent introuvable après suppression
+     *
+     * VÉRIFICATIONS :
+     * - assertTrue(supprime)
+     * - assertNull(apres)
+     *
+     * PRÉ-REQUIS :
+     * - Aucun (test indépendant)
+     * ===================================================
      */
     @Test
     @Order(7)
@@ -279,7 +448,23 @@ public class AdherentDAOTest {
     }
 
     /**
-     * Test: Récupérer tous les adhérents
+     * ===================================================
+     * TEST 8 : READ - Liste de tous les adhérents
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier la récupération de tous les adhérents
+     *
+     * RÉSULTAT ATTENDU :
+     * - Liste non null
+     * - Liste non vide (contient au moins l'adhérent du test 1)
+     *
+     * VÉRIFICATIONS :
+     * - assertNotNull(liste)
+     * - assertTrue(liste.size() > 0)
+     *
+     * PRÉ-REQUIS :
+     * - Le test 1 doit avoir réussi (au moins un adhérent en base)
+     * ===================================================
      */
     @Test
     @Order(8)
