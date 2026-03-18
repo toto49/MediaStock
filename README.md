@@ -67,7 +67,7 @@ maintenable et évolutive.
 - **Java JDK 25+**
 - **JavaFX** (si non inclus dans la distribution)
 - **MySQL 8.0+**
-- **Maven** ou **Gradle**
+- **Maven**
 - Un IDE recommandé :
     - **IntelliJ IDEA**
     - **Eclipse**
