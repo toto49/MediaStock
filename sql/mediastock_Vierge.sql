@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost
--- Généré le : mer. 18 mars 2026 à 08:27
+-- Généré le : mer. 18 mars 2026 à 15:41
 -- Version du serveur : 10.11.11-MariaDB
 -- Version de PHP : 8.2.28
 
@@ -106,14 +106,16 @@ CREATE TABLE `PRODUIT` (
 -- Index pour la table `ADHERENT`
 --
 ALTER TABLE `ADHERENT`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_adh` (`id`,`nom`,`prenom`);
 
 --
 -- Index pour la table `ADMINISTRATEUR`
 --
 ALTER TABLE `ADMINISTRATEUR`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unique_email` (`email`);
+  ADD UNIQUE KEY `unique_email` (`email`),
+  ADD KEY `idx_admin` (`id`,`email`,`nom`,`prenom`,`mdp`);
 
 --
 -- Index pour la table `EMPRUNT`
@@ -121,20 +123,23 @@ ALTER TABLE `ADMINISTRATEUR`
 ALTER TABLE `EMPRUNT`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_exemplaire` (`id_exemplaire`),
-  ADD KEY `EMPRUNT_ibfk_1` (`id_adherent`);
+  ADD KEY `EMPRUNT_ibfk_1` (`id_adherent`),
+  ADD KEY `idx_emprunt` (`id`,`statut`,`id_adherent`,`id_exemplaire`);
 
 --
 -- Index pour la table `EXEMPLAIRE`
 --
 ALTER TABLE `EXEMPLAIRE`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `id_produit` (`id_produit`);
+  ADD KEY `id_produit` (`id_produit`),
+  ADD KEY `idx_exemplaire` (`id`,`id_produit`,`code_barre`);
 
 --
 -- Index pour la table `PRODUIT`
 --
 ALTER TABLE `PRODUIT`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_produit` (`id`,`type_produit`);
 
 --
 -- AUTO_INCREMENT pour les tables déchargées
@@ -144,7 +149,7 @@ ALTER TABLE `PRODUIT`
 -- AUTO_INCREMENT pour la table `ADMINISTRATEUR`
 --
 ALTER TABLE `ADMINISTRATEUR`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=134;
 
 --
 -- AUTO_INCREMENT pour la table `EMPRUNT`
@@ -156,13 +161,13 @@ ALTER TABLE `EMPRUNT`
 -- AUTO_INCREMENT pour la table `EXEMPLAIRE`
 --
 ALTER TABLE `EXEMPLAIRE`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=336;
 
 --
 -- AUTO_INCREMENT pour la table `PRODUIT`
 --
 ALTER TABLE `PRODUIT`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- Contraintes pour les tables déchargées
