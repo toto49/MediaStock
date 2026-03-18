@@ -10,6 +10,33 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * PLAN DE TEST - AdherentServiceTest
+ * ===================================================
+ *
+ * OBJECTIF : Vérifier le bon fonctionnement du service AdherentService
+ *            qui gère la logique métier des adhérents (création d'ID,
+ *            inscriptions, gestion des données)
+ *
+ * ENVIRONNEMENT DE TEST :
+ * - Base de données : test (nettoyage automatique après exécution)
+ * - Données : emails uniques générés dynamiquement
+ * - Nettoyage : automatique via @AfterAll (idsACleaner)
+ * - Ordre : défini par @Order (dépendances logiques entre tests)
+ *
+ * COUVERTURE DES TESTS :
+ * - testGenerateNumAdherent        → Génération d'ID (format ADH-YYYY-XXX)
+ * - testInscrireAdherent           → Inscription normale
+ * - testInscrireAdherentDonneesSpeciales → Inscription avec caractères spéciaux
+ * - testInscriptionsMultiples      → Création de plusieurs adhérents
+ * - testNumerosUniques             → Unicité des IDs générés
+ * - testRecuperationApresCreation  → Récupération après création
+ *
+ * NETTOYAGE AUTOMATIQUE :
+ * - Tous les adhérents créés sont stockés dans idsACleaner
+ * - Supprimés automatiquement après tous les tests
+ * ===================================================
+ */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdherentServiceTest {
 
@@ -30,6 +57,11 @@ public class AdherentServiceTest {
         System.out.println("=== INITIALISATION DES TESTS ===");
     }
 
+    /**
+     * NETTOYAGE FINAL
+     * Supprime tous les adhérents créés pendant les tests
+     * Exécuté une seule fois après tous les tests
+     */
     @AfterAll
     static void nettoyage() throws SQLException {
         System.out.println(" NETTOYAGE AUTOMATIQUE");
@@ -69,7 +101,31 @@ public class AdherentServiceTest {
     }
 
     /**
-     * Test: Test de la méthode generateNumAdherent
+     * ===================================================
+     * TEST 1 : GÉNÉRATION DE NUMÉRO D'ADHÉRENT
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier la génération du numéro d'adhérent unique
+     *            au format ADH-ANNÉE-NUMÉRO (ex: ADH-2026-001)
+     *
+     * DONNÉES :
+     * - Aucune (méthode sans paramètre)
+     *
+     * RÉSULTAT ATTENDU :
+     * - Format : ADH-YYYY-XXX
+     * - Commence par "ADH-"
+     * - Contient l'année courante
+     * - Le numéro de séquence a 3 chiffres
+     *
+     * VÉRIFICATIONS :
+     * - assertNotNull(numAdherent)
+     * - assertTrue(numAdherent.startsWith("ADH-"))
+     * - assertTrue(numAdherent.contains(anneeCourante))
+     * - assertEquals(3, parties[2].length())
+     *
+     * DÉPENDANCES :
+     * - Aucune (test indépendant)
+     * ===================================================
      */
     @Test
     @Order(1)
@@ -96,7 +152,36 @@ public class AdherentServiceTest {
     }
 
     /**
-     * Test : Inscription d'un adhérent
+     * ===================================================
+     * TEST 2 : INSCRIPTION D'UN ADHÉRENT (NORMAL)
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier l'inscription d'un adhérent avec des données standards
+     *
+     * DONNÉES :
+     * - Nom : "Martin"
+     * - Prénom : "Sophie"
+     * - Email : unique (généré automatiquement)
+     * - Téléphone : "0612345678"
+     *
+     * PROCÉDURE :
+     * 1. Inscrire l'adhérent via le service
+     * 2. Récupérer tous les adhérents
+     * 3. Chercher celui avec l'email créé
+     *
+     * RÉSULTATS ATTENDUS :
+     * - Adhérent trouvé
+     * - Toutes ses données correspondent
+     * - L'ID généré commence par "ADH-"
+     *
+     * VÉRIFICATIONS :
+     * - assertNotNull(trouve)
+     * - assertEquals sur nom, prénom, email, téléphone
+     * - assertTrue(numAdherent.startsWith("ADH-"))
+     *
+     * DÉPENDANCES :
+     * - Aucune (test indépendant)
+     * ===================================================
      */
     @Test
     @Order(2)
@@ -141,7 +226,29 @@ public class AdherentServiceTest {
     }
 
     /**
-     * Test : Inscription avec des données spéciales
+     * ===================================================
+     * TEST 3 : INSCRIPTION AVEC DONNÉES SPÉCIALES
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier que les données avec caractères spéciaux
+     *            (accents, tirets, espaces) sont correctement gérées
+     *
+     * DONNÉES :
+     * - Nom : "Dupont-Étienne" (tiret et accent)
+     * - Prénom : "Jean-Claude" (tiret)
+     * - Téléphone : "+33 6 12 34 56 78" (espaces, +)
+     *
+     * RÉSULTATS ATTENDUS :
+     * - Adhérent créé avec succès
+     * - Toutes les données spéciales sont conservées
+     *
+     * VÉRIFICATIONS :
+     * - assertNotNull(trouve)
+     * - assertEquals sur nom, prénom, téléphone
+     *
+     * DÉPENDANCES :
+     * - Aucune (test indépendant)
+     * ===================================================
      */
     @Test
     @Order(3)
@@ -177,7 +284,26 @@ public class AdherentServiceTest {
     }
 
     /**
-     * Test: Inscriptions multiples
+     * ===================================================
+     * TEST 4 : INSCRIPTIONS MULTIPLES
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier la création de plusieurs adhérents à la suite
+     *
+     * DONNÉES :
+     * - 3 adhérents avec noms, prénoms, téléphones différents
+     *   ["Dupont/Jean/0102030405", "Martin/Sophie/0203040506", "Bernard/Pierre/0304050607"]
+     *
+     * RÉSULTATS ATTENDUS :
+     * - Les 3 adhérents sont créés
+     * - Tous sont retrouvables par leur email
+     *
+     * VÉRIFICATIONS :
+     * - assertTrue(trouve) pour chaque email
+     *
+     * DÉPENDANCES :
+     * - Aucune (test indépendant)
+     * ===================================================
      */
     @Test
     @Order(4)
@@ -216,7 +342,29 @@ public class AdherentServiceTest {
     }
 
     /**
-     * Test : Vérification que les numéros sont uniques
+     * ===================================================
+     * TEST 5 : UNICITÉ DES NUMÉROS D'ADHÉRENT
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier que chaque adhérent reçoit un ID unique
+     *
+     * DONNÉES :
+     * - 3 adhérents avec des données différentes
+     *
+     * PROCÉDURE :
+     * 1. Créer 3 adhérents
+     * 2. Récupérer leurs IDs
+     * 3. Comparer tous les IDs entre eux
+     *
+     * RÉSULTATS ATTENDUS :
+     * - Tous les IDs sont différents
+     *
+     * VÉRIFICATIONS :
+     * - assertNotEquals pour chaque paire d'IDs
+     *
+     * DÉPENDANCES :
+     * - Aucune (test indépendant)
+     * ===================================================
      */
     @Test
     @Order(5)
@@ -261,7 +409,35 @@ public class AdherentServiceTest {
     }
 
     /**
-     * Test: Test de récupération après création
+     * ===================================================
+     * TEST 6 : RÉCUPÉRATION APRÈS CRÉATION
+     * ===================================================
+     *
+     * OBJECTIF : Vérifier qu'un adhérent créé peut être retrouvé
+     *            et que ses données sont intactes
+     *
+     * DONNÉES :
+     * - Nom : "Recuperation"
+     * - Prénom : "Test"
+     * - Téléphone : "0999999999"
+     * - Email : unique
+     *
+     * PROCÉDURE :
+     * 1. Créer l'adhérent
+     * 2. Rechercher par email
+     * 3. Vérifier toutes les données
+     *
+     * RÉSULTATS ATTENDUS :
+     * - Adhérent trouvé
+     * - Toutes les données correspondent
+     *
+     * VÉRIFICATIONS :
+     * - assertNotNull(trouve)
+     * - assertEquals sur tous les champs
+     *
+     * DÉPENDANCES :
+     * - Aucune (test indépendant)
+     * ===================================================
      */
     @Test
     @Order(6)
