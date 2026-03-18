@@ -1,9 +1,10 @@
 package com.eseo.mediastock.dao;
 
 import com.eseo.mediastock.model.Admin;
-import com.eseo.mediastock.service.PasswordUtilService;
 import org.junit.jupiter.api.*;
+
 import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -17,7 +18,7 @@ public class AdminDAOTest {
     private static final String MDP_TEST = "password123";
     private static final String NOM_TEST = "Test";
     private static final String PRENOM_TEST = "DAO";
-    private static final int TEL_TEST = 123456789;
+    private static final String TEL_TEST = "123456789";
 
     @BeforeAll
     static void setup() {
@@ -133,7 +134,7 @@ public class AdminDAOTest {
         // Modifie les champs
         String nouveauNom = "TestUpdate";
         String nouveauPrenom = "Update";
-        int nouveauTel = 987654321;
+        String nouveauTel = "987654321";
 
         admin.setNom(nouveauNom);
         admin.setPrenom(nouveauPrenom);
@@ -177,7 +178,7 @@ public class AdminDAOTest {
 
         // Créer un admin temporaire
         String emailTemp = "temp@delete.com";
-        Admin tempAdmin = new Admin(0, "Temp", "Delete", emailTemp, 111222333, "tempMdp");
+        Admin tempAdmin = new Admin(0, "Temp", "Delete", emailTemp, "111222333", "tempMdp");
         tempAdmin.setPlainPassword("tempMdp");
         adminDAO.create(tempAdmin);
 

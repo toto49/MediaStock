@@ -2,7 +2,7 @@ package com.eseo.mediastock.service;
 
 import com.eseo.mediastock.model.Admin;
 import org.junit.jupiter.api.*;
-import java.sql.SQLException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -14,7 +14,7 @@ public class AdminServiceTest {
     private static final String MDP_TEST = "password123";
     private static final String NOM_TEST = "Dupont";
     private static final String PRENOM_TEST = "Jean";
-    private static final int TEL_TEST = 612345678;
+    private static final String TEL_TEST = "612345678";
 
     @BeforeAll
     static void setup() {
@@ -41,7 +41,7 @@ public class AdminServiceTest {
         System.out.println("Test 1: Création admin");
 
         assertDoesNotThrow(() -> {
-            adminService.creerAdmin(EMAIL_TEST, MDP_TEST, NOM_TEST, PRENOM_TEST, TEL_TEST);
+            AdminService.creerAdmin(EMAIL_TEST, MDP_TEST, NOM_TEST, PRENOM_TEST, TEL_TEST);
         }, "La création ne devrait pas lancer d'exception");
 
         System.out.println("Admin créé avec email: " + EMAIL_TEST);
@@ -125,7 +125,7 @@ public class AdminServiceTest {
 
         // Tenter de créer un admin avec le même email
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            adminService.creerAdmin(EMAIL_TEST, "autreMdp", "Autre", "Nom", 123456789);
+            AdminService.creerAdmin(EMAIL_TEST, "autreMdp", "Autre", "Nom", "123456789");
         });
 
         assertTrue(exception.getMessage().contains("existe déjà"));
@@ -139,25 +139,25 @@ public class AdminServiceTest {
 
         // Test email vide
         Exception e1 = assertThrows(IllegalArgumentException.class, () -> {
-            adminService.creerAdmin("", MDP_TEST, NOM_TEST, PRENOM_TEST, TEL_TEST);
+            AdminService.creerAdmin("", MDP_TEST, NOM_TEST, PRENOM_TEST, TEL_TEST);
         });
         System.out.println("Email vide détecté: " + e1.getMessage());
 
         // Test téléphone invalide
         Exception e3 = assertThrows(IllegalArgumentException.class, () -> {
-            adminService.creerAdmin("autre@test.com", MDP_TEST, NOM_TEST, PRENOM_TEST, 0);
+            AdminService.creerAdmin("autre@test.com", MDP_TEST, NOM_TEST, PRENOM_TEST, "0");
         });
         System.out.println("Téléphone invalide détecté: " + e3.getMessage());
 
         // Test nom vide
         Exception e4 = assertThrows(IllegalArgumentException.class, () -> {
-            adminService.creerAdmin("autre@test.com", MDP_TEST, "", PRENOM_TEST, TEL_TEST);
+            AdminService.creerAdmin("autre@test.com", MDP_TEST, "", PRENOM_TEST, TEL_TEST);
         });
         System.out.println("Nom vide détecté: " + e4.getMessage());
 
         // Test prénom vide
         Exception e5 = assertThrows(IllegalArgumentException.class, () -> {
-            adminService.creerAdmin("autre@test.com", MDP_TEST, NOM_TEST, "", TEL_TEST);
+            AdminService.creerAdmin("autre@test.com", MDP_TEST, NOM_TEST, "", TEL_TEST);
         });
         System.out.println("Prénom vide détecté: " + e5.getMessage());
     }
@@ -173,7 +173,7 @@ public class AdminServiceTest {
         String nouveauPrenom = "Pierre";
         String nouvelEmail = "nouveau@test.com";
         String nouveauMdp = "nouveauMdp";
-        int nouveauTel = 987654321;
+        String nouveauTel = "987654321";
 
         // Mettre à jour - ne doit pas lancer d'exception
         assertDoesNotThrow(() -> {
@@ -214,7 +214,7 @@ public class AdminServiceTest {
         String emailTemp = "temp@suppression.com";
 
         try {
-            adminService.creerAdmin(emailTemp, "tempMdp123", "Temp", "Admin", 111222333);
+            AdminService.creerAdmin(emailTemp, "tempMdp123", "Temp", "Admin", "111222333");
             System.out.println("Admin temporaire créé");
 
             // Récupére l'admin créé via login
