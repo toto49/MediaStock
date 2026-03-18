@@ -3,98 +3,90 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.SVGPath?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml"
             xmlns="http://javafx.com/javafx"
             fx:controller="com.eseo.mediastock.controller.AccueilController"
-            prefHeight="400.0" prefWidth="600.0"
-            style="-fx-background-color: transparent;">
-    <VBox spacing="30" alignment="CENTER"
-          AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
-          AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0">
+            prefHeight="600.0" prefWidth="900.0"
+            style="-fx-background-color: #2b2b2b;">
 
+    <VBox AnchorPane.topAnchor="20.0" AnchorPane.leftAnchor="20.0" spacing="5">
         <Label text="Tableau de Bord"
-               style="-fx-text-fill: #ffcc00; -fx-font-size: 24px; -fx-font-weight: bold;"/>
-        <HBox alignment="CENTER" AnchorPane.topAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.bottomAnchor="0"
-              AnchorPane.leftAnchor="0" spacing="15">
-
-
-            <VBox prefWidth="200" maxWidth="300" alignment="CENTER" spacing="5"
-                  style="-fx-background-color: linear-gradient(to bottom right, #FF75E3, #9A4DFF);
-                     -fx-background-radius: 20;
-                     -fx-padding: 25;">
-
-                <effect>
-                    <DropShadow color="#00000055" radius="15" offsetY="5"/>
-                </effect>
-
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <Circle radius="5" fill="WHITE" opacity="0.7"/>
-                    <Label text="LIVRES ENREGISTRÉS"
-                           style="-fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-opacity: 0.8;"/>
-                </HBox>
-
-                <Label fx:id="labelNombreLivres" alignment="CENTER" textAlignment="CENTER"
-                       style="-fx-text-fill: white; -fx-font-size: 48px; -fx-font-weight: bold;"/>
-
-
-            </VBox>
-
-
-            <VBox prefWidth="200" maxWidth="300" alignment="CENTER" spacing="5"
-                  style="-fx-background-color: linear-gradient(to bottom right, #0090FF, #003bFF);
-                     -fx-background-radius: 20;
-                     -fx-padding: 25;">
-
-                <effect>
-                    <DropShadow color="#00000055" radius="15" offsetY="5"/>
-                </effect>
-
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <Circle radius="5" fill="WHITE" opacity="0.7"/>
-                    <Label text="DVD ENREGISTRÉS"
-                           style="-fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-opacity: 0.8;"/>
-                </HBox>
-
-                <Label fx:id="labelNombredvd" alignment="CENTER" textAlignment="CENTER"
-                       style="-fx-text-fill: white; -fx-font-size: 48px; -fx-font-weight: bold;"/>
-
-
-            </VBox>
-
-            <VBox prefWidth="200" maxWidth="300" alignment="CENTER" spacing="5"
-                  style="-fx-background-color: linear-gradient(to bottom right, #06D608, #008019);
-
-                     -fx-background-radius: 20;
-                     -fx-padding: 25;">
-
-                <effect>
-                    <DropShadow color="#00000055" radius="15" offsetY="5"/>
-                </effect>
-
-                <HBox spacing="10" alignment="CENTER_LEFT">
-                    <Circle radius="5" fill="WHITE" opacity="0.7"/>
-                    <Label text="JEUX ENREGISTRÉS"
-                           style="-fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: bold; -fx-opacity: 0.8;"/>
-                </HBox>
-
-                <Label fx:id="labelNombrejeux" alignment="CENTER" textAlignment="CENTER"
-                       style="-fx-text-fill: white; -fx-font-size: 48px; -fx-font-weight: bold;"/>
-
-
-            </VBox>
-
-        </HBox>
+               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: white;">
+            <effect>
+                <DropShadow color="#00000066" radius="10" offsetY="3"/>
+            </effect>
+        </Label>
+        <Label text="Aperçu global de votre inventaire MediaStock"
+               style="-fx-text-fill: #aaaaaa; -fx-font-size: 14px;"/>
     </VBox>
-    <Label fx:id="labelBonjour"
-           AnchorPane.topAnchor="15"
-           AnchorPane.rightAnchor="15"
-           style="-fx-text-fill: #ffcc00; -fx-font-size: 25px;">
-        Bonjour
-    </Label>
-    <Label AnchorPane.bottomAnchor="15"
-           AnchorPane.rightAnchor="15"
-           style="-fx-text-fill: derive(#2b2b2b, 50%); -fx-font-size: 12px;">
-        Version : 1.0
-    </Label>
+
+    <Label fx:id="labelBonjour" text="Bonjour !"
+           AnchorPane.topAnchor="25.0" AnchorPane.rightAnchor="20.0"
+           style="-fx-text-fill: #ffcc00; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+    <HBox alignment="CENTER" spacing="40"
+          AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0"
+          AnchorPane.topAnchor="150" AnchorPane.bottomAnchor="150">
+
+        <VBox prefWidth="220" prefHeight="180" alignment="CENTER" spacing="10"
+              style="-fx-background-color: #383838; -fx-background-radius: 15; -fx-padding: 20;">
+            <effect>
+                <DropShadow color="#00000088" radius="15" offsetY="5"/>
+            </effect>
+
+            <HBox alignment="CENTER" spacing="10">
+                <SVGPath
+                        content="M21 4H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1zm-1 13H7V6h13v11z M3 19h16v2H3z"
+                        fill="#ffcc00" scaleX="1.2" scaleY="1.2"/>
+                <Label text="LIVRES" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+            </HBox>
+
+            <Label fx:id="labelNombreLivres" text="0"
+                   style="-fx-text-fill: #ffcc00; -fx-font-size: 56px; -fx-font-weight: bold;"/>
+
+            <Label text="Enregistrés" style="-fx-text-fill: #888888; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+        </VBox>
+
+        <VBox prefWidth="220" prefHeight="180" alignment="CENTER" spacing="10"
+              style="-fx-background-color: #383838; -fx-background-radius: 15; -fx-padding: 20;">
+            <effect>
+                <DropShadow color="#00000088" radius="15" offsetY="5"/>
+            </effect>
+
+            <HBox alignment="CENTER" spacing="10">
+                <SVGPath
+                        content="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm0-6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"
+                        fill="#ffcc00" scaleX="1.2" scaleY="1.2"/>
+                <Label text="DVD" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+            </HBox>
+
+            <Label fx:id="labelNombredvd" text="0"
+                   style="-fx-text-fill: #ffcc00; -fx-font-size: 56px; -fx-font-weight: bold;"/>
+
+            <Label text="Enregistrés" style="-fx-text-fill: #888888; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+        </VBox>
+
+        <VBox prefWidth="220" prefHeight="180" alignment="CENTER" spacing="10"
+              style="-fx-background-color: #383838; -fx-background-radius: 15; -fx-padding: 20;">
+            <effect>
+                <DropShadow color="#00000088" radius="15" offsetY="5"/>
+            </effect>
+
+            <HBox alignment="CENTER" spacing="10">
+                <SVGPath
+                        content="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5S17.67 9 18.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"
+                        fill="#ffcc00" scaleX="1.2" scaleY="1.2"/>
+                <Label text="JEUX" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+            </HBox>
+
+            <Label fx:id="labelNombrejeux" text="0"
+                   style="-fx-text-fill: #ffcc00; -fx-font-size: 56px; -fx-font-weight: bold;"/>
+
+            <Label text="Enregistrés" style="-fx-text-fill: #888888; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+        </VBox>
+
+    </HBox>
+
+
 </AnchorPane>

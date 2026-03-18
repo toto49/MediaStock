@@ -57,9 +57,5 @@
         </HBox>
     </VBox>
 
-    <Label AnchorPane.bottomAnchor="15"
-           AnchorPane.rightAnchor="15"
-           style="-fx-text-fill: #888888; -fx-font-size: 12px;">
-        Version : 1.0
-    </Label>
+
 </AnchorPane>
