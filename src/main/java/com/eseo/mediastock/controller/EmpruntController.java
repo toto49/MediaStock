@@ -1,6 +1,7 @@
 package com.eseo.mediastock.controller;
 
 import com.eseo.mediastock.model.Adherent;
+import com.eseo.mediastock.model.CodeBarreScanner;
 import com.eseo.mediastock.model.Emprunt;
 import com.eseo.mediastock.model.Exemplaire;
 import com.eseo.mediastock.service.AdherentService;
@@ -261,5 +262,31 @@ public class EmpruntController {
 
     public record RetardItem(String numAdherent, String nomAdherent, String exemplaire, String dateLimite,
                              int joursRetard) {
+    }
+
+    @FXML
+    private void handleOuvrirScannerAdherent(ActionEvent event) {
+        CodeBarreScanner scanner = new CodeBarreScanner();
+
+        // On demande au scanner de mettre le résultat dans fieldAdherent
+        scanner.ouvrirFenetre(codeTrouve -> {
+            Platform.runLater(() -> {
+                fieldAdherent.setText(codeTrouve);
+                afficherMessage("Carte adhérent scannée : " + codeTrouve, false);
+            });
+        });
+    }
+
+    @FXML
+    private void handleOuvrirScannerExemplaire(ActionEvent event) {
+        CodeBarreScanner scanner = new CodeBarreScanner();
+
+        // On demande au scanner de mettre le résultat dans fieldExemplaire
+        scanner.ouvrirFenetre(codeTrouve -> {
+            Platform.runLater(() -> {
+                fieldExemplaire.setText(codeTrouve);
+                afficherMessage("Exemplaire scanné : " + codeTrouve, false);
+            });
+        });
     }
 }

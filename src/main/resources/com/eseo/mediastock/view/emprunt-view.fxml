@@ -26,13 +26,19 @@
             <Label text="EMPRUNT" styleClass="section-title"/>
 
             <VBox spacing="5">
-                <Label text="Numéro d'adherent"/>
-                <TextField fx:id="fieldAdherent" promptText="Entrez le numéro de l'adherent"/>
+                <Label text="Numéro d'adhérent"/>
+                <HBox spacing="10">
+                    <TextField fx:id="fieldAdherent" promptText="Entrez le numéro de l'adherent" HBox.hgrow="ALWAYS"/>
+                    <Button text="📷 Scanner" onAction="#handleOuvrirScannerAdherent"/>
+                </HBox>
             </VBox>
 
             <VBox spacing="5">
                 <Label text="Exemplaire"/>
-                <TextField fx:id="fieldExemplaire" promptText="code barre de l'exemplaire..."/>
+                <HBox spacing="10">
+                    <TextField fx:id="fieldExemplaire" promptText="code barre de l'exemplaire..." HBox.hgrow="ALWAYS"/>
+                    <Button text="📷 Scanner" onAction="#handleOuvrirScannerExemplaire"/>
+                </HBox>
             </VBox>
 
             <HBox spacing="20" alignment="CENTER">

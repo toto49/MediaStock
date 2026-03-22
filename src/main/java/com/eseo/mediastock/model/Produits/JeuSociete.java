@@ -4,7 +4,7 @@ import com.eseo.mediastock.model.Exemplaire;
 
 import java.util.List;
 
-public class JeuSociete extends Produit {
+public class  JeuSociete extends Produit {
     private int nbJoueursMin;
     private int nbJoueursMax;
     private int ageMin;

@@ -3,7 +3,7 @@ import com.eseo.mediastock.model.Exemplaire;
 
 import java.util.List;
 
-public abstract class  Produit {
+public abstract class Produit {
     // Variables de classes
     private static int NbrReference;
     // Variables d'instance accessibles aux enfants
