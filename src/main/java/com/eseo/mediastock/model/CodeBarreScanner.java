@@ -1,6 +1,5 @@
 package com.eseo.mediastock.model;
 
-import com.github.sarxos.webcam.Webcam;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.NotFoundException;
@@ -21,29 +20,33 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.awt.Dimension;
+import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.FrameGrabber;
+import org.bytedeco.javacv.Java2DFrameConverter;
+import org.bytedeco.javacv.OpenCVFrameGrabber;
+
 import java.awt.image.BufferedImage;
 import java.util.function.Consumer;
 
 public class CodeBarreScanner {
 
-    private Webcam webcam;
+    private OpenCVFrameGrabber grabber;
     private Thread webcamThread;
     private ImageView imageView;
     private Label resultLabel;
-    private boolean isRunning = false;
+    private volatile boolean isRunning = false;
     private Stage stage;
 
     // Pour renvoyer le résultat à la fenêtre principale
     private Consumer<String> onCodeScanned;
 
-    // On demande un Consumer (une action à exécuter) en paramètre
     public void ouvrirFenetre(Consumer<String> onCodeScanned) {
         this.onCodeScanned = onCodeScanned;
         this.stage = new Stage();
 
         imageView = new ImageView();
 
+        // Format "bandeau" pour le code-barres
         imageView.setViewport(new Rectangle2D(0, 140, 640, 200));
         imageView.setFitWidth(450);
         imageView.setFitHeight(250);
@@ -53,7 +56,7 @@ public class CodeBarreScanner {
         imageContainer.setAlignment(Pos.CENTER);
         imageContainer.setPadding(new Insets(30, 0, 0, 0));
 
-        resultLabel = new Label("Placez le code-barres devant la caméra...");
+        resultLabel = new Label("Démarrage de la caméra...");
         resultLabel.setFont(new Font("Arial", 20));
         resultLabel.setStyle("-fx-text-fill: #333333; -fx-padding: 20px;");
 
@@ -70,70 +73,104 @@ public class CodeBarreScanner {
 
         stage.setOnCloseRequest(event -> stopWebcam());
 
+        // La fenêtre s'affiche IMMÉDIATEMENT
         stage.show();
+
+        // Puis on lance l'allumage en arrière-plan
         startWebcam();
     }
 
     private void startWebcam() {
-        webcam = Webcam.getDefault();
-        if (webcam != null) {
-            webcam.setViewSize(new Dimension(640, 480));
-            webcam.open();
-            isRunning = true;
+        // On crée le Thread dès maintenant, tout le processus lourd se fera dedans
+        webcamThread = new Thread(() -> {
+            grabber = new OpenCVFrameGrabber(0);
+            grabber.setImageWidth(640);
+            grabber.setImageHeight(480);
 
-            webcamThread = new Thread(this::captureAndDecodeLoop);
-            webcamThread.setDaemon(true);
-            webcamThread.start();
-        } else {
-            resultLabel.setText("Erreur : Aucune webcam détectée.");
-            resultLabel.setStyle("-fx-text-fill: red;");
-        }
+            try {
+                // L'opération bloquante est maintenant isolée de l'interface !
+                grabber.start();
+                isRunning = true;
+
+                // On prévient l'interface que c'est prêt
+                Platform.runLater(() -> resultLabel.setText("Placez le code-barres devant la caméra..."));
+
+                // On enchaîne directement avec la boucle de capture
+                captureAndDecodeLoop();
+
+            } catch (FrameGrabber.Exception e) {
+                Platform.runLater(() -> {
+                    resultLabel.setText("Erreur : Impossible d'accéder à la caméra.");
+                    resultLabel.setStyle("-fx-text-fill: red;");
+                });
+                e.printStackTrace();
+            }
+        });
+
+        webcamThread.setDaemon(true);
+        webcamThread.start();
     }
 
     private void captureAndDecodeLoop() {
         MultiFormatReader reader = new MultiFormatReader();
 
-        while (isRunning) {
-            try {
-                BufferedImage bImage = webcam.getImage();
+        try (Java2DFrameConverter converter = new Java2DFrameConverter()) {
 
-                if (bImage != null) {
-                    Image fxImage = SwingFXUtils.toFXImage(bImage, null);
-                    Platform.runLater(() -> imageView.setImage(fxImage));
+            while (isRunning) {
+                try {
+                    Frame frame = grabber.grab();
 
-                    BufferedImageLuminanceSource source = new BufferedImageLuminanceSource(bImage);
-                    BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+                    if (frame != null && frame.image != null) {
+                        BufferedImage bImage = converter.getBufferedImage(frame);
 
-                    try {
-                        Result result = reader.decode(bitmap);
+                        if (bImage != null) {
+                            Image fxImage = SwingFXUtils.toFXImage(bImage, null);
+                            Platform.runLater(() -> imageView.setImage(fxImage));
 
-                        String codeBarreText = result.getText();
-                        if (onCodeScanned != null) {
-                            onCodeScanned.accept(codeBarreText);
+                            BufferedImageLuminanceSource source = new BufferedImageLuminanceSource(bImage);
+                            BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
+
+                            try {
+                                Result result = reader.decode(bitmap);
+
+                                String codeBarreText = result.getText();
+
+                                if (onCodeScanned != null) {
+                                    onCodeScanned.accept(codeBarreText);
+                                }
+
+                                Platform.runLater(() -> {
+                                    stopWebcam();
+                                    stage.close();
+                                });
+                                break;
+
+                            } catch (NotFoundException e) {
+                                // Aucun code
+                            }
                         }
+                    }
 
-                        Platform.runLater(() -> {
-                            stopWebcam();
-                            stage.close();
-                        });
+                    Thread.sleep(30);
 
-                        break;
-
-                    } catch (NotFoundException e) {
-                        // Rien trouvé, on continue de chercher
+                } catch (Exception e) {
+                    if (isRunning) {
+                        e.printStackTrace();
                     }
                 }
-                Thread.sleep(33); // ~30 FPS
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
     }
 
-    private void stopWebcam() {
+    public void stopWebcam() {
         isRunning = false;
-        if (webcam != null && webcam.isOpen()) {
-            webcam.close();
+        if (grabber != null) {
+            try {
+                grabber.stop();
+                grabber.release();
+            } catch (FrameGrabber.Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
