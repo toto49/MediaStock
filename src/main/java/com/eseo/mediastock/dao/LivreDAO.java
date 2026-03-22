@@ -25,7 +25,7 @@ public class LivreDAO {
             stmt.setString(3, l.getDescription());
             stmt.setString(4, l.getEditeur());
             stmt.setInt(5, l.getAnneeSortie());
-            stmt.setInt(6, l.getIsbn());
+            stmt.setString(6, l.getIsbn());
             stmt.setString(7, l.getAuteur());
             stmt.setInt(8, l.getNbPages());
             stmt.setString(9, l.getFormat());
@@ -89,7 +89,7 @@ public class LivreDAO {
             String editeur = rs.getString("editeur");
             int anneeSortie = rs.getInt("annee_sortie");
 
-            int isbn = rs.getInt("isbn");
+            String isbn = rs.getString("isbn");
             String auteur = rs.getString("auteur");
             int nb_pages = rs.getInt("nb_pages");
             String format = rs.getString("format");
@@ -100,7 +100,7 @@ public class LivreDAO {
         return livres;
     }
 
-    public void updateProduit(Produit p) throws SQLException {
+    public static void updateProduit(Produit p) throws SQLException {
         Livre l = (Livre) p;
         String sql = "UPDATE PRODUIT SET titre = ?, description = ?, editeur = ?, annee_sortie = ?, isbn = ?, auteur = ?, nb_pages = ?, format = ? WHERE id = ? AND type_produit = 'Livre'";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -109,11 +109,21 @@ public class LivreDAO {
             stmt.setString(2, l.getDescription());
             stmt.setString(3, l.getEditeur());
             stmt.setInt(4, l.getAnneeSortie());
-            stmt.setInt(5, l.getIsbn());
+            stmt.setString(5, l.getIsbn());
             stmt.setString(6, l.getAuteur());
             stmt.setInt(7, l.getNbPages());
             stmt.setString(8, l.getFormat());
             stmt.setInt(9, l.getId());
+            stmt.executeUpdate();
+        }
+    }
+
+    public static void deleteProduit(Produit p) throws SQLException {
+        String sql = "UPDATE EXEMPLAIRE SET statut = 'RETIRE' WHERE id_produit = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, p.getId());
             stmt.executeUpdate();
         }
     }

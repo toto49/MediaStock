@@ -139,13 +139,13 @@ public class ExemplaireDAO {
 
             switch (typeProduit) {
                 case "Livre":
-                    produit = livreDAO.GetByID(idProduit); // Idéalement, renomme aussi ces méthodes en getById() !
+                    produit = LivreDAO.GetByID(idProduit); // Idéalement, renomme aussi ces méthodes en getById() !
                     break;
                 case "DVD":
-                    produit = dvdDAO.GetByID(idProduit);
+                    produit = DvdDAO.GetByID(idProduit);
                     break;
                 case "JeuSociete":
-                    produit = jeuSocieteDAO.GetByID(idProduit);
+                    produit = JeuSocieteDAO.GetByID(idProduit);
                     break;
                 default:
                     throw new SQLException("Type de produit inconnu en base : " + typeProduit);
@@ -155,5 +155,16 @@ public class ExemplaireDAO {
             exemplaires.add(exemplaire);
         }
         return exemplaires;
+    }
+
+    public void deleteExemplaire(Exemplaire exemplaire) throws SQLException {
+        String sql = "UPDATE EXEMPLAIRE SET statut = 'RETIRE' WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, exemplaire.getId());
+            stmt.executeUpdate();
+            exemplaire.setStatusDispo(com.eseo.mediastock.model.Enum.EnumDispo.RETIRE);
+        }
     }
 }

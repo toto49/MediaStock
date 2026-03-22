@@ -7,7 +7,7 @@ import java.util.List;
 public class Livre extends Produit {
 
     // Déclaration de variables
-    private int isbn;
+    private String isbn;
     private String auteur;
     private int nbPages;
     private String format;
@@ -16,7 +16,7 @@ public class Livre extends Produit {
     public Livre(){
     }
 
-    public Livre(int id, String titre, String description, String editeur, int anneeSortie, List<Exemplaire> exemplaires, int isbn, String auteur, int nbPages, String format) {
+    public Livre(int id, String titre, String description, String editeur, int anneeSortie, List<Exemplaire> exemplaires, String isbn, String auteur, int nbPages, String format) {
         super(id, titre, description, editeur, anneeSortie, exemplaires);
         this.isbn = isbn;
         this.auteur = auteur;
@@ -25,8 +25,12 @@ public class Livre extends Produit {
     }
 
     // Getters/Setters
-    public int getIsbn() {
+    public String getIsbn() {
         return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
     }
 
     public String getAuteur() {
@@ -52,10 +56,4 @@ public class Livre extends Produit {
     public void setFormat(String format) {
         this.format = format;
     }
-
-    public void setIsbn(String isbn) {
-    }
-
-    // Methodes
-
 }

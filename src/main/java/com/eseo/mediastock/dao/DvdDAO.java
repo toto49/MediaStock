@@ -102,7 +102,7 @@ public class DvdDAO {
         return dvds;
     }
 
-    public void updateProduit(Produit p) throws SQLException {
+    public static void updateProduit(Produit p) throws SQLException {
         DVD d = (DVD) p;
         String sql = "UPDATE PRODUIT SET titre = ?, description = ?, editeur = ?, annee_sortie = ?, realisateur = ?, duree_minutes = ?, audio_langues = ?, sous_titres = ? WHERE id = ? AND type_produit = 'DVD'";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -116,6 +116,16 @@ public class DvdDAO {
             stmt.setString(7, String.join(",", d.getAudioLangues()));
             stmt.setString(8, d.getSousTitres() == null ? null : String.join(",", d.getSousTitres()));
             stmt.setInt(9, d.getId());
+            stmt.executeUpdate();
+        }
+    }
+
+    public static void deleteProduit(Produit p) throws SQLException {
+        String sql = "UPDATE EXEMPLAIRE SET statut = 'RETIRE' WHERE id_produit = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, p.getId());
             stmt.executeUpdate();
         }
     }

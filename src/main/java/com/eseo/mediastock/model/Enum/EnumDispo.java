@@ -4,4 +4,5 @@ public enum EnumDispo {
     DISPONIBLE,
     EMPRUNTE,
     RENDU,
+    RETIRE
 }

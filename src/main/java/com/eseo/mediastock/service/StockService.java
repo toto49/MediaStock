@@ -24,14 +24,11 @@ public class StockService {
 
     public void ajouterLivre(String titre, String description, String editeur, int annee, String isbn, String auteur, int nbPages, String format,int nbExemplaires) throws SQLException {
         if (titre == null || titre.trim().isEmpty()) throw new IllegalArgumentException("Le titre est obligatoire");
-
         Livre livre = new Livre();
-        // Champs parents (Produit)
         livre.setTitre(titre);
         livre.setDescription(description);
         livre.setEditeur(editeur);
         livre.setAnneeSortie(annee);
-        // Champs enfants (Livre)
         livre.setIsbn(isbn);
         livre.setAuteur(auteur);
         livre.setNbPages(nbPages);
@@ -48,12 +45,10 @@ public class StockService {
         if (titre == null || titre.trim().isEmpty()) throw new IllegalArgumentException("Le titre est obligatoire");
 
         DVD dvd = new DVD();
-        // Champs parents
         dvd.setTitre(titre);
         dvd.setDescription(description);
         dvd.setEditeur(editeur);
         dvd.setAnneeSortie(annee);
-        // Champs enfants
         dvd.setRealisateur(realisateur);
         dvd.setDureeMinutes(duree);
         dvd.setAudioLangues(audio);
@@ -69,12 +64,10 @@ public class StockService {
         if (titre == null || titre.trim().isEmpty()) throw new IllegalArgumentException("Le titre est obligatoire");
 
         JeuSociete jeu = new JeuSociete();
-        // Champs parents
         jeu.setTitre(titre);
         jeu.setDescription(description);
         jeu.setEditeur(editeur);
         jeu.setAnneeSortie(annee);
-        // Champs enfants
         jeu.setNbJoueursMin(nbJoueursMin);
         jeu.setNbJoueursMax(nbJoueursMax);
         jeu.setAgeMin(ageMin);
@@ -86,7 +79,37 @@ public class StockService {
         }
     }
 
-    // --- GESTION DES TYPES ---
+    public void modifierProduit(Produit produit) throws SQLException {
+        if (produit == null || produit.getId() == 0) {
+            throw new IllegalArgumentException("Le produit à modifier n'est pas valide.");
+        }
+
+        if (produit instanceof Livre) {
+            LivreDAO.updateProduit(produit);
+        } else if (produit instanceof DVD) {
+            DvdDAO.updateProduit(produit);
+        } else if (produit instanceof JeuSociete) {
+            JeuSocieteDAO.updateProduit(produit);
+        } else {
+            throw new IllegalArgumentException("Type de produit non pris en charge.");
+        }
+    }
+
+    public void supprimerProduit(Produit produit) throws SQLException {
+        if (produit == null || produit.getId() == 0) {
+            throw new IllegalArgumentException("Le produit à supprimer n'est pas valide.");
+        }
+
+        if (produit instanceof Livre) {
+            LivreDAO.deleteProduit(produit);
+        } else if (produit instanceof DVD) {
+            DvdDAO.deleteProduit(produit);
+        } else if (produit instanceof JeuSociete) {
+            JeuSocieteDAO.deleteProduit(produit);
+        } else {
+            throw new IllegalArgumentException("Type de produit non pris en charge.");
+        }
+    }
 
     public int getCodeType(Produit produit){
         if (produit instanceof Livre) return 1;
@@ -108,10 +131,6 @@ public class StockService {
         return (reste == 0) ? 0 : (10 - reste);
     }
 
-    /**
-     * Génère un code unique pour un EXEMPLAIRE
-     * Format : 2 + Type (1) + Aléatoire (10) + Clé (1)
-     */
     public String creerCodeBarreUnique(Produit produit){
         int type = getCodeType(produit);
         long randomPart = (long) (Math.random() * 9_000_000_000L);
@@ -125,20 +144,30 @@ public class StockService {
     // --- GESTION DES EXEMPLAIRES ---
 
     public void ajouterExemplaire(Produit produit) throws SQLException{
-
-        // On crée l'exemplaire physique
         Exemplaire ex = new Exemplaire();
         ex.setProduit(produit);
 
-        // On génère son étiquette unique
         String codeBarre = creerCodeBarreUnique(produit);
         ex.setCodeBarre(codeBarre);
 
-        // Valeurs par défaut obligatoires
         ex.setEtatPhysique(EnumEtat.NEUF);
         ex.setStatusDispo(EnumDispo.DISPONIBLE);
 
         exemplaireDAO.addExemplaire(ex);
+    }
+
+    public void modifierExemplaire(Exemplaire exemplaire) throws SQLException {
+        if (exemplaire == null || exemplaire.getId() == 0) {
+            throw new IllegalArgumentException("L'exemplaire à modifier n'est pas valide.");
+        }
+        exemplaireDAO.updateExemplaire(exemplaire);
+    }
+
+    public void supprimerExemplaire(Exemplaire exemplaire) throws SQLException {
+        if (exemplaire == null || exemplaire.getId() == 0) {
+            throw new IllegalArgumentException("L'exemplaire à supprimer n'est pas valide.");
+        }
+        exemplaireDAO.deleteExemplaire(exemplaire);
     }
 
     // --- RECHERCHER PRODUITS ---

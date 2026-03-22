@@ -98,7 +98,7 @@ public class JeuSocieteDAO {
         return jeux;
     }
 
-    public void updateProduit(Produit p) throws SQLException {
+    public static void updateProduit(Produit p) throws SQLException {
         JeuSociete j = (JeuSociete) p;
         String sql = "UPDATE PRODUIT SET titre = ?, description = ?, editeur = ?, annee_sortie = ?, nb_joueurs_min = ?, nb_joueurs_max = ?, age_min = ?, duree_partie = ? WHERE id = ? AND type_produit = 'Jeu'";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -112,6 +112,16 @@ public class JeuSocieteDAO {
             stmt.setInt(7, j.getAgeMin());
             stmt.setInt(8, j.getDureePartie());
             stmt.setInt(9, j.getId());
+            stmt.executeUpdate();
+        }
+    }
+
+
+    public static void deleteProduit(Produit p) throws SQLException {
+        String sql = "UPDATE EXEMPLAIRE SET statut = 'RETIRE' WHERE id_produit = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, p.getId());
             stmt.executeUpdate();
         }
     }
