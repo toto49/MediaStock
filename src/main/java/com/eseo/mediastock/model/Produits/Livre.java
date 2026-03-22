@@ -56,6 +56,4 @@ public class Livre extends Produit {
     public void setIsbn(String isbn) {
     }
 
-    // Methodes
-
 }

@@ -15,7 +15,6 @@ import java.util.List;
 public class ExemplaireDAO {
 
     public static List<Exemplaire> getExemplairesByProduit(Produit produit) throws SQLException {
-        // Pas besoin de jointure ici, on a déjà l'objet Produit !
         String sql = "SELECT id, code_barre, etat, statut FROM EXEMPLAIRE WHERE id_produit = ?";
         List<Exemplaire> exemplaires = new ArrayList<>();
 
