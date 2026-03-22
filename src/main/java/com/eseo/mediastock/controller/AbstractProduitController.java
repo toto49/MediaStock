@@ -237,6 +237,54 @@ public abstract class AbstractProduitController<T extends Produit> {
         paginationExemplaire.setPageFactory(pageIndex -> {
             TableView<Exemplaire> tablePage = new TableView<>();
             tablePage.setStyle("-fx-background-color: #383838;");
+            tablePage.setOnKeyPressed(event -> {
+                if (event.isShortcutDown() && event.getCode() == javafx.scene.input.KeyCode.C) {
+                    Exemplaire selectedItem = tablePage.getSelectionModel().getSelectedItem();
+
+                    if (selectedItem != null) {
+                        final javafx.scene.input.Clipboard clipboard = javafx.scene.input.Clipboard.getSystemClipboard();
+                        final javafx.scene.input.ClipboardContent content = new javafx.scene.input.ClipboardContent();
+
+                        content.putString(selectedItem.getCodeBarre());
+                        clipboard.setContent(content);
+                    }
+                }
+            });
+            tablePage.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2) {
+                    Exemplaire selectedItem = tablePage.getSelectionModel().getSelectedItem();
+
+                    if (selectedItem != null) {
+                        final javafx.scene.input.Clipboard clipboard = javafx.scene.input.Clipboard.getSystemClipboard();
+                        final javafx.scene.input.ClipboardContent content = new javafx.scene.input.ClipboardContent();
+
+                        content.putString(selectedItem.getCodeBarre());
+                        clipboard.setContent(content);
+                    }
+                }
+            });
+            tablePage.setRowFactory(tv -> {
+                TableRow<Exemplaire> row = new TableRow<>();
+                ContextMenu contextMenu = new ContextMenu();
+                MenuItem copyItem = new MenuItem("Copier le Code Barre");
+                copyItem.setOnAction(event -> {
+                    Exemplaire item = row.getItem();
+                    if (item != null) {
+                        final javafx.scene.input.Clipboard clipboard = javafx.scene.input.Clipboard.getSystemClipboard();
+                        final javafx.scene.input.ClipboardContent content = new javafx.scene.input.ClipboardContent();
+                        content.putString(item.getCodeBarre());
+                        clipboard.setContent(content);
+                    }
+                });
+                contextMenu.getItems().add(copyItem);
+                row.contextMenuProperty().bind(
+                        javafx.beans.binding.Bindings.when(row.emptyProperty())
+                                .then((ContextMenu) null)
+                                .otherwise(contextMenu)
+                );
+
+                return row;
+            });
 
             Label placeholder = new Label("Aucun exemplaire trouvé pour ce " + getCategorieProduit().toLowerCase() + ".");
             placeholder.setStyle("-fx-text-fill: #aaaaaa; -fx-font-style: italic;");

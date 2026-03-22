@@ -5,6 +5,7 @@ import com.eseo.mediastock.model.Emprunt;
 import com.eseo.mediastock.service.AdherentService;
 import com.eseo.mediastock.service.EmpruntService;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,6 +17,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -27,8 +31,6 @@ import java.util.List;
 public class AdherentController {
 
     private final int LIGNES_PAR_PAGE = 50;
-
-    // --- Champs du formulaire ---
     @FXML
     private TextField TeldAdherent;
     @FXML
@@ -37,22 +39,16 @@ public class AdherentController {
     private TextField PrenomAdherent;
     @FXML
     private TextField EmailAdherent;
-
-    // --- Boutons et Messages ---
     @FXML
     private Button btnCreer;
     @FXML
     private Button btnSupprimer;
     @FXML
     private Label lblMessage;
-
-    // --- Nouveaux champs pour la Recherche et Pagination ---
     @FXML
     private TextField searchBarAdherent;
     @FXML
     private Pagination paginationAdherents;
-
-    // --- Tableau et Colonnes ---
     @FXML
     private TableView<Adherent> tableRetard;
     @FXML
@@ -67,8 +63,6 @@ public class AdherentController {
     private TableColumn<Adherent, String> colEmailAdherent;
     @FXML
     private TableColumn<Adherent, Void> colAction;
-
-    // --- Service et Gestion des Données ---
     private AdherentService adherentService;
     private final ObservableList<Adherent> masterData = FXCollections.observableArrayList();
     private FilteredList<Adherent> filteredData;
@@ -76,6 +70,7 @@ public class AdherentController {
     @FXML
     public void initialize() {
         adherentService = new AdherentService();
+
         colidAdherent.setCellValueFactory(new PropertyValueFactory<>("id"));
         colTelAdherent.setCellValueFactory(new PropertyValueFactory<>("numTel"));
         colNomAdherent.setCellValueFactory(new PropertyValueFactory<>("nom"));
@@ -85,6 +80,51 @@ public class AdherentController {
         configurerColonneAction();
         configurerRechercheEtPagination();
         chargerAdherents();
+
+        tableRetard.setRowFactory(tv -> {
+            TableRow<Adherent> row = new TableRow<>();
+            ContextMenu contextMenu = new ContextMenu();
+            MenuItem copyItem = new MenuItem("Copier l'ID Adhérent");
+
+            copyItem.setOnAction(event -> {
+                Adherent item = row.getItem();
+                if (item != null) {
+                    final Clipboard clipboard = Clipboard.getSystemClipboard();
+                    final ClipboardContent content = new ClipboardContent();
+                    content.putString(String.valueOf(item.getId()));
+                    clipboard.setContent(content);
+                }
+            });
+
+            contextMenu.getItems().add(copyItem);
+
+            row.contextMenuProperty().bind(
+                    Bindings.when(row.emptyProperty())
+                            .then((ContextMenu) null)
+                            .otherwise(contextMenu)
+            );
+            return row;
+        });
+        tableRetard.setOnMouseClicked(event -> {
+
+            if (event.getClickCount() == 2) {
+                Adherent adherentSelectionne = tableRetard.getSelectionModel().getSelectedItem();
+                if (adherentSelectionne != null) {
+                    afficherPopupHistorique(adherentSelectionne);
+                }
+            }
+        });
+        tableRetard.setOnKeyPressed(event -> {
+            if (event.isShortcutDown() && event.getCode() == KeyCode.C) {
+                Adherent selectedItem = tableRetard.getSelectionModel().getSelectedItem();
+                if (selectedItem != null) {
+                    final Clipboard clipboard = Clipboard.getSystemClipboard();
+                    final ClipboardContent content = new ClipboardContent();
+                    content.putString(String.valueOf(selectedItem.getId()));
+                    clipboard.setContent(content);
+                }
+            }
+        });
     }
 
     private void configurerColonneAction() {
@@ -119,7 +159,6 @@ public class AdherentController {
         colAction.setCellFactory(cellFactory);
     }
 
-    // --- LE POPUP AVEC LES DONNÉES FORMATÉES ---
     private void afficherPopupHistorique(Adherent adherent) {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
@@ -175,6 +214,53 @@ public class AdherentController {
                         TableView<EmpruntHistorique> tablePage = new TableView<>();
                         tablePage.setStyle("-fx-background-color: #383838;");
 
+                        tablePage.setRowFactory(tv -> {
+                            TableRow<EmpruntHistorique> row = new TableRow<>();
+                            ContextMenu contextMenu = new ContextMenu();
+                            MenuItem copyItem = new MenuItem("Copier le Code Barre");
+
+                            copyItem.setOnAction(event -> {
+                                EmpruntHistorique item = row.getItem();
+                                if (item != null) {
+                                    final Clipboard clipboard = Clipboard.getSystemClipboard();
+                                    final ClipboardContent content = new ClipboardContent();
+                                    content.putString(item.titreProduit());
+                                    clipboard.setContent(content);
+                                }
+                            });
+
+                            contextMenu.getItems().add(copyItem);
+
+                            row.contextMenuProperty().bind(
+                                    Bindings.when(row.emptyProperty())
+                                            .then((ContextMenu) null)
+                                            .otherwise(contextMenu)
+                            );
+                            return row;
+                        });
+                        tablePage.setOnMouseClicked(event -> {
+                            if (event.getClickCount() == 2) {
+                                EmpruntHistorique selectedItem = tablePage.getSelectionModel().getSelectedItem();
+                                if (selectedItem != null) {
+                                    final Clipboard clipboard = Clipboard.getSystemClipboard();
+                                    final ClipboardContent content = new ClipboardContent();
+                                    content.putString(selectedItem.titreProduit());
+                                    clipboard.setContent(content);
+                                }
+                            }
+                        });
+                        tablePage.setOnKeyPressed(event -> {
+                            if (event.isShortcutDown() && event.getCode() == KeyCode.C) {
+                                EmpruntHistorique selectedItem = tablePage.getSelectionModel().getSelectedItem();
+                                if (selectedItem != null) {
+                                    final Clipboard clipboard = Clipboard.getSystemClipboard();
+                                    final ClipboardContent content = new ClipboardContent();
+                                    content.putString(selectedItem.titreProduit());
+                                    clipboard.setContent(content);
+                                }
+                            }
+                        });
+
                         Label placeholder = new Label("Aucun historique d'emprunt.");
                         placeholder.setStyle("-fx-text-fill: #aaaaaa; -fx-font-style: italic;");
                         tablePage.setPlaceholder(placeholder);
@@ -204,7 +290,6 @@ public class AdherentController {
                         return tablePage;
                     });
 
-
                     root.getChildren().remove(loadingBox);
                     root.getChildren().addAll(paginationHisto, btnFermer);
                 });
@@ -219,8 +304,6 @@ public class AdherentController {
             }
         }).start();
     }
-
-    // --- GESTION ADHÉRENTS PRINCIPALE ---
 
     private void chargerAdherents() {
         afficherPlaceholderChargement();
@@ -269,6 +352,7 @@ public class AdherentController {
         emptyLabel.setStyle("-fx-text-fill: #888888; -fx-font-size: 14px; -fx-font-style: italic;");
         tableRetard.setPlaceholder(emptyLabel);
     }
+
     private void configurerRechercheEtPagination() {
         filteredData = new FilteredList<>(masterData, p -> true);
 
@@ -323,7 +407,7 @@ public class AdherentController {
         String email = EmailAdherent.getText();
 
         if (nom.isEmpty() || prenom.isEmpty() || tel.isEmpty() || email.isEmpty()) {
-            afficherMessage("Veuillez remplir les champs obligatoires (Nom, Prénom, Téléphone, Email).", true);
+            afficherMessage("Veuillez remplir les champs obligatoires.", true);
             return;
         }
 
@@ -351,7 +435,7 @@ public class AdherentController {
                 afficherMessage("Erreur lors de la suppression : " + e.getMessage(), true);
             }
         } else {
-            afficherMessage("Veuillez sélectionner un adhérent dans le tableau pour le supprimer.", true);
+            afficherMessage("Veuillez sélectionner un adhérent.", true);
         }
     }
 
