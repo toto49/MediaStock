@@ -30,7 +30,6 @@ public class AdherentDAO {
             stmt.setString(5, adherent.getEmailContact());
 
             stmt.executeUpdate();
-
         }
     }
 
@@ -51,7 +50,7 @@ public class AdherentDAO {
             stmt.setString(5, adherent.getId()); //id pour la clause where
 
             //execute la mise a jour
-            int rowsAffected = stmt.executeUpdate();
+            stmt.executeUpdate();
         }
     }
 
@@ -111,6 +110,7 @@ public class AdherentDAO {
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, id);
+
             //resultat de la requete
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {

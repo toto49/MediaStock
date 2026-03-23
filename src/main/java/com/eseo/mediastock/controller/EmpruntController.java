@@ -26,6 +26,7 @@ import java.util.List;
  * Il permet également d'afficher et de gérer la liste des emprunts
  * actuellement en retard.
  * * @author tom
+ *
  * @date 2026/03/23
  */
 public class EmpruntController {
@@ -309,6 +310,7 @@ public class EmpruntController {
     /**
      * Représente un article en retard pour l'affichage dans le tableau.
      * * @param numAdherent L'identifiant unique de l'adhérent.
+     *
      * @param nomAdherent Le nom complet de l'adhérent.
      * @param exemplaire  Le code barre de l'exemplaire emprunté.
      * @param dateLimite  La date à laquelle le produit aurait dû être rendu.
