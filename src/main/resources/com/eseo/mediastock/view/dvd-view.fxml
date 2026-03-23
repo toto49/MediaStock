@@ -34,6 +34,16 @@
                 <DropShadow color="#00000066" radius="10" offsetY="3"/>
             </effect>
         </Label>
+
+        <Region HBox.hgrow="ALWAYS" />
+
+        <Button text="AJOUTER" onAction="#ButtonAjouter"
+                style="-fx-background-color: transparent; -fx-text-fill: #ffcc00; -fx-border-color: #ffcc00; -fx-border-radius: 30; -fx-border-width: 2; -fx-cursor: hand; -fx-font-weight: bold; -fx-padding: 8 20;">
+            <graphic>
+                <SVGPath content="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="#ffcc00" scaleX="0.8" scaleY="0.8"/>
+            </graphic>
+        </Button>
+
     </HBox>
 
     <ScrollPane fitToHeight="true" fitToWidth="true"

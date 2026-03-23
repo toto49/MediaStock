@@ -673,4 +673,166 @@ public abstract class AbstractProduitController<T extends Produit> {
         popup.setScene(scene);
         popup.showAndWait();
     }
+
+    @FXML
+    public void ButtonAjouter(ActionEvent actionEvent) {
+        afficherPopupAjoutProduit();
+    }
+
+    protected void afficherPopupAjoutProduit() {
+        Stage popup = new Stage();
+        popup.initModality(Modality.APPLICATION_MODAL);
+        popup.setTitle("Ajouter : " + getCategorieProduit());
+
+        VBox root = new VBox(20);
+        root.setPadding(new Insets(25));
+        root.setStyle("-fx-background-color: #2b2b2b; -fx-text-fill: white;");
+
+        Label lblTitrePage = new Label("Ajouter un nouveau " + getCategorieProduit());
+        lblTitrePage.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: white;");
+
+        // --- Champs communs ---
+        TextField txtTitre = createStyledTextField("Titre");
+        TextField txtDescription = createStyledTextField("Description");
+        TextField txtEditeur = createStyledTextField("Éditeur");
+        TextField txtAnnee = createStyledTextField("Année");
+        txtAnnee.setText(String.valueOf(java.time.LocalDate.now().getYear()));
+        TextField txtStock = createStyledTextField("Stock");
+        txtStock.setText("1");
+
+        VBox formBox = new VBox(15);
+        formBox.getChildren().addAll(
+                createFieldBox("Titre", txtTitre),
+                createFieldBox("Description", txtDescription),
+                createFieldBox("Éditeur", txtEditeur),
+                createFieldBox("Année de sortie", txtAnnee),
+                createFieldBox("Nombre d'exemplaires", txtStock)
+        );
+
+        // --- Champs spécifiques ---
+        TextField txtAuteur = createStyledTextField("Auteur");
+        TextField txtIsbn = createStyledTextField("ISBN");
+        TextField txtPages = createStyledTextField("Pages");
+        TextField txtFormat = createStyledTextField("Format");
+
+        TextField txtRealisateur = createStyledTextField("Réalisateur");
+        TextField txtDuree = createStyledTextField("Durée");
+        TextField txtAudio = createStyledTextField("Audio");
+        TextField txtSousTitres = createStyledTextField("Sous-titres");
+
+        TextField txtJoueursMin = createStyledTextField("Min");
+        TextField txtJoueursMax = createStyledTextField("Max");
+        TextField txtAgeMin = createStyledTextField("Âge");
+        TextField txtDureePartie = createStyledTextField("Durée");
+
+        String categorie = getCategorieProduit().toLowerCase();
+        if (categorie.contains("livre")) {
+            formBox.getChildren().addAll(
+                    createFieldBox("Auteur", txtAuteur),
+                    createFieldBox("ISBN", txtIsbn),
+                    createFieldBox("Nombre de pages", txtPages),
+                    createFieldBox("Format", txtFormat)
+            );
+        } else if (categorie.contains("dvd")) {
+            formBox.getChildren().addAll(
+                    createFieldBox("Réalisateur", txtRealisateur),
+                    createFieldBox("Durée (minutes)", txtDuree),
+                    createFieldBox("Langues audio", txtAudio),
+                    createFieldBox("Sous-titres", txtSousTitres)
+            );
+        } else {
+            formBox.getChildren().addAll(
+                    createFieldBox("Joueurs Minimum", txtJoueursMin),
+                    createFieldBox("Joueurs Maximum", txtJoueursMax),
+                    createFieldBox("Âge Minimum", txtAgeMin),
+                    createFieldBox("Durée de partie (minutes)", txtDureePartie)
+            );
+        }
+
+        Label lblErreur = new Label();
+        lblErreur.setStyle("-fx-text-fill: #e74c3c; -fx-font-size: 13px;");
+        lblErreur.setMaxWidth(Double.MAX_VALUE);
+        lblErreur.setAlignment(Pos.CENTER);
+
+        // --- Boutons ---
+        Button btnAnnuler = new Button("Annuler");
+        btnAnnuler.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: #555555; -fx-border-radius: 6; -fx-padding: 8 20; -fx-cursor: hand;");
+        btnAnnuler.setOnAction(event -> popup.close());
+
+        Button btnEnregistrer = new Button("Ajouter le produit");
+        btnEnregistrer.setStyle("-fx-background-color: #2a6b3d; -fx-text-fill: white; -fx-background-radius: 6; -fx-padding: 8 20; -fx-font-weight: bold; -fx-cursor: hand;");
+
+        btnEnregistrer.setOnAction(event -> {
+            try {
+                String titre = txtTitre.getText();
+                String desc = txtDescription.getText();
+                String editeur = txtEditeur.getText();
+                int annee = Integer.parseInt(txtAnnee.getText());
+                int stock = Integer.parseInt(txtStock.getText());
+
+                if (categorie.contains("livre")) {
+                    stockService.ajouterLivre(titre, desc, editeur, annee, txtIsbn.getText(), txtAuteur.getText(), Integer.parseInt(txtPages.getText()), txtFormat.getText(), stock);
+                } else if (categorie.contains("dvd")) {
+                    List<String> pistesAudio = Arrays.asList(txtAudio.getText().split("\\s*,\\s*"));
+                    List<String> sousTitresList = txtSousTitres.getText().isEmpty() ? new ArrayList<>() : Arrays.asList(txtSousTitres.getText().split("\\s*,\\s*"));
+                    stockService.ajouterDVD(titre, desc, editeur, annee, txtRealisateur.getText(), Integer.parseInt(txtDuree.getText()), pistesAudio, sousTitresList, stock);
+                } else {
+                    stockService.ajouterJeuSociete(titre, desc, editeur, annee, Integer.parseInt(txtJoueursMin.getText()), Integer.parseInt(txtJoueursMax.getText()), Integer.parseInt(txtAgeMin.getText()), Integer.parseInt(txtDureePartie.getText()), stock);
+                }
+
+                chargerDonneesDansTableau();
+                popup.close();
+
+            } catch (NumberFormatException e) {
+                lblErreur.setText("Erreur : Veuillez vérifier les champs numériques (Année, Stock, Pages...).");
+            } catch (SQLException e) {
+                lblErreur.setText("Erreur BDD : " + e.getMessage());
+            }
+        });
+
+        HBox boutonsBox = new HBox(15, btnAnnuler, btnEnregistrer);
+        boutonsBox.setAlignment(Pos.CENTER_RIGHT);
+
+        root.getChildren().addAll(lblTitrePage, formBox, lblErreur, boutonsBox);
+
+        ScrollPane scrollPane = new ScrollPane(root);
+        scrollPane.setFitToWidth(true);
+        // On supprime les bordures inline de base
+        scrollPane.setStyle("-fx-background: #2b2b2b; -fx-background-color: transparent; -fx-border-width: 0; -fx-padding: 0;");
+
+        Scene scene = new Scene(scrollPane, 500, 700);
+        scene.setFill(javafx.scene.paint.Color.web("#2b2b2b"));
+
+        // --- L'ASTUCE : Injection du CSS dynamique sans fichier ---
+        String css = ".scroll-pane { -fx-background: #2b2b2b; -fx-padding: 0; -fx-background-insets: 0; } " +
+                ".scroll-pane > .viewport { -fx-background-color: transparent; } " +
+                ".scroll-bar:vertical { -fx-background-color: transparent; -fx-pref-width: 10px; } " +
+                ".scroll-bar:vertical .track { -fx-background-color: transparent; -fx-border-color: transparent; } " +
+                ".scroll-bar:vertical .thumb { -fx-background-color: #555555; -fx-background-radius: 10px; } " +
+                ".scroll-bar:vertical .thumb:hover { -fx-background-color: #777777; } " +
+                ".scroll-bar:vertical .increment-button, .scroll-bar:vertical .decrement-button { -fx-padding: 0; -fx-pref-height: 0; }";
+
+        // On encode le CSS en Base64 pour le passer en Data URI à JavaFX
+        String base64Css = java.util.Base64.getEncoder().encodeToString(css.getBytes());
+        scene.getStylesheets().add("data:text/css;base64," + base64Css);
+        // ----------------------------------------------------------
+
+        popup.setScene(scene);
+        popup.showAndWait();
+    }
+
+    // --- Méthodes utilitaires ---
+
+    private TextField createStyledTextField(String prompt) {
+        TextField tf = new TextField();
+        tf.setPromptText(prompt);
+        tf.setStyle("-fx-background-color: #1a1a1a; -fx-text-fill: white; -fx-prompt-text-fill: #555555; -fx-background-radius: 6; -fx-padding: 10; -fx-border-width: 0;");
+        return tf;
+    }
+
+    private VBox createFieldBox(String labelText, TextField field) {
+        Label lbl = new Label(labelText);
+        lbl.setStyle("-fx-text-fill: #cccccc; -fx-font-size: 13px;");
+        return new VBox(5, lbl, field);
+    }
 }
