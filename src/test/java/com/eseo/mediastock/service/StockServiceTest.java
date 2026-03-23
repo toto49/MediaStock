@@ -64,7 +64,7 @@ public class StockServiceTest {
                     "Conte philosophique",
                     "Gallimard",
                     1943,
-                    "978-2070612758",
+                    "972070612",
                     "Saint-Exupéry",
                     96,
                     "Poche",

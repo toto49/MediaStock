@@ -11,13 +11,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdminServiceTest {
 
-    private static final String EMAIL_TEST = "test@admin.com";
     private static final String MDP_TEST = "password123";
     private static final String NOM_TEST = "Dupont";
     private static final String PRENOM_TEST = "Jean";
-    private static final String TEL_TEST = "612345678";
+    private static final String TEL_TEST = "0612345678";
     private static AdminService adminService;
     private static int idAdminTest = 0;
+    private static String emailTest; // Email unique pour le test
 
     /**
      * Sets .
@@ -25,7 +25,10 @@ public class AdminServiceTest {
     @BeforeAll
     static void setup() {
         adminService = new AdminService();
+        // Générer un email unique avec timestamp
+        emailTest = "test_" + System.currentTimeMillis() + "@admin.com";
         System.out.println("DÉMARRAGE DES TESTS ADMIN SERVICE");
+        System.out.println("Email de test: " + emailTest);
     }
 
     /**
@@ -53,15 +56,15 @@ public class AdminServiceTest {
         System.out.println("Test 1: Création admin");
 
         assertDoesNotThrow(() -> {
-            AdminService.creerAdmin(EMAIL_TEST, MDP_TEST, NOM_TEST, PRENOM_TEST, TEL_TEST);
+            adminService.creerAdmin(emailTest, MDP_TEST, NOM_TEST, PRENOM_TEST, TEL_TEST);
         }, "La création ne devrait pas lancer d'exception");
 
-        System.out.println("Admin créé avec email: " + EMAIL_TEST);
+        System.out.println("Admin créé avec email: " + emailTest);
 
         // Récupération via login
-        Admin admin = adminService.login(EMAIL_TEST, MDP_TEST);
+        Admin admin = adminService.login(emailTest, MDP_TEST);
         assertNotNull(admin, "L'admin devrait exister après création");
-        assertEquals(EMAIL_TEST, admin.getEmail());
+        assertEquals(emailTest, admin.getEmail());
 
         // Récupération de l'ID
         idAdminTest = admin.getId();
@@ -78,13 +81,13 @@ public class AdminServiceTest {
         System.out.println("Test 2: Connexion");
 
         // Connexion réussie
-        Admin admin = adminService.login(EMAIL_TEST, MDP_TEST);
+        Admin admin = adminService.login(emailTest, MDP_TEST);
         assertNotNull(admin, "Connexion devrait réussir");
-        assertEquals(EMAIL_TEST, admin.getEmail());
+        assertEquals(emailTest, admin.getEmail());
         System.out.println("Connexion réussie");
 
         // Échec de connexion
-        Admin adminFail = adminService.login(EMAIL_TEST, "mauvaisMdp");
+        Admin adminFail = adminService.login(emailTest, "mauvaisMdp");
         assertNull(adminFail, "Connexion devrait échouer");
         System.out.println("Échec avec mauvais mot de passe");
     }
@@ -101,7 +104,7 @@ public class AdminServiceTest {
 
         Admin admin = adminService.getAdminParId(idAdminTest);
         assertNotNull(admin, "L'admin devrait être trouvé par son ID");
-        assertEquals(EMAIL_TEST, admin.getEmail());
+        assertEquals(emailTest, admin.getEmail());
         assertEquals(NOM_TEST, admin.getNom());
         assertEquals(PRENOM_TEST, admin.getPrenom());
         assertEquals(TEL_TEST, admin.getNumTel());
@@ -126,9 +129,9 @@ public class AdminServiceTest {
         System.out.println("Mot de passe changé");
 
         // Vérifie avec nouveau mot de passe
-        Admin admin = adminService.login(EMAIL_TEST, "nouveauMdp123");
+        Admin admin = adminService.login(emailTest, "nouveauMdp123");
         assertNotNull(admin, "Connexion avec nouveau mdp devrait réussir");
-        assertEquals(EMAIL_TEST, admin.getEmail());
+        assertEquals(emailTest, admin.getEmail());
         System.out.println("Connexion avec nouveau mot de passe réussie");
 
         // Remettre l'ancien mot de passe pour les tests suivants
@@ -149,7 +152,7 @@ public class AdminServiceTest {
 
         // Tenter de créer un admin avec le même email
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            AdminService.creerAdmin(EMAIL_TEST, "autreMdp", "Autre", "Nom", "123456789");
+            adminService.creerAdmin(emailTest, "autreMdp", "Autre", "Nom", "0698765432");
         });
 
         assertTrue(exception.getMessage().contains("existe déjà"));
@@ -166,25 +169,31 @@ public class AdminServiceTest {
 
         // Test email vide
         Exception e1 = assertThrows(IllegalArgumentException.class, () -> {
-            AdminService.creerAdmin("", MDP_TEST, NOM_TEST, PRENOM_TEST, TEL_TEST);
+            adminService.creerAdmin("", MDP_TEST, NOM_TEST, PRENOM_TEST, TEL_TEST);
         });
         System.out.println("Email vide détecté: " + e1.getMessage());
 
-        // Test téléphone invalide
-        Exception e3 = assertThrows(IllegalArgumentException.class, () -> {
-            AdminService.creerAdmin("autre@test.com", MDP_TEST, NOM_TEST, PRENOM_TEST, "0");
+        // Test téléphone invalide (trop court)
+        Exception e2 = assertThrows(IllegalArgumentException.class, () -> {
+            adminService.creerAdmin("autre@test.com", MDP_TEST, NOM_TEST, PRENOM_TEST, "123");
         });
-        System.out.println("Téléphone invalide détecté: " + e3.getMessage());
+        System.out.println("Téléphone invalide détecté: " + e2.getMessage());
+
+        // Test téléphone avec lettres
+        Exception e3 = assertThrows(IllegalArgumentException.class, () -> {
+            adminService.creerAdmin("autre@test.com", MDP_TEST, NOM_TEST, PRENOM_TEST, "abcdefghij");
+        });
+        System.out.println("Téléphone avec lettres détecté: " + e3.getMessage());
 
         // Test nom vide
         Exception e4 = assertThrows(IllegalArgumentException.class, () -> {
-            AdminService.creerAdmin("autre@test.com", MDP_TEST, "", PRENOM_TEST, TEL_TEST);
+            adminService.creerAdmin("autre@test.com", MDP_TEST, "", PRENOM_TEST, TEL_TEST);
         });
         System.out.println("Nom vide détecté: " + e4.getMessage());
 
         // Test prénom vide
         Exception e5 = assertThrows(IllegalArgumentException.class, () -> {
-            AdminService.creerAdmin("autre@test.com", MDP_TEST, NOM_TEST, "", TEL_TEST);
+            adminService.creerAdmin("autre@test.com", MDP_TEST, NOM_TEST, "", TEL_TEST);
         });
         System.out.println("Prénom vide détecté: " + e5.getMessage());
     }
@@ -201,9 +210,9 @@ public class AdminServiceTest {
 
         String nouveauNom = "Martin";
         String nouveauPrenom = "Pierre";
-        String nouvelEmail = "nouveau@test.com";
+        String nouvelEmail = "nouveau_" + System.currentTimeMillis() + "@test.com";
         String nouveauMdp = "nouveauMdp";
-        String nouveauTel = "987654321";
+        String nouveauTel = "0987654321";
 
         // Mettre à jour - ne doit pas lancer d'exception
         assertDoesNotThrow(() -> {
@@ -233,6 +242,18 @@ public class AdminServiceTest {
         assertNotNull(loginTest, "Connexion avec nouveau mdp devrait réussir");
         System.out.println("Connexion avec nouveau mdp réussie");
 
+        // Remettre les données d'origine
+        assertDoesNotThrow(() -> {
+            adminService.mettreAJourAdmin(
+                    idAdminTest,
+                    emailTest,
+                    MDP_TEST,
+                    NOM_TEST,
+                    PRENOM_TEST,
+                    TEL_TEST
+            );
+        }, "Le retour aux données d'origine devrait réussir");
+        System.out.println("Données remises à l'original");
     }
 
     /**
@@ -244,10 +265,11 @@ public class AdminServiceTest {
         System.out.println("Test 8: Suppression admin ---");
 
         // Créer un admin temporaire pour le supprimer
-        String emailTemp = "temp@suppression.com";
+        String emailTemp = "temp_suppression_" + System.currentTimeMillis() + "@test.com";
+        String telTemp = "0611111111";
 
         try {
-            AdminService.creerAdmin(emailTemp, "tempMdp123", "Temp", "Admin", "111222333");
+            adminService.creerAdmin(emailTemp, "tempMdp123", "Temp", "Admin", telTemp);
             System.out.println("Admin temporaire créé");
 
             // Récupére l'admin créé via login

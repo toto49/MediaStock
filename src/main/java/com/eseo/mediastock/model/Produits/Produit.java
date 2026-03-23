@@ -10,27 +10,33 @@ import java.util.List;
 public abstract class Produit {
     // Variables de classes
     private static int NbrReference;
+
     /**
      * The Id.
      */
-// Variables d'instance accessibles aux enfants
+    // Variables d'instance accessibles aux enfants
     protected int id;
+
     /**
      * The Titre.
      */
     protected String titre;
+
     /**
      * The Description.
      */
     protected String description;
+
     /**
      * The Editeur.
      */
     protected String editeur;
+
     /**
      * The Annee sortie.
      */
     protected int anneeSortie;
+
     // Listes des exemplaires
     private List<Exemplaire> exemplaires;
 
@@ -170,6 +176,5 @@ public abstract class Produit {
     }
 
     // Méthodes de classe
-
 
 }

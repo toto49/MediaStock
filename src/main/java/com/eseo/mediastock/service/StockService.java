@@ -15,6 +15,8 @@ import com.eseo.mediastock.model.Produits.Produit;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 /**
  * The type Stock service.
@@ -205,7 +207,7 @@ public class StockService {
      */
     public String creerCodeBarreUnique(Produit produit) {
         int type = getCodeType(produit);
-        long randomPart = (long) (Math.random() * 9_000_000_000L);
+        long randomPart = ThreadLocalRandom.current().nextLong(1_000_000_000L, 10_000_000_000L);
 
         String codeSansCle = String.format("2%d%010d", type, randomPart);
         int key = calculerCleEAN13(codeSansCle);
@@ -270,23 +272,22 @@ public class StockService {
      */
 // --- RECHERCHER PRODUITS ---
     public List<Produit> SearchProduit(String searchbar, String typeProduit) throws SQLException {
-        List<Produit> produits = new ArrayList<>();
-        List<? extends Produit> Allproducts = new ArrayList<>();
+        List<? extends Produit> Allproducts = switch (typeProduit) {
+            case "DVD" -> DvdDAO.ProduitObjectList();
+            case "Jeu" -> JeuSocieteDAO.ProduitObjectList();
+            case "Livre" -> LivreDAO.ProduitObjectList();
+            default -> new ArrayList<>();
+        };
 
-        if (typeProduit.equals("DVD")) {
-            Allproducts = DvdDAO.ProduitObjectList();
-        } else if (typeProduit.equals("Jeu")) {
-            Allproducts = JeuSocieteDAO.ProduitObjectList();
-        } else if (typeProduit.equals("Livre")) {
-            Allproducts = LivreDAO.ProduitObjectList();
+        if (searchbar == null || searchbar.trim().isEmpty()) {
+            return new ArrayList<>(Allproducts);
         }
 
-        for (Produit produit : Allproducts) {
-            if (produit.getTitre().toLowerCase().contains(searchbar.toLowerCase())) {
-                produits.add(produit);
-            }
-        }
-        return produits;
+        String searchKeyword = searchbar.toLowerCase();
+
+        return Allproducts.stream()
+                .filter(produit -> produit.getTitre().toLowerCase().contains(searchKeyword))
+                .collect(Collectors.toList());
     }
 
     /**
