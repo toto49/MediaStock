@@ -22,7 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The type Emprunt controller.
+ * Contrôleur gérant les opérations d'emprunt et de retour.
+ * Il permet également d'afficher et de gérer la liste des emprunts
+ * actuellement en retard.
+ * * @author tom
+ * @date 2026/03/23
  */
 public class EmpruntController {
 
@@ -64,7 +68,8 @@ public class EmpruntController {
     private Pagination paginationRetards;
 
     /**
-     * Initialize.
+     * Initialise le contrôleur.
+     * Configure les colonnes du tableau des retards, la pagination et charge les données.
      */
     @FXML
     public void initialize() {
@@ -184,6 +189,12 @@ public class EmpruntController {
         }).start();
     }
 
+    /**
+     * Gère l'action d'emprunt d'un exemplaire par un adhérent.
+     * Vérifie la validité de l'adhérent, de l'exemplaire et les règles métier avant validation.
+     *
+     * @param event L'événement déclenché par le clic sur le bouton d'emprunt.
+     */
     @FXML
     private void handleEmprunter(ActionEvent event) {
         lblMessage.setText("");
@@ -225,6 +236,12 @@ public class EmpruntController {
         }
     }
 
+    /**
+     * Gère l'action de retour d'un exemplaire.
+     * Met à jour le statut de l'emprunt et rafraîchit la liste des retards si nécessaire.
+     *
+     * @param event L'événement déclenché par le clic sur le bouton de retour.
+     */
     @FXML
     private void handleRendre(ActionEvent event) {
         lblMessage.setText("");
@@ -290,7 +307,12 @@ public class EmpruntController {
     }
 
     /**
-     * The type Retard item.
+     * Représente un article en retard pour l'affichage dans le tableau.
+     * * @param numAdherent L'identifiant unique de l'adhérent.
+     * @param nomAdherent Le nom complet de l'adhérent.
+     * @param exemplaire  Le code barre de l'exemplaire emprunté.
+     * @param dateLimite  La date à laquelle le produit aurait dû être rendu.
+     * @param joursRetard Le nombre de jours de retard calculé par rapport à la date limite.
      */
     public record RetardItem(String numAdherent, String nomAdherent, String exemplaire, String dateLimite,
                              int joursRetard) {
