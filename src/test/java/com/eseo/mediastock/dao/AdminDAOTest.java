@@ -38,15 +38,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdminDAOTest {
 
-    private static AdminDAO adminDAO;
-    private static int idAdminTest = 0;
-
     // Constantes pour les tests
     private static final String EMAIL_TEST = "testdao@admin.com";
     private static final String MDP_TEST = "password123";
     private static final String NOM_TEST = "Test";
     private static final String PRENOM_TEST = "DAO";
     private static final String TEL_TEST = "123456789";
+    private static AdminDAO adminDAO;
+    private static int idAdminTest = 0;
 
     /**
      * Sets .

@@ -32,16 +32,13 @@ public class EmpruntController {
     private final EmpruntService empruntService = new EmpruntService();
     private final AdherentService adherentService = new AdherentService();
     private final StockService stockService = new StockService();
-
+    // --- Données ---
+    private final ObservableList<RetardItem> masterData = FXCollections.observableArrayList();
     // --- Champs de formulaire ---
     @FXML
     private TextField fieldAdherent;
     @FXML
     private TextField fieldExemplaire;
-
-    // --- Données ---
-    private final ObservableList<RetardItem> masterData = FXCollections.observableArrayList();
-
     // --- Boutons et Message ---
     @FXML
     private Button btnRendre;
@@ -266,13 +263,6 @@ public class EmpruntController {
         }
     }
 
-    /**
-     * The type Retard item.
-     */
-    public record RetardItem(String numAdherent, String nomAdherent, String exemplaire, String dateLimite,
-                             int joursRetard) {
-    }
-
     @FXML
     private void handleOuvrirScannerAdherent(ActionEvent event) {
         CodeBarreScanner scanner = new CodeBarreScanner();
@@ -297,5 +287,12 @@ public class EmpruntController {
                 afficherMessage("Exemplaire scanné : " + codeTrouve, false);
             });
         });
+    }
+
+    /**
+     * The type Retard item.
+     */
+    public record RetardItem(String numAdherent, String nomAdherent, String exemplaire, String dateLimite,
+                             int joursRetard) {
     }
 }

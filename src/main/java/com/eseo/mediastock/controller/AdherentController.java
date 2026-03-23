@@ -34,6 +34,7 @@ import java.util.List;
 public class AdherentController {
 
     private final int LIGNES_PAR_PAGE = 50;
+    private final ObservableList<Adherent> masterData = FXCollections.observableArrayList();
     @FXML
     private TextField TeldAdherent;
     @FXML
@@ -67,7 +68,6 @@ public class AdherentController {
     @FXML
     private TableColumn<Adherent, Void> colAction;
     private AdherentService adherentService;
-    private final ObservableList<Adherent> masterData = FXCollections.observableArrayList();
     private FilteredList<Adherent> filteredData;
 
     /**

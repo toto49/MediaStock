@@ -1,4 +1,5 @@
 package com.eseo.mediastock.model.Produits;
+
 import com.eseo.mediastock.model.Exemplaire;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public abstract class Produit {
     /**
      * Instantiates a new Produit.
      */
-    public Produit(){
+    public Produit() {
     }
 
     /**
@@ -74,7 +75,9 @@ public abstract class Produit {
      *
      * @param id the id
      */
-    public void setId(int id){this.id = id;}
+    public void setId(int id) {
+        this.id = id;
+    }
 
     /**
      * Gets titre.

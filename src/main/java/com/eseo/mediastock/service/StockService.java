@@ -42,7 +42,7 @@ public class StockService {
      * @param nbExemplaires the nb exemplaires
      * @throws SQLException the sql exception
      */
-    public void ajouterLivre(String titre, String description, String editeur, int annee, String isbn, String auteur, int nbPages, String format,int nbExemplaires) throws SQLException {
+    public void ajouterLivre(String titre, String description, String editeur, int annee, String isbn, String auteur, int nbPages, String format, int nbExemplaires) throws SQLException {
         if (titre == null || titre.trim().isEmpty()) throw new IllegalArgumentException("Le titre est obligatoire");
         Livre livre = new Livre();
         livre.setTitre(titre);
@@ -75,7 +75,7 @@ public class StockService {
      * @param nbExemplaires the nb exemplaires
      * @throws SQLException the sql exception
      */
-    public void ajouterDVD(String titre, String description,String editeur, int annee, String realisateur, int duree, List<String> audio,List<String> sousTitres,int nbExemplaires) throws SQLException {
+    public void ajouterDVD(String titre, String description, String editeur, int annee, String realisateur, int duree, List<String> audio, List<String> sousTitres, int nbExemplaires) throws SQLException {
         if (titre == null || titre.trim().isEmpty()) throw new IllegalArgumentException("Le titre est obligatoire");
 
         DVD dvd = new DVD();
@@ -108,7 +108,7 @@ public class StockService {
      * @param nbExemplaires the nb exemplaires
      * @throws SQLException the sql exception
      */
-    public void ajouterJeuSociete(String titre, String description,String editeur, int annee, int nbJoueursMin, int nbJoueursMax, int ageMin, int dureePartie,int nbExemplaires) throws SQLException {
+    public void ajouterJeuSociete(String titre, String description, String editeur, int annee, int nbJoueursMin, int nbJoueursMax, int ageMin, int dureePartie, int nbExemplaires) throws SQLException {
         if (titre == null || titre.trim().isEmpty()) throw new IllegalArgumentException("Le titre est obligatoire");
 
         JeuSociete jeu = new JeuSociete();
@@ -177,7 +177,7 @@ public class StockService {
      * @param produit the produit
      * @return the int
      */
-    public int getCodeType(Produit produit){
+    public int getCodeType(Produit produit) {
         if (produit instanceof Livre) return 1;
         if (produit instanceof DVD) return 2;
         if (produit instanceof JeuSociete) return 3;
@@ -203,7 +203,7 @@ public class StockService {
      * @param produit the produit
      * @return the string
      */
-    public String creerCodeBarreUnique(Produit produit){
+    public String creerCodeBarreUnique(Produit produit) {
         int type = getCodeType(produit);
         long randomPart = (long) (Math.random() * 9_000_000_000L);
 
@@ -221,7 +221,7 @@ public class StockService {
      * @param produit the produit
      * @throws SQLException the sql exception
      */
-    public void ajouterExemplaire(Produit produit) throws SQLException{
+    public void ajouterExemplaire(Produit produit) throws SQLException {
         Exemplaire ex = new Exemplaire();
         ex.setProduit(produit);
 
@@ -269,20 +269,20 @@ public class StockService {
      * @throws SQLException the sql exception
      */
 // --- RECHERCHER PRODUITS ---
-    public List<Produit> SearchProduit (String searchbar,String typeProduit) throws SQLException {
+    public List<Produit> SearchProduit(String searchbar, String typeProduit) throws SQLException {
         List<Produit> produits = new ArrayList<>();
         List<? extends Produit> Allproducts = new ArrayList<>();
 
-        if (typeProduit.equals("DVD")){
+        if (typeProduit.equals("DVD")) {
             Allproducts = DvdDAO.ProduitObjectList();
-        }else if (typeProduit.equals("Jeu")){
+        } else if (typeProduit.equals("Jeu")) {
             Allproducts = JeuSocieteDAO.ProduitObjectList();
-        }else if (typeProduit.equals("Livre")){
+        } else if (typeProduit.equals("Livre")) {
             Allproducts = LivreDAO.ProduitObjectList();
         }
 
-        for (Produit produit : Allproducts){
-            if (produit.getTitre().toLowerCase().contains(searchbar.toLowerCase())){
+        for (Produit produit : Allproducts) {
+            if (produit.getTitre().toLowerCase().contains(searchbar.toLowerCase())) {
                 produits.add(produit);
             }
         }
@@ -296,7 +296,7 @@ public class StockService {
      * @return the list
      */
 // --- LISTE EXEMPLAIRES PRODUITS
-    public List<Exemplaire> getExemplaireFromProduct(Produit produit){
+    public List<Exemplaire> getExemplaireFromProduct(Produit produit) {
         return produit.getExemplaires();
     }
 

@@ -27,7 +27,7 @@ public class JeuSocieteDAO {
         String sql = "INSERT INTO PRODUIT (type_produit, titre, description, editeur, annee_sortie, nb_joueurs_min,nb_joueurs_max, age_min, duree_partie) VALUES (?,?,?,?,?,?,?,?,?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)){
+             PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, "Jeu");
             stmt.setString(2, j.getTitre());
@@ -114,7 +114,7 @@ public class JeuSocieteDAO {
             int ageMin = rs.getInt("age_min");
             int dureePartie = rs.getInt("duree_partie");
             List<Exemplaire> exemplaires = new ArrayList<>();
-            JeuSociete jeu = new JeuSociete(id, titre, description, editeur, anneeSortie , exemplaires, nbJoueursMin, nbJoueursMax, ageMin, dureePartie);
+            JeuSociete jeu = new JeuSociete(id, titre, description, editeur, anneeSortie, exemplaires, nbJoueursMin, nbJoueursMax, ageMin, dureePartie);
             jeux.add(jeu);
         }
         return jeux;
@@ -130,7 +130,7 @@ public class JeuSocieteDAO {
         JeuSociete j = (JeuSociete) p;
         String sql = "UPDATE PRODUIT SET titre = ?, description = ?, editeur = ?, annee_sortie = ?, nb_joueurs_min = ?, nb_joueurs_max = ?, age_min = ?, duree_partie = ? WHERE id = ? AND type_produit = 'Jeu'";
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)){
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, j.getTitre());
             stmt.setString(2, j.getDescription());
             stmt.setString(3, j.getEditeur());

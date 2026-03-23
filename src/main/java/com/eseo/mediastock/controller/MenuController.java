@@ -18,18 +18,17 @@ import java.io.IOException;
 public class MenuController {
 
     private static MenuController instance;
-
+    /**
+     * The Btn list view.
+     */
+    @FXML
+    public Button btnListView;
     @FXML
     private BorderPane mainPane;
     @FXML
     private Button btnAccueil;
     @FXML
     private Button btnParametres;
-    /**
-     * The Btn list view.
-     */
-    @FXML
-    public Button btnListView;
     @FXML
     private Button btnAddProduit;
     @FXML

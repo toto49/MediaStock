@@ -16,9 +16,9 @@ import java.util.List;
  */
 public class EmpruntService {
 
+    private static final int MAX_EMPRUNTS = 5;
     private final EmpruntDAO empruntDAO = new EmpruntDAO();
     private final ExemplaireDAO exemplaireDAO = new ExemplaireDAO();
-    private static final int MAX_EMPRUNTS = 5 ;
 
     /**
      * Peut emprunter boolean.
@@ -27,10 +27,18 @@ public class EmpruntService {
      * @param exemplaire the exemplaire
      * @return the boolean
      */
-    public boolean peutEmprunter(Adherent adherent, Exemplaire exemplaire){
-        if (adherent.getNombreEmprunts() >= MAX_EMPRUNTS){return false;}
-        for (Emprunt emprunt : adherent.getEmpruntsEnCours()){if (emprunt.estEnRetard()){return false;}}
-        if (!exemplaire.estDispo()){return false;}
+    public boolean peutEmprunter(Adherent adherent, Exemplaire exemplaire) {
+        if (adherent.getNombreEmprunts() >= MAX_EMPRUNTS) {
+            return false;
+        }
+        for (Emprunt emprunt : adherent.getEmpruntsEnCours()) {
+            if (emprunt.estEnRetard()) {
+                return false;
+            }
+        }
+        if (!exemplaire.estDispo()) {
+            return false;
+        }
         return exemplaire.estBonEtat();
     }
 
@@ -42,18 +50,17 @@ public class EmpruntService {
      * @throws SQLException the sql exception
      */
     public void enregistrerEmprunt(Adherent adherent, Exemplaire exemplaire) throws SQLException {
-        if (peutEmprunter(adherent, exemplaire)){
+        if (peutEmprunter(adherent, exemplaire)) {
             Emprunt emprunt = new Emprunt();
             emprunt.setEmprunteur(adherent);
             emprunt.setExemplaire(exemplaire);
             adherent.ajouterEmprunt(emprunt);
             exemplaire.setStatusDispo(EnumDispo.EMPRUNTE);
 
-            try{
-                empruntDAO.addEmprunt(adherent,exemplaire);
+            try {
+                empruntDAO.addEmprunt(adherent, exemplaire);
                 exemplaireDAO.updateExemplaire(exemplaire);
-            }
-            catch (SQLException e){
+            } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -90,7 +97,7 @@ public class EmpruntService {
      * @throws SQLException the sql exception
      */
     public List<Emprunt> getEmpruntsFromAdherent(Adherent adherent) throws SQLException {
-        return  empruntDAO.getEmpruntsByAdherent(adherent);
+        return empruntDAO.getEmpruntsByAdherent(adherent);
     }
 
     /**

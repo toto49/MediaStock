@@ -11,6 +11,9 @@ import javafx.scene.control.Label;
  * The type Accueil controller.
  */
 public class AccueilController {
+    private static int cacheLivres = -1;
+    private static int cacheDVDs = -1;
+    private static int cacheJeux = -1;
     @FXML
     private Label labelBonjour;
     @FXML
@@ -19,11 +22,6 @@ public class AccueilController {
     private Label labelNombredvd;
     @FXML
     private Label labelNombrejeux;
-
-    private static int cacheLivres = -1;
-    private static int cacheDVDs = -1;
-    private static int cacheJeux = -1;
-
     private StockService stockService;
 
     /**

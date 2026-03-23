@@ -42,15 +42,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdherentServiceTest {
 
+    // Compteur pour des IDs uniques
+    private static final AtomicInteger compteur = new AtomicInteger(1);
+    // Liste pour stocker les IDs créés pendant les tests
+    private static final List<String> idsACleaner = new ArrayList<>();
     private static AdherentService adherentService;
     private static AdherentDAO adherentDAO;
     private static String idTest;
-
-    // Compteur pour des IDs uniques
-    private static final AtomicInteger compteur = new AtomicInteger(1);
-
-    // Liste pour stocker les IDs créés pendant les tests
-    private static final List<String> idsACleaner = new ArrayList<>();
 
     /**
      * Sets .
@@ -333,7 +331,7 @@ public class AdherentServiceTest {
             String email = genererEmailUnique();
             emails.add(email);
             adherentService.inscrireAdherent(noms[i], prenoms[i], email, telephones[i]);
-            System.out.println("  Création " + (i+1) + ": " + noms[i] + " " + prenoms[i]);
+            System.out.println("  Création " + (i + 1) + ": " + noms[i] + " " + prenoms[i]);
         }
 
         // Vérifie que tous ont été créés

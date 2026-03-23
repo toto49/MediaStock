@@ -116,7 +116,7 @@ public class LivreDAO {
             int nb_pages = rs.getInt("nb_pages");
             String format = rs.getString("format");
             List<Exemplaire> exemplaires = new ArrayList<>();
-            Livre livre = new Livre(id, titre, description, editeur, anneeSortie , exemplaires, isbn, auteur, nb_pages, format);
+            Livre livre = new Livre(id, titre, description, editeur, anneeSortie, exemplaires, isbn, auteur, nb_pages, format);
             livres.add(livre);
         }
         return livres;

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * The type Jeu societe.
  */
-public class  JeuSociete extends Produit {
+public class JeuSociete extends Produit {
     private int nbJoueursMin;
     private int nbJoueursMax;
     private int ageMin;
@@ -17,7 +17,7 @@ public class  JeuSociete extends Produit {
      * Instantiates a new Jeu societe.
      */
 // Constructeurs
-    public JeuSociete(){
+    public JeuSociete() {
     }
 
     /**

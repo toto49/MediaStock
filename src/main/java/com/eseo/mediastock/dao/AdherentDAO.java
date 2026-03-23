@@ -17,7 +17,7 @@ public class AdherentDAO {
      * @param adherent - L'objet Adherent à sauvegarder
      * @throws SQLException - Si l'insertion échoue
      */
-    public void createAdherent (Adherent adherent) throws SQLException {
+    public void createAdherent(Adherent adherent) throws SQLException {
         String sql = "INSERT INTO ADHERENT (id, num_tel, nom, prenom, email) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -40,10 +40,10 @@ public class AdherentDAO {
      * @param adherent - L'objet Adherent avec les nouvelles valeurs
      * @throws SQLException - Si la mise à jour échoue
      */
-    public void updateAdherent (Adherent adherent) throws SQLException{
+    public void updateAdherent(Adherent adherent) throws SQLException {
         String sql = "UPDATE ADHERENT SET num_tel = ?, nom = ?, prenom =?, email=? WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql)){
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, adherent.getNumTel());
             stmt.setString(2, adherent.getNom());
             stmt.setString(3, adherent.getPrenom());
@@ -62,11 +62,11 @@ public class AdherentDAO {
      * @return int - Le nombre de lignes dans la table ADHERENT qui répondent a la condition
      * @throws SQLException - Si la requête échoue
      */
-    public int countAdherents (int annee) throws SQLException {
+    public int countAdherents(int annee) throws SQLException {
         String sql = "SELECT COUNT(*) FROM ADHERENT WHERE id LIKE ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, "ADH-" + annee + "%");
 
             try (ResultSet rs = stmt.executeQuery()) {

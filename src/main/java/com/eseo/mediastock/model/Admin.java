@@ -38,42 +38,54 @@ public class Admin {
      * @return the id
      */
 // Getters/Setters
-    public int getId() { return id; }
+    public int getId() {
+        return id;
+    }
 
     /**
      * Sets id.
      *
      * @param id the id
      */
-    public void setId(int id) { this.id = id; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
     /**
      * Gets nom.
      *
      * @return the nom
      */
-    public String getNom() { return nom; }
+    public String getNom() {
+        return nom;
+    }
 
     /**
      * Sets nom.
      *
      * @param nom the nom
      */
-    public void setNom(String nom) { this.nom = nom; }
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
 
     /**
      * Gets prenom.
      *
      * @return the prenom
      */
-    public String getPrenom() { return prenom; }
+    public String getPrenom() {
+        return prenom;
+    }
 
     /**
      * Sets prenom.
      *
      * @param prenom the prenom
      */
-    public void setPrenom(String prenom) { this.prenom = prenom; }
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
 
     /**
      * Gets num tel.
@@ -98,40 +110,52 @@ public class Admin {
      *
      * @return the email
      */
-    public String getEmail() { return email; }
+    public String getEmail() {
+        return email;
+    }
 
     /**
      * Sets email.
      *
      * @param email the email
      */
-    public void setEmail(String email) { this.email = email; }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     /**
      * Gets password hash.
      *
      * @return the password hash
      */
-    public String getPasswordHash() { return passwordHash; }
+    public String getPasswordHash() {
+        return passwordHash;
+    }
 
     /**
      * Sets password hash.
      *
      * @param passwordHash the password hash
      */
-    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
 
     /**
      * Gets plain password.
      *
      * @return the plain password
      */
-    public String getPlainPassword() { return plainPassword; }
+    public String getPlainPassword() {
+        return plainPassword;
+    }
 
     /**
      * Sets plain password.
      *
      * @param plainPassword the plain password
      */
-    public void setPlainPassword(String plainPassword) { this.plainPassword = plainPassword; }
+    public void setPlainPassword(String plainPassword) {
+        this.plainPassword = plainPassword;
+    }
 }

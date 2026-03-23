@@ -39,11 +39,10 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdherentDAOTest {
 
-    private static AdherentDAO dao;
-    private static String idTest;
-
     // Liste pour stocker les IDs créés pendant les tests
     private static final List<String> idsACleaner = new ArrayList<>();
+    private static AdherentDAO dao;
+    private static String idTest;
 
     /**
      * Sets .
@@ -503,7 +502,7 @@ public class AdherentDAOTest {
         assertNotNull(liste);
         assertTrue(liste.size() > 0);
 
-        System.out.println( liste.size() + " adhérent(s) trouvé(s) dans la base");
+        System.out.println(liste.size() + " adhérent(s) trouvé(s) dans la base");
 
         // Afficher les 5 premiers
         int affiches = 0;

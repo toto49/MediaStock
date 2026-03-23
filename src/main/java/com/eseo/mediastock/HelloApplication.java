@@ -27,11 +27,11 @@ import java.util.Objects;
  */
 public class HelloApplication extends Application {
 
-    private double xOffset = 0;
-    private double yOffset = 0;
     private static Label lblTitreHeader;
     private static Stage mainStage;
     private static VBox rootGlobal;
+    private double xOffset = 0;
+    private double yOffset = 0;
     private boolean isMaximized = false;
     private double savedX, savedY, savedWidth, savedHeight;
 
@@ -42,6 +42,35 @@ public class HelloApplication extends Application {
      */
     public static void main(String[] args) {
         launch(args);
+    }
+
+    /**
+     * Changer titre global.
+     *
+     * @param nouveauTitre the nouveau titre
+     */
+    public static void changerTitreGlobal(String nouveauTitre) {
+        String titreComplet = "MediaStock - " + nouveauTitre;
+        if (lblTitreHeader != null) {
+            lblTitreHeader.setText(titreComplet);
+        }
+        if (mainStage != null) {
+            mainStage.setTitle(titreComplet);
+        }
+    }
+
+    /**
+     * Changer page globale.
+     *
+     * @param nouvelleVue  the nouvelle vue
+     * @param nouveauTitre the nouveau titre
+     */
+    public static void changerPageGlobale(Parent nouvelleVue, String nouveauTitre) {
+        VBox.setVgrow(nouvelleVue, Priority.ALWAYS);
+        if (rootGlobal != null && rootGlobal.getChildren().size() > 1) {
+            rootGlobal.getChildren().set(1, nouvelleVue);
+        }
+        changerTitreGlobal(nouveauTitre);
     }
 
     @Override
@@ -74,35 +103,6 @@ public class HelloApplication extends Application {
 
         changerTitreGlobal("Bienvenue");
         stage.show();
-    }
-
-    /**
-     * Changer titre global.
-     *
-     * @param nouveauTitre the nouveau titre
-     */
-    public static void changerTitreGlobal(String nouveauTitre) {
-        String titreComplet = "MediaStock - " + nouveauTitre;
-        if (lblTitreHeader != null) {
-            lblTitreHeader.setText(titreComplet);
-        }
-        if (mainStage != null) {
-            mainStage.setTitle(titreComplet);
-        }
-    }
-
-    /**
-     * Changer page globale.
-     *
-     * @param nouvelleVue  the nouvelle vue
-     * @param nouveauTitre the nouveau titre
-     */
-    public static void changerPageGlobale(Parent nouvelleVue, String nouveauTitre) {
-        VBox.setVgrow(nouvelleVue, Priority.ALWAYS);
-        if (rootGlobal != null && rootGlobal.getChildren().size() > 1) {
-            rootGlobal.getChildren().set(1, nouvelleVue);
-        }
-        changerTitreGlobal(nouveauTitre);
     }
 
     private void toggleMaximize(Stage stage) {

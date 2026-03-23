@@ -21,21 +21,18 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class EmpruntServiceTest {
 
+    // Constante pour le nombre max d'emprunts
+    private static final int MAX_EMPRUNTS = 6;
     // Le service qu'on test
     private EmpruntService empruntService;
-
     // Des mocks (simulateurs) pour les DAO
     // Les mocks sont plus rapide et plus fiable que utiliser les dao qui dependent trop de l'environnement
     private EmpruntDAOMock empruntDAOMock;
     private ExemplaireDAOMock exemplaireDAOMock;
-
     // Des objets de test
     private Adherent adherent;
     private ExemplaireMock exemplaire;
     private Emprunt emprunt;
-
-    // Constante pour le nombre max d'emprunts
-    private static final int MAX_EMPRUNTS = 6;
 
     /**
      * S'exécute AVANT chaque test
@@ -256,17 +253,24 @@ public class EmpruntServiceTest {
          * Instantiates a new Exemplaire mock.
          */
         public ExemplaireMock() {
-            super(0, new Produit() {}, "codeBarre", EnumEtat.BON, EnumDispo.DISPONIBLE);
+            super(0, new Produit() {
+            }, "codeBarre", EnumEtat.BON, EnumDispo.DISPONIBLE);
         }
 
         @Override
-        public boolean estDispo() { return dispo; }
+        public boolean estDispo() {
+            return dispo;
+        }
 
         @Override
-        public boolean estBonEtat() { return bonEtat; }
+        public boolean estBonEtat() {
+            return bonEtat;
+        }
 
         @Override
-        public EnumDispo getStatusDispo() { return statut; }
+        public EnumDispo getStatusDispo() {
+            return statut;
+        }
 
         @Override
         public void setStatusDispo(EnumDispo nouveauStatut) {
@@ -274,7 +278,18 @@ public class EmpruntServiceTest {
         }
 
         @Override
-        public int getId() { return id; }
+        public int getId() {
+            return id;
+        }
+
+        /**
+         * Sets id.
+         *
+         * @param i the
+         */
+        public void setId(int i) {
+            this.id = i;
+        }
 
         /**
          * Sets dispo.
@@ -282,35 +297,36 @@ public class EmpruntServiceTest {
          * @param d the d
          */
 // Méthodes pour configurer le mock
-        public void setDispo(boolean d) { this.dispo = d; }
+        public void setDispo(boolean d) {
+            this.dispo = d;
+        }
 
         /**
          * Sets bon etat.
          *
          * @param b the b
          */
-        public void setBonEtat(boolean b) { this.bonEtat = b; }
+        public void setBonEtat(boolean b) {
+            this.bonEtat = b;
+        }
 
         /**
          * Gets statut.
          *
          * @return the statut
          */
-        public EnumDispo getStatut() { return statut; }
+        public EnumDispo getStatut() {
+            return statut;
+        }
 
         /**
          * Sets statut.
          *
          * @param s the s
          */
-        public void setStatut(EnumDispo s) { this.statut = s; }
-
-        /**
-         * Sets id.
-         *
-         * @param i the
-         */
-        public void setId(int i) { this.id = i; }
+        public void setStatut(EnumDispo s) {
+            this.statut = s;
+        }
     }
 
     /**

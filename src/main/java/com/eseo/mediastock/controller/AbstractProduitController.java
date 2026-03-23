@@ -446,6 +446,7 @@ public abstract class AbstractProduitController<T extends Produit> {
         popup.setScene(scene);
         popup.showAndWait();
     }
+
     private void afficherPopupExemplaire(T produit) {
         try {
             produit.setExemplaires(com.eseo.mediastock.dao.ExemplaireDAO.getExemplairesByProduit(produit));

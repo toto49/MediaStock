@@ -28,7 +28,7 @@ public class DvdDAO {
         String sql = "INSERT INTO PRODUIT (type_produit, titre, description, editeur, annee_sortie, realisateur, duree_minutes, audio_langues, sous_titres) VALUES (?,?,?,?,?,?,?,?,?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)){
+             PreparedStatement stmt = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, "DVD");
             stmt.setString(2, d.getTitre());
@@ -118,7 +118,7 @@ public class DvdDAO {
             String rawSub = rs.getString("sous_titres");
             List<String> sousTitres = (rawSub == null || rawSub.isEmpty()) ? new ArrayList<>() : new ArrayList<>(Arrays.asList(rawSub.split(",")));
             List<Exemplaire> exemplaires = new ArrayList<>();
-            DVD dvd = new DVD(id, titre, description, editeur, anneeSortie , exemplaires,realisateur, dureeMinutes, audioLangues, sousTitres);
+            DVD dvd = new DVD(id, titre, description, editeur, anneeSortie, exemplaires, realisateur, dureeMinutes, audioLangues, sousTitres);
             dvds.add(dvd);
         }
         return dvds;
@@ -134,7 +134,7 @@ public class DvdDAO {
         DVD d = (DVD) p;
         String sql = "UPDATE PRODUIT SET titre = ?, description = ?, editeur = ?, annee_sortie = ?, realisateur = ?, duree_minutes = ?, audio_langues = ?, sous_titres = ? WHERE id = ? AND type_produit = 'DVD'";
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)){
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, d.getTitre());
             stmt.setString(2, d.getDescription());
             stmt.setString(3, d.getEditeur());

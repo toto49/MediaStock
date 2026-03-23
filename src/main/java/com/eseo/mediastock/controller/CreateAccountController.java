@@ -21,6 +21,7 @@ import java.util.Objects;
  */
 public class CreateAccountController {
 
+    private final AdherentService adherentService = new AdherentService();
     /**
      * The Field nom co.
      */
@@ -45,11 +46,8 @@ public class CreateAccountController {
      * The Field copassword co.
      */
     public PasswordField field_copassword_co;
-
     @FXML
     private Label error_label;
-
-    private final AdherentService adherentService = new AdherentService();
 
     /**
      * Buttonreturnco.

@@ -19,7 +19,7 @@ public class Exemplaire {
      * Instantiates a new Exemplaire.
      */
 // Constructeurs
-    public Exemplaire(){
+    public Exemplaire() {
     }
 
     /**
@@ -63,7 +63,9 @@ public class Exemplaire {
      *
      * @param produit the produit
      */
-    public void setProduit(Produit produit) {this.produit = produit;}
+    public void setProduit(Produit produit) {
+        this.produit = produit;
+    }
 
     /**
      * Gets code barre.
@@ -79,7 +81,9 @@ public class Exemplaire {
      *
      * @param codeBarre the code barre
      */
-    public void setCodeBarre(String codeBarre) {this.codeBarre = codeBarre;}
+    public void setCodeBarre(String codeBarre) {
+        this.codeBarre = codeBarre;
+    }
 
     /**
      * Gets etat physique.
@@ -123,7 +127,7 @@ public class Exemplaire {
      * @return the boolean
      */
 // Méthodes
-    public boolean estDispo(){
+    public boolean estDispo() {
         return (statusDispo == EnumDispo.DISPONIBLE);
     }
 
@@ -132,7 +136,7 @@ public class Exemplaire {
      *
      * @return the boolean
      */
-    public boolean estBonEtat(){
+    public boolean estBonEtat() {
         return (etatPhysique != EnumEtat.ABIME);
     }
 }

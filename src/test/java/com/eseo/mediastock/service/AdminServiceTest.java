@@ -42,13 +42,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdminServiceTest {
 
-    private static AdminService adminService;
-    private static int idAdminTest = 0;
     private static final String EMAIL_TEST = "test@admin.com";
     private static final String MDP_TEST = "password123";
     private static final String NOM_TEST = "Dupont";
     private static final String PRENOM_TEST = "Jean";
     private static final String TEL_TEST = "612345678";
+    private static AdminService adminService;
+    private static int idAdminTest = 0;
 
     /**
      * Sets .

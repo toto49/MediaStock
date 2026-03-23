@@ -8,18 +8,18 @@ import java.util.List;
  */
 public class Adherent {
     private final List<Emprunt> empruntsEnCours;
-    // Déclarations Variables
-    private String id;
-    private String nom;
-    private String prenom;
-    private String emailContact;
-    private String numTel;
     private final List<Emprunt> historique;
     /**
      * The Nbr adherent.
      */
 //
     public int nbrAdherent;
+    // Déclarations Variables
+    private String id;
+    private String nom;
+    private String prenom;
+    private String emailContact;
+    private String numTel;
 
     /**
      * Instantiates a new Adherent.
@@ -40,7 +40,7 @@ public class Adherent {
         this.historique = new ArrayList<>();
 
         //initialiser à 0 pour chaque nvel adhrent
-    this.nbrAdherent = 0;
+        this.nbrAdherent = 0;
     }
 
 
@@ -50,14 +50,18 @@ public class Adherent {
      * @return the id
      */
 // Getter/Setter
-    public String getId() {return id;}
+    public String getId() {
+        return id;
+    }
 
     /**
      * Set id.
      *
      * @param id the id
      */
-    public void setId(String id){this.id = id;}
+    public void setId(String id) {
+        this.id = id;
+    }
 
     /**
      * Gets nom.
@@ -155,7 +159,7 @@ public class Adherent {
      * @return the int
      */
 //Methodes
-    public int getNombreEmprunts(){
+    public int getNombreEmprunts() {
         return empruntsEnCours.size();
     }
 

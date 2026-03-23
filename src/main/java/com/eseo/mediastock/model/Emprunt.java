@@ -8,17 +8,17 @@ import java.time.LocalDate;
  * The type Emprunt.
  */
 public class Emprunt {
+    private final LocalDate dateDebut;
+    private final LocalDate dateRetour;
     private int id;
     private Adherent emprunteur;
     private Exemplaire exemplaire;
-    private final LocalDate dateDebut;
-    private final LocalDate dateRetour;
     private EnumDispo statut;
 
     /**
      * Instantiates a new Emprunt.
      */
-    public Emprunt(){
+    public Emprunt() {
         this.dateDebut = LocalDate.now();
         this.dateRetour = LocalDate.now().plusMonths(2);
         this.statut = EnumDispo.EMPRUNTE;
@@ -33,7 +33,7 @@ public class Emprunt {
      * @param dateDebut  the date debut
      * @param dateRetour the date retour
      */
-    public Emprunt(int id, Adherent emprunteur, Exemplaire exemplaire,LocalDate dateDebut,LocalDate dateRetour) {
+    public Emprunt(int id, Adherent emprunteur, Exemplaire exemplaire, LocalDate dateDebut, LocalDate dateRetour) {
         this.id = id;
         this.emprunteur = emprunteur;
         this.exemplaire = exemplaire;
@@ -47,14 +47,18 @@ public class Emprunt {
      *
      * @return the id
      */
-    public int getId() {return id;}
+    public int getId() {
+        return id;
+    }
 
     /**
      * Gets emprunteur.
      *
      * @return the emprunteur
      */
-    public Adherent getEmprunteur() {return emprunteur;}
+    public Adherent getEmprunteur() {
+        return emprunteur;
+    }
 
     /**
      * Sets emprunteur.
@@ -70,7 +74,9 @@ public class Emprunt {
      *
      * @return the exemplaire
      */
-    public Exemplaire getExemplaire() {return exemplaire;}
+    public Exemplaire getExemplaire() {
+        return exemplaire;
+    }
 
     /**
      * Sets exemplaire.
@@ -104,7 +110,9 @@ public class Emprunt {
      *
      * @return the status dispo
      */
-    public  EnumDispo getStatusDispo() {return statut;}
+    public EnumDispo getStatusDispo() {
+        return statut;
+    }
 
     /**
      * Sets status dispo.
@@ -121,7 +129,7 @@ public class Emprunt {
      * @return the boolean
      */
 //Méthodes
-    public boolean estEnRetard(){
+    public boolean estEnRetard() {
         return dateRetour.isBefore(LocalDate.now()) && this.statut == EnumDispo.EMPRUNTE;
     }
 

@@ -19,7 +19,7 @@ public class Livre extends Produit {
      * Instantiates a new Livre.
      */
 // Constructeurs
-    public Livre(){
+    public Livre() {
     }
 
     /**

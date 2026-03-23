@@ -21,13 +21,11 @@ import java.util.concurrent.CompletableFuture;
  */
 public class AjouterProduitController implements Initializable {
 
+    private final String STYLE_LABEL = "-fx-font-size: 15px; -fx-text-fill: #ffcc00;";
     @FXML
     private VBox containerFormulaire;
     @FXML
     private ComboBox<String> ChoiceAddProduit;
-
-    private final String STYLE_LABEL = "-fx-font-size: 15px; -fx-text-fill: #ffcc00;";
-
     // Instance du service
     private StockService stockService;
 
