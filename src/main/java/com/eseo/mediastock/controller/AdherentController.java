@@ -29,7 +29,12 @@ import javafx.util.Callback;
 import java.util.List;
 
 /**
- * The type Adherent controller.
+ * Contrôleur gérant la vue des adhérents.
+ * Permet l'affichage, la création, la suppression et la consultation de l'historique
+ * des emprunts pour les adhérents de la bibliothèque.
+ *
+ * @author tom
+ * @date 2026/03/23
  */
 public class AdherentController {
 
@@ -71,7 +76,8 @@ public class AdherentController {
     private FilteredList<Adherent> filteredData;
 
     /**
-     * Initialize.
+     * Initialise le contrôleur.
+     * Configure les colonnes du tableau, la barre de recherche, la pagination et charge les données initiales.
      */
     @FXML
     public void initialize() {
@@ -404,9 +410,10 @@ public class AdherentController {
     }
 
     /**
-     * Handlecreer.
+     * Gère l'action de création d'un nouvel adhérent.
+     * Vérifie les champs obligatoires et enregistre l'adhérent via le service.
      *
-     * @param event the event
+     * @param event L'événement déclenché par le clic sur le bouton de création.
      */
     @FXML
     public void handlecreer(ActionEvent event) {
@@ -433,9 +440,10 @@ public class AdherentController {
     }
 
     /**
-     * Handlesupprimer.
+     * Gère l'action de suppression d'un adhérent.
+     * Récupère l'adhérent sélectionné dans le tableau et le supprime via le service.
      *
-     * @param event the event
+     * @param event L'événement déclenché par le clic sur le bouton de suppression.
      */
     @FXML
     public void handlesupprimer(ActionEvent event) {
@@ -472,7 +480,11 @@ public class AdherentController {
     }
 
     /**
-     * The type Emprunt historique.
+     * Représente l'historique d'un emprunt pour l'affichage dans le tableau dédié.
+     *
+     * @param titreProduit Le code barre ou l'identifiant du produit emprunté.
+     * @param dateEmprunt  La date à laquelle l'emprunt a été effectué.
+     * @param statut       Le statut actuel de l'emprunt (ex: EN_COURS, RETOURNE).
      */
     public record EmpruntHistorique(String titreProduit, String dateEmprunt, String statut) {
     }
