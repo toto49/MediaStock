@@ -28,6 +28,9 @@ import javafx.util.Callback;
 
 import java.util.List;
 
+/**
+ * The type Adherent controller.
+ */
 public class AdherentController {
 
     private final int LIGNES_PAR_PAGE = 50;
@@ -67,6 +70,9 @@ public class AdherentController {
     private final ObservableList<Adherent> masterData = FXCollections.observableArrayList();
     private FilteredList<Adherent> filteredData;
 
+    /**
+     * Initialize.
+     */
     @FXML
     public void initialize() {
         adherentService = new AdherentService();
@@ -397,6 +403,11 @@ public class AdherentController {
         }
     }
 
+    /**
+     * Handlecreer.
+     *
+     * @param event the event
+     */
     @FXML
     public void handlecreer(ActionEvent event) {
         lblMessage.setText("");
@@ -421,6 +432,11 @@ public class AdherentController {
         }
     }
 
+    /**
+     * Handlesupprimer.
+     *
+     * @param event the event
+     */
     @FXML
     public void handlesupprimer(ActionEvent event) {
         lblMessage.setText("");
@@ -455,6 +471,9 @@ public class AdherentController {
         }
     }
 
+    /**
+     * The type Emprunt historique.
+     */
     public record EmpruntHistorique(String titreProduit, String dateEmprunt, String statut) {
     }
 }

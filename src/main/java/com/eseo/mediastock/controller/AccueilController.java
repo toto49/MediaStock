@@ -7,6 +7,9 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
+/**
+ * The type Accueil controller.
+ */
 public class AccueilController {
     @FXML
     private Label labelBonjour;
@@ -23,6 +26,9 @@ public class AccueilController {
 
     private StockService stockService;
 
+    /**
+     * Initialize.
+     */
     @FXML
     public void initialize() {
         stockService = new StockService();

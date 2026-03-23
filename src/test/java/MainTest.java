@@ -4,9 +4,17 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 
+/**
+ * The type Main test.
+ */
 public class MainTest {
 
-    public static void main(String[] args) {
+    /**
+     * Main.
+     *
+     * @param args the args
+     */
+    static void main(String[] args) {
 
         try (Connection connection = DatabaseConnection.getConnection()) {
             if (connection != null) {

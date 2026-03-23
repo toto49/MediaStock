@@ -11,12 +11,22 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * The type Emprunt service.
+ */
 public class EmpruntService {
 
     private final EmpruntDAO empruntDAO = new EmpruntDAO();
     private final ExemplaireDAO exemplaireDAO = new ExemplaireDAO();
     private static final int MAX_EMPRUNTS = 5 ;
 
+    /**
+     * Peut emprunter boolean.
+     *
+     * @param adherent   the adherent
+     * @param exemplaire the exemplaire
+     * @return the boolean
+     */
     public boolean peutEmprunter(Adherent adherent, Exemplaire exemplaire){
         if (adherent.getNombreEmprunts() >= MAX_EMPRUNTS){return false;}
         for (Emprunt emprunt : adherent.getEmpruntsEnCours()){if (emprunt.estEnRetard()){return false;}}
@@ -24,6 +34,13 @@ public class EmpruntService {
         return exemplaire.estBonEtat();
     }
 
+    /**
+     * Enregistrer emprunt.
+     *
+     * @param adherent   the adherent
+     * @param exemplaire the exemplaire
+     * @throws SQLException the sql exception
+     */
     public void enregistrerEmprunt(Adherent adherent, Exemplaire exemplaire) throws SQLException {
         if (peutEmprunter(adherent, exemplaire)){
             Emprunt emprunt = new Emprunt();
@@ -42,6 +59,12 @@ public class EmpruntService {
         }
     }
 
+    /**
+     * Enregistrer retour.
+     *
+     * @param adherent the adherent
+     * @param emprunt  the emprunt
+     */
     public void enregistrerRetour(Adherent adherent, Emprunt emprunt) {
         if (adherent != null && emprunt != null && adherent.getId().equals(emprunt.getEmprunteur().getId())) {
 
@@ -59,14 +82,34 @@ public class EmpruntService {
         }
     }
 
+    /**
+     * Gets emprunts from adherent.
+     *
+     * @param adherent the adherent
+     * @return the emprunts from adherent
+     * @throws SQLException the sql exception
+     */
     public List<Emprunt> getEmpruntsFromAdherent(Adherent adherent) throws SQLException {
         return  empruntDAO.getEmpruntsByAdherent(adherent);
     }
 
+    /**
+     * Gets emprunts en retards.
+     *
+     * @return the emprunts en retards
+     * @throws SQLException the sql exception
+     */
     public List<Emprunt> getEmpruntsEnRetards() throws SQLException {
         return empruntDAO.trouverRetards(LocalDate.now());
     }
 
+    /**
+     * Gets emprunt actif.
+     *
+     * @param codeBarre the code barre
+     * @return the emprunt actif
+     * @throws SQLException the sql exception
+     */
     public Emprunt getEmpruntActif(String codeBarre) throws SQLException {
         return empruntDAO.trouverEmpruntEnCours(codeBarre);
     }

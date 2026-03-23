@@ -22,6 +22,9 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * The type Hello application.
+ */
 public class HelloApplication extends Application {
 
     private double xOffset = 0;
@@ -32,6 +35,11 @@ public class HelloApplication extends Application {
     private boolean isMaximized = false;
     private double savedX, savedY, savedWidth, savedHeight;
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         launch(args);
     }
@@ -68,6 +76,11 @@ public class HelloApplication extends Application {
         stage.show();
     }
 
+    /**
+     * Changer titre global.
+     *
+     * @param nouveauTitre the nouveau titre
+     */
     public static void changerTitreGlobal(String nouveauTitre) {
         String titreComplet = "MediaStock - " + nouveauTitre;
         if (lblTitreHeader != null) {
@@ -78,6 +91,12 @@ public class HelloApplication extends Application {
         }
     }
 
+    /**
+     * Changer page globale.
+     *
+     * @param nouvelleVue  the nouvelle vue
+     * @param nouveauTitre the nouveau titre
+     */
     public static void changerPageGlobale(Parent nouvelleVue, String nouveauTitre) {
         VBox.setVgrow(nouvelleVue, Priority.ALWAYS);
         if (rootGlobal != null && rootGlobal.getChildren().size() > 1) {

@@ -3,19 +3,37 @@ package com.eseo.mediastock.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
+/**
+ * The type Liste view controller.
+ */
 public class ListeViewController {
 
+    /**
+     * Button view livre.
+     *
+     * @param actionEvent the action event
+     */
     @FXML
     public void ButtonViewLivre(ActionEvent actionEvent) {
         // On passe le nom du fichier FXML ET le titre à afficher
         naviguerVers("livres", "Gestion des Livres");
     }
 
+    /**
+     * Button view dvd.
+     *
+     * @param actionEvent the action event
+     */
     @FXML
     public void ButtonViewDVD(ActionEvent actionEvent) {
         naviguerVers("dvd", "DVDthèque");
     }
 
+    /**
+     * Button view jeux.
+     *
+     * @param actionEvent the action event
+     */
     @FXML
     public void ButtonViewJeux(ActionEvent actionEvent) {
         naviguerVers("jeux", "Ludothèque");

@@ -6,13 +6,17 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Adherent dao.
+ */
 public class AdherentDAO {
 
     /**
      * MÉTHODE CREATE Adherent - Insère un nouvel adhérent avec son ID manuel
+     *
      * @param adherent - L'objet Adherent à sauvegarder
      * @throws SQLException - Si l'insertion échoue
-     **/
+     */
     public void createAdherent (Adherent adherent) throws SQLException {
         String sql = "INSERT INTO ADHERENT (id, num_tel, nom, prenom, email) VALUES (?, ?, ?, ?, ?)";
 
@@ -32,10 +36,10 @@ public class AdherentDAO {
 
     /**
      * MÉTHODE UPDATE - Met à jour un adhérent existant
+     *
      * @param adherent - L'objet Adherent avec les nouvelles valeurs
      * @throws SQLException - Si la mise à jour échoue
-     * **/
-
+     */
     public void updateAdherent (Adherent adherent) throws SQLException{
         String sql = "UPDATE ADHERENT SET num_tel = ?, nom = ?, prenom =?, email=? WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -53,9 +57,11 @@ public class AdherentDAO {
 
     /**
      * MÉTHODE COUNT - Compte le nombre d'adhérents inscrit l'année en cour
+     *
+     * @param annee the annee
      * @return int - Le nombre de lignes dans la table ADHERENT qui répondent a la condition
      * @throws SQLException - Si la requête échoue
-     * **/
+     */
     public int countAdherents (int annee) throws SQLException {
         String sql = "SELECT COUNT(*) FROM ADHERENT WHERE id LIKE ?";
 
@@ -71,11 +77,13 @@ public class AdherentDAO {
         }
         return 0;
     }
+
     /**
      * MÉTHODE DELETE - Supprime un adhérent par son ID
+     *
      * @param id - L'ID de l'adhérent à supprimer (format String, ex: "ADH-2026-001")
-     * @throws SQLException - Si la suppression échoue
      * @return boolean - true si suppression réussie, false sinon
+     * @throws SQLException - Si la suppression échoue
      */
     public boolean deleteAdherent(String id) throws SQLException {
         String sql = "DELETE FROM ADHERENT WHERE id = ?";
@@ -96,8 +104,7 @@ public class AdherentDAO {
      * @param id - L'identifiant de l'adhérent dans la base
      * @return Adherent - L'objet Adherent correspondant, ou null si non trouvé
      * @throws SQLException - Si la requête échoue
-     **/
-
+     */
     public Adherent GetByID(String id) throws SQLException {
         String sql = "SELECT * FROM ADHERENT WHERE id = ?";
 
@@ -125,8 +132,7 @@ public class AdherentDAO {
      *
      * @return List<Adherent> - Liste de tous les adhérents
      * @throws SQLException - Si la requête échoue
-     *
-     **/
+     */
     public List<Adherent> findAll() throws SQLException {
         //liste pour stocker les resultats
         List<Adherent> adherents = new ArrayList<>();

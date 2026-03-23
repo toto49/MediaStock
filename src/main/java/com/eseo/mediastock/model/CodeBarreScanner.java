@@ -19,7 +19,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
 import org.bytedeco.javacv.Java2DFrameConverter;
@@ -28,6 +27,9 @@ import org.bytedeco.javacv.OpenCVFrameGrabber;
 import java.awt.image.BufferedImage;
 import java.util.function.Consumer;
 
+/**
+ * The type Code barre scanner.
+ */
 public class CodeBarreScanner {
 
     private OpenCVFrameGrabber grabber;
@@ -40,6 +42,11 @@ public class CodeBarreScanner {
     // Pour renvoyer le résultat à la fenêtre principale
     private Consumer<String> onCodeScanned;
 
+    /**
+     * Ouvrir fenetre.
+     *
+     * @param onCodeScanned the on code scanned
+     */
     public void ouvrirFenetre(Consumer<String> onCodeScanned) {
         this.onCodeScanned = onCodeScanned;
         this.stage = new Stage();
@@ -162,6 +169,9 @@ public class CodeBarreScanner {
         }
     }
 
+    /**
+     * Stop webcam.
+     */
     public void stopWebcam() {
         isRunning = false;
         if (grabber != null) {

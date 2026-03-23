@@ -1,8 +1,16 @@
 package com.eseo.mediastock;
 
+/**
+ * The type Launcher.
+ */
 public class Launcher {
 
-    public static void main(String[] args) {
+    /**
+     * Main.
+     *
+     * @param args the args
+     */
+    static void main(String[] args) {
         HelloApplication.main(args);
     }
 }

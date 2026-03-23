@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The type Ajouter produit controller.
+ */
 public class AjouterProduitController implements Initializable {
 
     @FXML

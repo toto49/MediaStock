@@ -16,6 +16,9 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * The type Emprunt service test.
+ */
 public class EmpruntServiceTest {
 
     // Le service qu'on test
@@ -169,6 +172,8 @@ public class EmpruntServiceTest {
 
     /**
      * TEST : Vérifie qu'on peut enregistrer un emprunt normal
+     *
+     * @throws SQLException the sql exception
      */
     @Test
     void testEnregistrerEmprunt_Succes() throws SQLException {
@@ -207,6 +212,8 @@ public class EmpruntServiceTest {
 
     /**
      * TEST : Vérifie qu'on ne peut pas enregistrer un emprunt si les conditions ne sont pas remplies
+     *
+     * @throws SQLException the sql exception
      */
     @Test
     void testEnregistrerEmprunt_NonAutorise() throws SQLException {
@@ -245,6 +252,9 @@ public class EmpruntServiceTest {
         private EnumDispo statut = EnumDispo.DISPONIBLE;
         private int id = 1;
 
+        /**
+         * Instantiates a new Exemplaire mock.
+         */
         public ExemplaireMock() {
             super(0, new Produit() {}, "codeBarre", EnumEtat.BON, EnumDispo.DISPONIBLE);
         }
@@ -266,11 +276,40 @@ public class EmpruntServiceTest {
         @Override
         public int getId() { return id; }
 
-        // Méthodes pour configurer le mock
+        /**
+         * Sets dispo.
+         *
+         * @param d the d
+         */
+// Méthodes pour configurer le mock
         public void setDispo(boolean d) { this.dispo = d; }
+
+        /**
+         * Sets bon etat.
+         *
+         * @param b the b
+         */
         public void setBonEtat(boolean b) { this.bonEtat = b; }
-        public void setStatut(EnumDispo s) { this.statut = s; }
+
+        /**
+         * Gets statut.
+         *
+         * @return the statut
+         */
         public EnumDispo getStatut() { return statut; }
+
+        /**
+         * Sets statut.
+         *
+         * @param s the s
+         */
+        public void setStatut(EnumDispo s) { this.statut = s; }
+
+        /**
+         * Sets id.
+         *
+         * @param i the
+         */
         public void setId(int i) { this.id = i; }
     }
 
@@ -279,12 +318,27 @@ public class EmpruntServiceTest {
      * Simule les appels à la base de données
      */
     class EmpruntDAOMock extends EmpruntDAO {
+        /**
+         * The Add emprunt appele.
+         */
         boolean addEmpruntAppele = false;
+        /**
+         * The Save retour appele.
+         */
         boolean saveRetourAppele = false;
 
-        // Pour vérifier les paramètres
+        /**
+         * The Last adherent.
+         */
+// Pour vérifier les paramètres
         Adherent lastAdherent = null;
+        /**
+         * The Last exemplaire.
+         */
         Exemplaire lastExemplaire = null;
+        /**
+         * The Last emprunt.
+         */
         Emprunt lastEmprunt = null;
 
         @Override
@@ -308,7 +362,13 @@ public class EmpruntServiceTest {
      * Mock pour ExemplaireDAO
      */
     class ExemplaireDAOMock extends ExemplaireDAO {
+        /**
+         * The Update appele.
+         */
         boolean updateAppele = false;
+        /**
+         * The Last exemplaire.
+         */
         Exemplaire lastExemplaire = null;
 
         @Override
