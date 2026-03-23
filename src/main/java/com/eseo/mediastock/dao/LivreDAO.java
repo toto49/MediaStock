@@ -11,17 +11,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The type Livre dao.
- */
 public class LivreDAO {
 
-    /**
-     * Add produit.
-     *
-     * @param p the p
-     * @throws SQLException the sql exception
-     */
     public static void addProduit(Produit p) throws SQLException {
         Livre l = (Livre) p;
         String sql = "INSERT INTO PRODUIT (type_produit, titre, description, editeur, annee_sortie, isbn, auteur, nb_pages, format) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -51,13 +42,6 @@ public class LivreDAO {
         }
     }
 
-    /**
-     * Get by id livre.
-     *
-     * @param id the id
-     * @return the livre
-     * @throws SQLException the sql exception
-     */
     public static Livre GetByID(int id) throws SQLException {
         Livre livre = null;
         String sql = "SELECT * FROM PRODUIT WHERE id = ?";
@@ -79,12 +63,6 @@ public class LivreDAO {
         return livre;
     }
 
-    /**
-     * Produit object list list.
-     *
-     * @return the list
-     * @throws SQLException the sql exception
-     */
     public static List<Livre> ProduitObjectList() throws SQLException {
         String sql = "SELECT * FROM PRODUIT WHERE type_produit = ?";
         List<Livre> livres;
@@ -122,12 +100,6 @@ public class LivreDAO {
         return livres;
     }
 
-    /**
-     * Update produit.
-     *
-     * @param p the p
-     * @throws SQLException the sql exception
-     */
     public static void updateProduit(Produit p) throws SQLException {
         Livre l = (Livre) p;
         String sql = "UPDATE PRODUIT SET titre = ?, description = ?, editeur = ?, annee_sortie = ?, isbn = ?, auteur = ?, nb_pages = ?, format = ? WHERE id = ? AND type_produit = 'Livre'";
@@ -146,12 +118,6 @@ public class LivreDAO {
         }
     }
 
-    /**
-     * Delete produit.
-     *
-     * @param p the p
-     * @throws SQLException the sql exception
-     */
     public static void deleteProduit(Produit p) throws SQLException {
         String sql = "UPDATE EXEMPLAIRE SET statut = 'RETIRE' WHERE id_produit = ?";
 
@@ -162,12 +128,6 @@ public class LivreDAO {
         }
     }
 
-    /**
-     * Count livres int.
-     *
-     * @return the int
-     * @throws SQLException the sql exception
-     */
     public int countLivres() throws SQLException {
         String sql = "SELECT COUNT(*) FROM PRODUIT WHERE type_produit = 'Livre'";
         int count = 0;

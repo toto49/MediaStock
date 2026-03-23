@@ -16,9 +16,6 @@ import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Optional;
 
-/**
- * The type Parametre controller.
- */
 public class ParametreController {
 
     private final AdminService adminService = new AdminService();
@@ -66,11 +63,6 @@ public class ParametreController {
     }
 
 
-    /**
-     * Button edit param.
-     *
-     * @param actionEvent the action event
-     */
     @FXML
     public void ButtonEditParam(ActionEvent actionEvent) {
         Admin adminActuel = UserSession.getAdminConnecte();
@@ -151,11 +143,6 @@ public class ParametreController {
         }
     }
 
-    /**
-     * Button edit password.
-     *
-     * @param actionEvent the action event
-     */
     @FXML
     public void ButtonEditPassword(ActionEvent actionEvent) {
         Admin adminActuel = UserSession.getAdminConnecte();

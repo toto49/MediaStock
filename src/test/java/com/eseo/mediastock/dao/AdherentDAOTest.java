@@ -9,33 +9,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * PLAN DE TEST - AdherentDAOTest
- * ===================================================
- * <p>
- * OBJECTIF : Vérifier le bon fonctionnement de toutes les méthodes CRUD
- * de la classe AdherentDAO (Create, Read, Update, Delete)
- * <p>
- * ENVIRONNEMENT DE TEST :
- * - Base de données : test (nettoyage automatique après exécution)
- * - Données : générées dynamiquement avec timestamps uniques
- * - Nettoyage : automatique via @AfterAll
- * - Ordre : défini par @Order (dépendances entre tests)
- * <p>
- * COUVERTURE DES TESTS :
- * - testCreateAdherent    → CREATE
- * - testGetByID           → READ (existant)
- * - testGetByIDInexistant → READ (inexistant)
- * - testUpdateAdherent    → UPDATE
- * - testValeursSpeciales  → CREATE (cas limites)
- * - testCreationsMultiples→ CREATE (batch)
- * - testDeleteAdherent    → DELETE
- * - testFindAll           → READ (tous)
- * <p>
- * NETTOYAGE AUTOMATIQUE :
- * Les IDs créés sont stockés dans idsACleaner et supprimés après tous les tests
- * ===================================================
- */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdherentDAOTest {
 
@@ -44,21 +17,11 @@ public class AdherentDAOTest {
     private static AdherentDAO dao;
     private static String idTest;
 
-    /**
-     * Sets .
-     */
     @BeforeAll
     static void setup() {
         dao = new AdherentDAO();
     }
 
-    /**
-     * NETTOYAGE FINAL
-     * Supprime tous les adhérents créés pendant les tests
-     * Exécuté une seule fois après tous les tests
-     *
-     * @throws SQLException the sql exception
-     */
     @AfterAll
     static void nettoyage() throws SQLException {
         System.out.println("NETTOYAGE AUTOMATIQUE");
@@ -89,49 +52,16 @@ public class AdherentDAOTest {
         idsACleaner.clear();
     }
 
-    /**
-     * Sets up.
-     */
     @BeforeEach
     void setUp() {
         System.out.println(" Nouveau test");
     }
 
-    /**
-     * Tear down.
-     */
     @AfterEach
     void tearDown() {
         System.out.println("Test terminé ");
     }
 
-    /**
-     * ===================================================
-     * TEST 1 : CREATE - Création d'un adhérent
-     * ===================================================
-     * <p>
-     * OBJECTIF : Vérifier l'insertion d'un nouvel adhérent
-     * <p>
-     * DONNÉES :
-     * - ID : généré automatiquement (timestamp)
-     * - Nom : "LicornTest"
-     * - Prénom : "MorgianeTest"
-     * - Email : "email@test.com"
-     * - Téléphone : "0123456789"
-     * <p>
-     * RÉSULTAT ATTENDU :
-     * - L'adhérent est créé avec un ID non null
-     * - Toutes les données sont correctement sauvegardées
-     * <p>
-     * VÉRIFICATIONS :
-     * - assertNotNull(a.getId()) → ID généré
-     * <p>
-     * DÉPENDANCES :
-     * - Aucune (premier test)
-     * ===================================================
-     *
-     * @throws SQLException the sql exception
-     */
     @Test
     @Order(1)
     void testCreateAdherent() throws SQLException {
@@ -158,30 +88,6 @@ public class AdherentDAOTest {
         System.out.println(" Tél : " + a.getNumTel());
     }
 
-    /**
-     * ===================================================
-     * TEST 2 : READ - Recherche par ID (existant)
-     * ===================================================
-     * <p>
-     * OBJECTIF : Vérifier la récupération d'un adhérent existant
-     * <p>
-     * DONNÉES :
-     * - ID : idTest (créé au test 1)
-     * <p>
-     * RÉSULTAT ATTENDU :
-     * - Adhérent trouvé
-     * - Toutes ses données sont identiques à la création
-     * <p>
-     * VÉRIFICATIONS :
-     * - assertNotNull(trouve) → adhérent trouvé
-     * - assertEquals sur tous les champs (id, nom, prénom, email, tel)
-     * <p>
-     * PRÉ-REQUIS :
-     * - Le test 1 doit avoir réussi (idTest défini)
-     * ===================================================
-     *
-     * @throws SQLException the sql exception
-     */
     @Test
     @Order(2)
     void testGetByID() throws SQLException {
@@ -204,28 +110,6 @@ public class AdherentDAOTest {
         System.out.println(" Nom : " + trouve.getNom());
     }
 
-    /**
-     * ===================================================
-     * TEST 3 : READ - Recherche par ID (inexistant)
-     * ===================================================
-     * <p>
-     * OBJECTIF : Vérifier le comportement avec un ID inexistant
-     * <p>
-     * DONNÉES :
-     * - ID : "ID-QUI-NEXISTE-PAS" (ID fictif)
-     * <p>
-     * RÉSULTAT ATTENDU :
-     * - Retour null (pas d'exception)
-     * <p>
-     * VÉRIFICATIONS :
-     * - assertNull(trouve) → aucun adhérent trouvé
-     * <p>
-     * PRÉ-REQUIS :
-     * - Aucun (test indépendant)
-     * ===================================================
-     *
-     * @throws SQLException the sql exception
-     */
     @Test
     @Order(3)
     void testGetByIDInexistant() throws SQLException {
@@ -238,30 +122,6 @@ public class AdherentDAOTest {
         System.out.println(" ID inexistant retourne null (normal)");
     }
 
-    /**
-     * ===================================================
-     * TEST 4 : UPDATE - Mise à jour d'un adhérent
-     * ===================================================
-     * <p>
-     * OBJECTIF : Vérifier la modification des données d'un adhérent
-     * <p>
-     * DONNÉES :
-     * - ID : idTest (créé au test 1)
-     * - Modification : nom → "LicornTestModif"
-     * <p>
-     * RÉSULTAT ATTENDU :
-     * - Nom modifié avec succès
-     * - Les autres données restent inchangées
-     * <p>
-     * VÉRIFICATIONS :
-     * - assertEquals("LicornTestModif", modifie.getNom())
-     * <p>
-     * PRÉ-REQUIS :
-     * - Le test 1 doit avoir réussi (idTest défini)
-     * ===================================================
-     *
-     * @throws SQLException the sql exception
-     */
     @Test
     @Order(4)
     void testUpdateAdherent() throws SQLException {
@@ -291,32 +151,6 @@ public class AdherentDAOTest {
         System.out.println(" Nouveau nom : " + modifie.getNom());
     }
 
-    /**
-     * ===================================================
-     * TEST 5 : CREATE - Données spéciales (accents, chiffres, longs)
-     * ===================================================
-     * <p>
-     * OBJECTIF : Vérifier que les données avec caractères spéciaux sont bien gérées
-     * <p>
-     * SCÉNARIOS TESTÉS :
-     * 1. Caractères accentués (Étienne, François)
-     * 2. Chiffres dans le nom (User123, Test456)
-     * 3. Email très long (email.tres.tres.long@test.domain.com)
-     * 4. Téléphone avec format spécial (+33 6 12 34 56 78)
-     * <p>
-     * RÉSULTAT ATTENDU :
-     * - Tous les adhérents sont créés avec succès
-     * - Leurs données sont correctement sauvegardées
-     * <p>
-     * VÉRIFICATIONS :
-     * - assertNotNull(id) pour chaque création
-     * <p>
-     * PRÉ-REQUIS :
-     * - Aucun (test indépendant)
-     * ===================================================
-     *
-     * @throws SQLException the sql exception
-     */
     @Test
     @Order(5)
     void testValeursSpeciales() throws SQLException {
@@ -349,30 +183,6 @@ public class AdherentDAOTest {
         System.out.println(" Adhérent avec email long créé : " + longEmail.getId());
     }
 
-    /**
-     * ===================================================
-     * TEST 6 : CREATE - Créations multiples
-     * ===================================================
-     * <p>
-     * OBJECTIF : Vérifier l'insertion de plusieurs adhérents à la suite
-     * <p>
-     * DONNÉES :
-     * - 3 adhérents avec des IDs et données différents
-     * <p>
-     * RÉSULTAT ATTENDU :
-     * - Les 3 adhérents sont créés avec des IDs non null
-     * - On peut les retrouver individuellement
-     * <p>
-     * VÉRIFICATIONS :
-     * - assertNotNull pour chaque ID
-     * - Récupération individuelle réussie pour chacun
-     * <p>
-     * PRÉ-REQUIS :
-     * - Aucun (test indépendant)
-     * ===================================================
-     *
-     * @throws SQLException the sql exception
-     */
     @Test
     @Order(6)
     void testCreationsMultiples() throws SQLException {
@@ -416,33 +226,6 @@ public class AdherentDAOTest {
         System.out.println(" Tous retrouvés individuellement");
     }
 
-    /**
-     * ===================================================
-     * TEST 7 : DELETE - Suppression d'un adhérent
-     * ===================================================
-     * <p>
-     * OBJECTIF : Vérifier la suppression d'un adhérent
-     * <p>
-     * PROCÉDURE :
-     * 1. Créer un adhérent temporaire
-     * 2. Vérifier qu'il existe
-     * 3. Le supprimer
-     * 4. Vérifier qu'il n'existe plus
-     * <p>
-     * RÉSULTAT ATTENDU :
-     * - Suppression réussie (true)
-     * - Adhérent introuvable après suppression
-     * <p>
-     * VÉRIFICATIONS :
-     * - assertTrue(supprime)
-     * - assertNull(apres)
-     * <p>
-     * PRÉ-REQUIS :
-     * - Aucun (test indépendant)
-     * ===================================================
-     *
-     * @throws SQLException the sql exception
-     */
     @Test
     @Order(7)
     void testDeleteAdherent() throws SQLException {
@@ -471,27 +254,6 @@ public class AdherentDAOTest {
         System.out.println("Adhérent " + aSupprimer.getId() + " supprimé avec succès");
     }
 
-    /**
-     * ===================================================
-     * TEST 8 : READ - Liste de tous les adhérents
-     * ===================================================
-     * <p>
-     * OBJECTIF : Vérifier la récupération de tous les adhérents
-     * <p>
-     * RÉSULTAT ATTENDU :
-     * - Liste non null
-     * - Liste non vide (contient au moins l'adhérent du test 1)
-     * <p>
-     * VÉRIFICATIONS :
-     * - assertNotNull(liste)
-     * - assertTrue(liste.size() > 0)
-     * <p>
-     * PRÉ-REQUIS :
-     * - Le test 1 doit avoir réussi (au moins un adhérent en base)
-     * ===================================================
-     *
-     * @throws SQLException the sql exception
-     */
     @Test
     @Order(8)
     void testFindAll() throws SQLException {

@@ -5,40 +5,6 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * PLAN DE TEST - AdminServiceTest
- * ===================================================
- * <p>
- * OBJECTIF : Vérifier le bon fonctionnement du service AdminService
- * qui gère la logique métier des administrateurs
- * <p>
- * FONCTIONNALITÉS TESTÉES :
- * - Création d'admin avec validation
- * - Authentification (login)
- * - Récupération par ID
- * - Changement de mot de passe
- * - Vérification d'email existant
- * - Validation des données
- * - Mise à jour complète
- * - Suppression
- * <p>
- * ENVIRONNEMENT DE TEST :
- * - Base de données : test
- * - Données : constantes définies (EMAIL_TEST, MDP_TEST, etc.)
- * - Nettoyage : suppression de l'admin de test après tous les tests
- * - Ordre : défini par @Order (dépendances entre tests)
- * <p>
- * COUVERTURE DES TESTS :
- * - testCreerAdmin          → CREATE (réussite)
- * - testLogin               → AUTHENTIFICATION (succès/échec)
- * - testGetAdminParId       → READ (par ID)
- * - testChangerMotDePasse   → UPDATE (mot de passe)
- * - testEmailExistant       → VALIDATION (email dupliqué)
- * - testDonneesInvalides    → VALIDATION (données incorrectes)
- * - testMettreAJourAdmin    → UPDATE (tous champs)
- * - testSupprimerAdmin      → DELETE
- * ===================================================
- */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdminServiceTest {
 
@@ -50,20 +16,12 @@ public class AdminServiceTest {
     private static AdminService adminService;
     private static int idAdminTest = 0;
 
-    /**
-     * Sets .
-     */
     @BeforeAll
     static void setup() {
         adminService = new AdminService();
         System.out.println("DÉMARRAGE DES TESTS ADMIN SERVICE");
     }
 
-    /**
-     * NETTOYAGE FINAL
-     * Supprime l'admin créé pendant les tests
-     * Exécuté une seule fois après tous les tests
-     */
     @AfterAll
     static void cleanup() {
         System.out.println("NETTOYAGE ");
@@ -77,36 +35,6 @@ public class AdminServiceTest {
         }
     }
 
-    /**
-     * ===================================================
-     * TEST 1 : CREATE - Création d'un administrateur
-     * ===================================================
-     * <p>
-     * OBJECTIF : Vérifier la création d'un admin avec toutes ses données
-     * <p>
-     * DONNÉES :
-     * - Email : EMAIL_TEST ("test@admin.com")
-     * - Mot de passe : MDP_TEST ("password123")
-     * - Nom : NOM_TEST ("Dupont")
-     * - Prénom : PRENOM_TEST ("Jean")
-     * - Téléphone : TEL_TEST ("612345678")
-     * <p>
-     * RÉSULTATS ATTENDUS :
-     * - Aucune exception lancée
-     * - Admin créé avec succès
-     * - ID généré > 0
-     * - Login réussi après création
-     * <p>
-     * VÉRIFICATIONS :
-     * - assertDoesNotThrow
-     * - assertNotNull(admin)
-     * - assertEquals(EMAIL_TEST, admin.getEmail())
-     * - assertTrue(idAdminTest > 0)
-     * <p>
-     * DÉPENDANCES :
-     * - Aucune (premier test)
-     * ===================================================
-     */
     @Test
     @Order(1)
     void testCreerAdmin() {
@@ -129,30 +57,6 @@ public class AdminServiceTest {
         System.out.println("ID généré: " + idAdminTest);
     }
 
-    /**
-     * ===================================================
-     * TEST 2 : AUTHENTIFICATION - Login
-     * ===================================================
-     * <p>
-     * OBJECTIF : Vérifier l'authentification avec bons et mauvais identifiants
-     * <p>
-     * SCÉNARIOS TESTÉS :
-     * 1. Connexion réussie avec EMAIL_TEST et MDP_TEST
-     * 2. Échec de connexion avec EMAIL_TEST et "mauvaisMdp"
-     * <p>
-     * RÉSULTATS ATTENDUS :
-     * - Bons identifiants → admin retourné
-     * - Mauvais mot de passe → null
-     * <p>
-     * VÉRIFICATIONS :
-     * - assertNotNull(admin)
-     * - assertEquals(EMAIL_TEST, admin.getEmail())
-     * - assertNull(adminFail)
-     * <p>
-     * PRÉ-REQUIS :
-     * - Le test 1 doit avoir réussi (admin créé avec EMAIL_TEST)
-     * ===================================================
-     */
     @Test
     @Order(2)
     void testLogin() {
@@ -170,28 +74,6 @@ public class AdminServiceTest {
         System.out.println("Échec avec mauvais mot de passe");
     }
 
-    /**
-     * ===================================================
-     * TEST 3 : READ - Récupération par ID
-     * ===================================================
-     * <p>
-     * OBJECTIF : Vérifier la récupération d'un admin par son ID
-     * <p>
-     * DONNÉES :
-     * - ID : idAdminTest (créé au test 1)
-     * <p>
-     * RÉSULTATS ATTENDUS :
-     * - Admin trouvé
-     * - Toutes ses données correspondent à la création
-     * <p>
-     * VÉRIFICATIONS :
-     * - assertNotNull(admin)
-     * - assertEquals sur email, nom, prénom, téléphone
-     * <p>
-     * PRÉ-REQUIS :
-     * - Le test 1 doit avoir réussi (idAdminTest défini)
-     * ===================================================
-     */
     @Test
     @Order(3)
     void testGetAdminParId() {
@@ -208,35 +90,6 @@ public class AdminServiceTest {
         System.out.println("Admin trouvé avec ID: " + idAdminTest);
     }
 
-    /**
-     * ===================================================
-     * TEST 4 : UPDATE - Changement de mot de passe
-     * ===================================================
-     * <p>
-     * OBJECTIF : Vérifier le changement de mot de passe
-     * <p>
-     * DONNÉES :
-     * - ID : idAdminTest
-     * - Ancien mot de passe : MDP_TEST
-     * - Nouveau mot de passe : "nouveauMdp123"
-     * <p>
-     * PROCÉDURE :
-     * 1. Changer le mot de passe
-     * 2. Vérifier la connexion avec nouveau mot de passe
-     * 3. Remettre l'ancien mot de passe
-     * <p>
-     * RÉSULTATS ATTENDUS :
-     * - Aucune exception
-     * - Login réussi avec nouveau mot de passe
-     * <p>
-     * VÉRIFICATIONS :
-     * - assertDoesNotThrow
-     * - assertNotNull(admin) avec nouveau mdp
-     * <p>
-     * PRÉ-REQUIS :
-     * - Le test 1 doit avoir réussi (idAdminTest défini)
-     * ===================================================
-     */
     @Test
     @Order(4)
     void testChangerMotDePasse() {
@@ -265,28 +118,6 @@ public class AdminServiceTest {
         System.out.println("Mot de passe remis à l'original");
     }
 
-    /**
-     * ===================================================
-     * TEST 5 : VALIDATION - Email existant
-     * ===================================================
-     * <p>
-     * OBJECTIF : Vérifier qu'on ne peut pas créer deux admins avec le même email
-     * <p>
-     * DONNÉES :
-     * - Email existant : EMAIL_TEST
-     * - Autres données différentes
-     * <p>
-     * RÉSULTAT ATTENDU :
-     * - Exception IllegalArgumentException avec message "existe déjà"
-     * <p>
-     * VÉRIFICATIONS :
-     * - assertThrows(IllegalArgumentException.class)
-     * - exception.getMessage().contains("existe déjà")
-     * <p>
-     * PRÉ-REQUIS :
-     * - Le test 1 doit avoir réussi (admin avec EMAIL_TEST créé)
-     * ===================================================
-     */
     @Test
     @Order(5)
     void testEmailExistant() {
@@ -301,30 +132,6 @@ public class AdminServiceTest {
         System.out.println("Email existant détecté: " + exception.getMessage());
     }
 
-    /**
-     * ===================================================
-     * TEST 6 : VALIDATION - Données invalides
-     * ===================================================
-     * <p>
-     * OBJECTIF : Vérifier que les validations fonctionnent pour
-     * toutes les données incorrectes
-     * <p>
-     * SCÉNARIOS TESTÉS :
-     * 1. Email vide → IllegalArgumentException
-     * 2. Téléphone invalide → IllegalArgumentException
-     * 3. Nom vide → IllegalArgumentException
-     * 4. Prénom vide → IllegalArgumentException
-     * <p>
-     * RÉSULTATS ATTENDUS :
-     * - Chaque cas lance une exception avec message approprié
-     * <p>
-     * VÉRIFICATIONS :
-     * - assertThrows pour chaque cas
-     * <p>
-     * DÉPENDANCES :
-     * - Aucune (test indépendant)
-     * ===================================================
-     */
     @Test
     @Order(6)
     void testDonneesInvalides() {
@@ -355,39 +162,6 @@ public class AdminServiceTest {
         System.out.println("Prénom vide détecté: " + e5.getMessage());
     }
 
-    /**
-     * ===================================================
-     * TEST 7 : UPDATE - Mise à jour complète
-     * ===================================================
-     * <p>
-     * OBJECTIF : Vérifier la mise à jour de toutes les informations d'un admin
-     * <p>
-     * DONNÉES MODIFIÉES :
-     * - Email : "nouveau@test.com"
-     * - Mot de passe : "nouveauMdp"
-     * - Nom : "Martin"
-     * - Prénom : "Pierre"
-     * - Téléphone : "987654321"
-     * <p>
-     * PROCÉDURE :
-     * 1. Mettre à jour l'admin
-     * 2. Vérifier que toutes les données ont changé
-     * 3. Vérifier la connexion avec nouveau mot de passe
-     * <p>
-     * RÉSULTATS ATTENDUS :
-     * - Aucune exception
-     * - Tous les champs modifiés
-     * - Login réussi avec nouveau mot de passe
-     * <p>
-     * VÉRIFICATIONS :
-     * - assertDoesNotThrow
-     * - assertEquals sur tous les champs
-     * - assertNotNull(loginTest)
-     * <p>
-     * PRÉ-REQUIS :
-     * - Le test 1 doit avoir réussi (idAdminTest défini)
-     * ===================================================
-     */
     @Test
     @Order(7)
     void testMettreAJourAdmin() {
@@ -431,37 +205,6 @@ public class AdminServiceTest {
 
     }
 
-    /**
-     * ===================================================
-     * TEST 8 : DELETE - Suppression d'un administrateur
-     * ===================================================
-     * <p>
-     * OBJECTIF : Vérifier la suppression d'un admin
-     * <p>
-     * PROCÉDURE :
-     * 1. Créer un admin temporaire avec email unique
-     * 2. Vérifier qu'il existe (login)
-     * 3. Le supprimer
-     * 4. Vérifier qu'il n'existe plus (login null)
-     * <p>
-     * DONNÉES TEMPORAIRES :
-     * - Email : "temp@suppression.com"
-     * - Mot de passe : "tempMdp123"
-     * - Nom : "Temp", Prénom : "Admin", Tél : "111222333"
-     * <p>
-     * RÉSULTATS ATTENDUS :
-     * - Suppression réussie (pas d'exception)
-     * - Admin introuvable après suppression
-     * <p>
-     * VÉRIFICATIONS :
-     * - assertNotNull(adminTemp) avant suppression
-     * - assertDoesNotThrow lors de la suppression
-     * - assertNull(adminSupprime) après suppression
-     * <p>
-     * DÉPENDANCES :
-     * - Aucune (test indépendant)
-     * ===================================================
-     */
     @Test
     @Order(8)
     void testSupprimerAdmin() {

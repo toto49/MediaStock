@@ -7,26 +7,15 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * The type Adherent service.
- */
 public class AdherentService {
 
     private final AdherentDAO adherentDAO;
 
-    /**
-     * Instantiates a new Adherent service.
-     */
-// Constructeur
+    // Constructeur
     public AdherentService() {
         this.adherentDAO = new AdherentDAO();
     }
 
-    /**
-     * Génère un numéro d'adhérent unique au format ADH-ANNEE-NUMERO
-     *
-     * @return the string
-     */
     public String generateNumAdherent() {
         int annee = LocalDate.now().getYear();
         int totalAdherents = 0;
@@ -42,15 +31,6 @@ public class AdherentService {
         return String.format("ADH-%d-%03d", annee, numeroSequence);
     }
 
-    /**
-     * Inscrit un nouvel adhérent
-     *
-     * @param nom       the nom
-     * @param prenom    the prenom
-     * @param email     the email
-     * @param telephone the telephone
-     * @throws SQLException the sql exception
-     */
     public void inscrireAdherent(String nom, String prenom, String email, String telephone) throws SQLException {
         // Génération de l'ID unique
         String numAdherent = generateNumAdherent();
@@ -65,45 +45,20 @@ public class AdherentService {
         System.out.println("   ID attribué: " + nouvelAdherent.getId());
     }
 
-    /**
-     * Supprime un adhérent par son ID
-     *
-     * @param id the id
-     * @throws SQLException the sql exception
-     */
     public void supprimerAdherent(String id) throws SQLException {
         adherentDAO.deleteAdherent(id);
         System.out.println("Adhérent " + id + " supprimé avec succès");
     }
 
-    /**
-     * Met à jour les informations d'un adhérent
-     *
-     * @param adherent the adherent
-     * @throws SQLException the sql exception
-     */
     public void mettreAJourAdherent(Adherent adherent) throws SQLException {
         adherentDAO.updateAdherent(adherent);
         System.out.println("Adhérent " + adherent.getId() + " mis à jour avec succès");
     }
 
-    /**
-     * Récupère tous les adhérents
-     *
-     * @return the all adherents
-     * @throws SQLException the sql exception
-     */
     public List<Adherent> getAllAdherents() throws SQLException {
         return adherentDAO.findAll();
     }
 
-    /**
-     * Gets adherent by id.
-     *
-     * @param id the id
-     * @return the adherent by id
-     * @throws SQLException the sql exception
-     */
     public Adherent getAdherentById(String id) throws SQLException {
         for (Adherent a : adherentDAO.findAll()) {
             if (a.getId().equals(id)) {

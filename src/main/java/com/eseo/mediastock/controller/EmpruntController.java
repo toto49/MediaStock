@@ -21,9 +21,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The type Emprunt controller.
- */
 public class EmpruntController {
 
     private final int LIGNES_PAR_PAGE = 50;
@@ -63,9 +60,6 @@ public class EmpruntController {
     @FXML
     private Pagination paginationRetards;
 
-    /**
-     * Initialize.
-     */
     @FXML
     public void initialize() {
         colNumAdherent.setCellValueFactory(cellData ->
@@ -289,9 +283,6 @@ public class EmpruntController {
         });
     }
 
-    /**
-     * The type Retard item.
-     */
     public record RetardItem(String numAdherent, String nomAdherent, String exemplaire, String dateLimite,
                              int joursRetard) {
     }

@@ -6,9 +6,6 @@ import javafx.scene.control.Pagination;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-/**
- * The type Dvd controller.
- */
 public class DVDController extends AbstractProduitController<DVD> {
 
     @FXML
@@ -18,9 +15,6 @@ public class DVDController extends AbstractProduitController<DVD> {
     @FXML
     private TableColumn<DVD, Void> colAction;
 
-    /**
-     * Initialize.
-     */
     @FXML
     public void initialize() {
         initCommon();

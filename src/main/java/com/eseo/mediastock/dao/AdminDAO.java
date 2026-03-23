@@ -7,19 +7,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The type Admin dao.
- */
 public class AdminDAO {
 
-    /**
-     * AUTHENTIFICATION DE L'ADMIN
-     *
-     * @param email    the email
-     * @param password the password
-     * @return the admin
-     * @throws SQLException the sql exception
-     */
     public Admin authenticate(String email, String password) throws SQLException {
         email = email != null ? email.trim() : null;
         password = password != null ? password.trim() : null;
@@ -57,12 +46,6 @@ public class AdminDAO {
         return null;
     }
 
-    /**
-     * CREATE - Crée un nouvel administrateur
-     *
-     * @param admin the admin
-     * @throws SQLException the sql exception
-     */
     public void create(Admin admin) throws SQLException {
         String sql = "INSERT INTO ADMINISTRATEUR (nom, prenom, email, num_tel, mdp) VALUES (?, ?, ?, ?, ?)";
 
@@ -86,12 +69,6 @@ public class AdminDAO {
         }
     }
 
-    /**
-     * UPDATE - Met à jour un administrateur
-     *
-     * @param admin the admin
-     * @throws SQLException the sql exception
-     */
     public void update(Admin admin) throws SQLException {
         String sql = "UPDATE ADMINISTRATEUR SET nom = ?, prenom = ?, email = ?, num_tel = ?, mdp = ? WHERE id = ?";
 
@@ -118,12 +95,6 @@ public class AdminDAO {
         }
     }
 
-    /**
-     * DELETE - Supprime un admin
-     *
-     * @param id the id
-     * @throws SQLException the sql exception
-     */
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM ADMINISTRATEUR WHERE id = ?";
 
@@ -140,12 +111,6 @@ public class AdminDAO {
         }
     }
 
-    /**
-     * FIND ALL - Récupère tous les administrateurs
-     *
-     * @return the list
-     * @throws SQLException the sql exception
-     */
     public List<Admin> findAll() throws SQLException {
         List<Admin> admins = new ArrayList<>();
         String sql = "SELECT * FROM ADMINISTRATEUR ORDER BY nom, prenom";
@@ -168,13 +133,6 @@ public class AdminDAO {
         return admins;
     }
 
-    /**
-     * FIND BY EMAIL - Récupère un admin par son email
-     *
-     * @param email the email
-     * @return the admin
-     * @throws SQLException the sql exception
-     */
     public Admin findByEmail(String email) throws SQLException {
         String sql = "SELECT * FROM ADMINISTRATEUR WHERE email = ?";
 
@@ -199,15 +157,6 @@ public class AdminDAO {
         return null;
     }
 
-    /**
-     * CHANGE PASSWORD - Change le mot de passe
-     *
-     * @param id         the id
-     * @param ancienMdp  the ancien mdp
-     * @param nouveauMdp the nouveau mdp
-     * @return the boolean
-     * @throws SQLException the sql exception
-     */
     public boolean changePassword(int id, String ancienMdp, String nouveauMdp) throws SQLException {
         String selectSql = "SELECT mdp FROM ADMINISTRATEUR WHERE id = ?";
         String updateSql = "UPDATE ADMINISTRATEUR SET mdp = ? WHERE id = ?";

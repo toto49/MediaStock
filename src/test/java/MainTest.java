@@ -4,16 +4,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 
-/**
- * The type Main test.
- */
 public class MainTest {
 
-    /**
-     * Main.
-     *
-     * @param args the args
-     */
     static void main(String[] args) {
 
         try (Connection connection = DatabaseConnection.getConnection()) {

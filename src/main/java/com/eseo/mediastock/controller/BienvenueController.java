@@ -10,23 +10,11 @@ import javafx.scene.control.Label;
 
 import java.io.IOException;
 
-/**
- * The type Bienvenue controller.
- */
 public class BienvenueController {
 
-    /**
-     * The Labelconnexion.
-     */
     @FXML
     public Label labelconnexion;
 
-    /**
-     * Buttonconnexion.
-     *
-     * @param actionEvent the action event
-     * @throws IOException the io exception
-     */
     public void Buttonconnexion(ActionEvent actionEvent) throws IOException {
         labelconnexion.setText("Connexion en cours...");
 
@@ -39,12 +27,6 @@ public class BienvenueController {
         HelloApplication.changerPageGlobale(nouvelleVue, "Connexion");
     }
 
-    /**
-     * Button create account.
-     *
-     * @param actionEvent the action event
-     * @throws IOException the io exception
-     */
     public void ButtonCreateAccount(ActionEvent actionEvent) throws IOException {
         labelconnexion.setText("Création de compte...");
 

@@ -12,18 +12,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The type Exemplaire dao.
- */
 public class ExemplaireDAO {
 
-    /**
-     * Gets exemplaires by produit.
-     *
-     * @param produit the produit
-     * @return the exemplaires by produit
-     * @throws SQLException the sql exception
-     */
     public static List<Exemplaire> getExemplairesByProduit(Produit produit) throws SQLException {
         String sql = "SELECT id, code_barre, etat, statut FROM EXEMPLAIRE WHERE id_produit = ?";
         List<Exemplaire> exemplaires = new ArrayList<>();
@@ -48,12 +38,6 @@ public class ExemplaireDAO {
         return exemplaires;
     }
 
-    /**
-     * Add exemplaire.
-     *
-     * @param exemplaire the exemplaire
-     * @throws SQLException the sql exception
-     */
     public void addExemplaire(Exemplaire exemplaire) throws SQLException {
         String sql = "INSERT INTO EXEMPLAIRE (code_barre, etat, statut, id_produit) VALUES (?, ?, ?, ?)";
 
@@ -69,12 +53,6 @@ public class ExemplaireDAO {
         }
     }
 
-    /**
-     * Update exemplaire.
-     *
-     * @param exemplaire the exemplaire
-     * @throws SQLException the sql exception
-     */
     public void updateExemplaire(Exemplaire exemplaire) throws SQLException {
         String sql = "UPDATE EXEMPLAIRE SET statut = ?, etat = ? WHERE id = ?";
 
@@ -89,12 +67,6 @@ public class ExemplaireDAO {
         }
     }
 
-    /**
-     * Gets all exemplaires.
-     *
-     * @return the all exemplaires
-     * @throws SQLException the sql exception
-     */
     public List<Exemplaire> getAllExemplaires() throws SQLException {
         // Fini le SELECT *, on demande spécifiquement les colonnes utiles
         String sql = "SELECT e.id, e.code_barre, e.etat, e.statut, e.id_produit, p.type_produit " +
@@ -109,13 +81,6 @@ public class ExemplaireDAO {
         }
     }
 
-    /**
-     * Gets by id.
-     *
-     * @param id the id
-     * @return the by id
-     * @throws SQLException the sql exception
-     */
     public Exemplaire getById(int id) throws SQLException {
         String sql = "SELECT e.id, e.code_barre, e.etat, e.statut, e.id_produit, p.type_produit " +
                 "FROM EXEMPLAIRE e " +
@@ -135,13 +100,6 @@ public class ExemplaireDAO {
         }
     }
 
-    /**
-     * Find by code barre exemplaire.
-     *
-     * @param codeBarre the code barre
-     * @return the exemplaire
-     * @throws SQLException the sql exception
-     */
     public Exemplaire findByCodeBarre(String codeBarre) throws SQLException {
         String sql = "SELECT e.id, e.code_barre, e.etat, e.statut, e.id_produit, p.type_produit " +
                 "FROM EXEMPLAIRE e " +
@@ -198,12 +156,6 @@ public class ExemplaireDAO {
         return exemplaires;
     }
 
-    /**
-     * Delete exemplaire.
-     *
-     * @param exemplaire the exemplaire
-     * @throws SQLException the sql exception
-     */
     public void deleteExemplaire(Exemplaire exemplaire) throws SQLException {
         String sql = "UPDATE EXEMPLAIRE SET statut = 'RETIRE' WHERE id = ?";
 

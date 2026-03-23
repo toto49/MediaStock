@@ -6,9 +6,6 @@ import javafx.scene.control.Pagination;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-/**
- * The type Livres controller.
- */
 public class LivresController extends AbstractProduitController<Livre> {
 
     @FXML
@@ -18,9 +15,6 @@ public class LivresController extends AbstractProduitController<Livre> {
     @FXML
     private TableColumn<Livre, Void> colAction;
 
-    /**
-     * Initialize.
-     */
     @FXML
     public void initialize() {
         initCommon();

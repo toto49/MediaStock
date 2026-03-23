@@ -29,64 +29,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * The type Abstract produit controller.
- *
- * @param <T> the type parameter
- */
 public abstract class AbstractProduitController<T extends Produit> {
 
-    /**
-     * The Lignes par page.
-     */
     protected final int LIGNES_PAR_PAGE = 50;
-    /**
-     * The Master data.
-     */
     protected final ObservableList<T> masterData = FXCollections.observableArrayList();
-    /**
-     * The Stock service.
-     */
     protected StockService stockService;
 
-    /**
-     * Gets table.
-     *
-     * @return the table
-     */
     protected abstract TableView<T> getTable();
 
-    /**
-     * Gets pagination.
-     *
-     * @return the pagination
-     */
     protected abstract Pagination getPagination();
 
-    /**
-     * Gets col action.
-     *
-     * @return the col action
-     */
     protected abstract TableColumn<T, Void> getColAction();
 
-    /**
-     * Gets categorie produit.
-     *
-     * @return the categorie produit
-     */
     protected abstract String getCategorieProduit();
 
-    /**
-     * Gets produit class.
-     *
-     * @return the produit class
-     */
     protected abstract Class<T> getProduitClass();
 
-    /**
-     * Init common.
-     */
     protected void initCommon() {
         stockService = new StockService();
         if (getTable() != null) {
@@ -129,9 +87,6 @@ public abstract class AbstractProduitController<T extends Produit> {
         }
     }
 
-    /**
-     * Charger donnees dans tableau.
-     */
     protected void chargerDonneesDansTableau() {
         afficherPlaceholderChargement();
 
@@ -185,11 +140,6 @@ public abstract class AbstractProduitController<T extends Produit> {
         getTable().setPlaceholder(emptyLabel);
     }
 
-    /**
-     * Button return.
-     *
-     * @param actionEvent the action event
-     */
     @FXML
     public void ButtonReturn(ActionEvent actionEvent) {
         if (MenuController.getInstance() != null) {
@@ -304,11 +254,6 @@ public abstract class AbstractProduitController<T extends Produit> {
         getColAction().setCellFactory(cellFactory);
     }
 
-    /**
-     * Modifier produit.
-     *
-     * @param produit the produit
-     */
     protected void modifierProduit(T produit) {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);

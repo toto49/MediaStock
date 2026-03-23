@@ -11,17 +11,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The type Jeu societe dao.
- */
 public class JeuSocieteDAO {
 
-    /**
-     * Add produit.
-     *
-     * @param p the p
-     * @throws SQLException the sql exception
-     */
     public static void addProduit(Produit p) throws SQLException {
         JeuSociete j = (JeuSociete) p;
         String sql = "INSERT INTO PRODUIT (type_produit, titre, description, editeur, annee_sortie, nb_joueurs_min,nb_joueurs_max, age_min, duree_partie) VALUES (?,?,?,?,?,?,?,?,?)";
@@ -50,13 +41,6 @@ public class JeuSocieteDAO {
         }
     }
 
-    /**
-     * Get by id jeu societe.
-     *
-     * @param id the id
-     * @return the jeu societe
-     * @throws SQLException the sql exception
-     */
     public static JeuSociete GetByID(int id) throws SQLException {
         JeuSociete jeu = null;
         String sql = "SELECT * FROM PRODUIT WHERE id = ?";
@@ -78,12 +62,6 @@ public class JeuSocieteDAO {
         return jeu;
     }
 
-    /**
-     * Produit object list list.
-     *
-     * @return the list
-     * @throws SQLException the sql exception
-     */
     public static List<JeuSociete> ProduitObjectList() throws SQLException {
         String sql = "SELECT * FROM PRODUIT WHERE type_produit = ?";
         List<JeuSociete> jeux;
@@ -120,12 +98,6 @@ public class JeuSocieteDAO {
         return jeux;
     }
 
-    /**
-     * Update produit.
-     *
-     * @param p the p
-     * @throws SQLException the sql exception
-     */
     public static void updateProduit(Produit p) throws SQLException {
         JeuSociete j = (JeuSociete) p;
         String sql = "UPDATE PRODUIT SET titre = ?, description = ?, editeur = ?, annee_sortie = ?, nb_joueurs_min = ?, nb_joueurs_max = ?, age_min = ?, duree_partie = ? WHERE id = ? AND type_produit = 'Jeu'";
@@ -145,12 +117,6 @@ public class JeuSocieteDAO {
     }
 
 
-    /**
-     * Delete produit.
-     *
-     * @param p the p
-     * @throws SQLException the sql exception
-     */
     public static void deleteProduit(Produit p) throws SQLException {
         String sql = "UPDATE EXEMPLAIRE SET statut = 'RETIRE' WHERE id_produit = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -160,12 +126,6 @@ public class JeuSocieteDAO {
         }
     }
 
-    /**
-     * Count jeux int.
-     *
-     * @return the int
-     * @throws SQLException the sql exception
-     */
     public int countJeux() throws SQLException {
         String sql = "SELECT COUNT(*) FROM PRODUIT WHERE type_produit = 'Jeu'";
         int count = 0;

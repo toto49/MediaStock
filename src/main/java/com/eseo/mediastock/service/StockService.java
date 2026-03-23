@@ -16,32 +16,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The type Stock service.
- */
 public class StockService {
 
-    /**
-     * The Exemplaire dao.
-     */
     ExemplaireDAO exemplaireDAO = new ExemplaireDAO();
 
     // --- AJOUT DES PRODUITS ---
 
-    /**
-     * Ajouter livre.
-     *
-     * @param titre         the titre
-     * @param description   the description
-     * @param editeur       the editeur
-     * @param annee         the annee
-     * @param isbn          the isbn
-     * @param auteur        the auteur
-     * @param nbPages       the nb pages
-     * @param format        the format
-     * @param nbExemplaires the nb exemplaires
-     * @throws SQLException the sql exception
-     */
     public void ajouterLivre(String titre, String description, String editeur, int annee, String isbn, String auteur, int nbPages, String format, int nbExemplaires) throws SQLException {
         if (titre == null || titre.trim().isEmpty()) throw new IllegalArgumentException("Le titre est obligatoire");
         Livre livre = new Livre();
@@ -61,20 +41,6 @@ public class StockService {
         }
     }
 
-    /**
-     * Ajouter dvd.
-     *
-     * @param titre         the titre
-     * @param description   the description
-     * @param editeur       the editeur
-     * @param annee         the annee
-     * @param realisateur   the realisateur
-     * @param duree         the duree
-     * @param audio         the audio
-     * @param sousTitres    the sous titres
-     * @param nbExemplaires the nb exemplaires
-     * @throws SQLException the sql exception
-     */
     public void ajouterDVD(String titre, String description, String editeur, int annee, String realisateur, int duree, List<String> audio, List<String> sousTitres, int nbExemplaires) throws SQLException {
         if (titre == null || titre.trim().isEmpty()) throw new IllegalArgumentException("Le titre est obligatoire");
 
@@ -94,20 +60,6 @@ public class StockService {
 
     }
 
-    /**
-     * Ajouter jeu societe.
-     *
-     * @param titre         the titre
-     * @param description   the description
-     * @param editeur       the editeur
-     * @param annee         the annee
-     * @param nbJoueursMin  the nb joueurs min
-     * @param nbJoueursMax  the nb joueurs max
-     * @param ageMin        the age min
-     * @param dureePartie   the duree partie
-     * @param nbExemplaires the nb exemplaires
-     * @throws SQLException the sql exception
-     */
     public void ajouterJeuSociete(String titre, String description, String editeur, int annee, int nbJoueursMin, int nbJoueursMax, int ageMin, int dureePartie, int nbExemplaires) throws SQLException {
         if (titre == null || titre.trim().isEmpty()) throw new IllegalArgumentException("Le titre est obligatoire");
 
@@ -127,12 +79,6 @@ public class StockService {
         }
     }
 
-    /**
-     * Modifier produit.
-     *
-     * @param produit the produit
-     * @throws SQLException the sql exception
-     */
     public void modifierProduit(Produit produit) throws SQLException {
         if (produit == null || produit.getId() == 0) {
             throw new IllegalArgumentException("Le produit à modifier n'est pas valide.");
@@ -149,12 +95,6 @@ public class StockService {
         }
     }
 
-    /**
-     * Supprimer produit.
-     *
-     * @param produit the produit
-     * @throws SQLException the sql exception
-     */
     public void supprimerProduit(Produit produit) throws SQLException {
         if (produit == null || produit.getId() == 0) {
             throw new IllegalArgumentException("Le produit à supprimer n'est pas valide.");
@@ -171,12 +111,6 @@ public class StockService {
         }
     }
 
-    /**
-     * Get code type int.
-     *
-     * @param produit the produit
-     * @return the int
-     */
     public int getCodeType(Produit produit) {
         if (produit instanceof Livre) return 1;
         if (produit instanceof DVD) return 2;
@@ -197,12 +131,6 @@ public class StockService {
         return (reste == 0) ? 0 : (10 - reste);
     }
 
-    /**
-     * Creer code barre unique string.
-     *
-     * @param produit the produit
-     * @return the string
-     */
     public String creerCodeBarreUnique(Produit produit) {
         int type = getCodeType(produit);
         long randomPart = (long) (Math.random() * 9_000_000_000L);
@@ -215,12 +143,6 @@ public class StockService {
 
     // --- GESTION DES EXEMPLAIRES ---
 
-    /**
-     * Ajouter exemplaire.
-     *
-     * @param produit the produit
-     * @throws SQLException the sql exception
-     */
     public void ajouterExemplaire(Produit produit) throws SQLException {
         Exemplaire ex = new Exemplaire();
         ex.setProduit(produit);
@@ -234,12 +156,6 @@ public class StockService {
         exemplaireDAO.addExemplaire(ex);
     }
 
-    /**
-     * Modifier exemplaire.
-     *
-     * @param exemplaire the exemplaire
-     * @throws SQLException the sql exception
-     */
     public void modifierExemplaire(Exemplaire exemplaire) throws SQLException {
         if (exemplaire == null || exemplaire.getId() == 0) {
             throw new IllegalArgumentException("L'exemplaire à modifier n'est pas valide.");
@@ -247,12 +163,6 @@ public class StockService {
         exemplaireDAO.updateExemplaire(exemplaire);
     }
 
-    /**
-     * Supprimer exemplaire.
-     *
-     * @param exemplaire the exemplaire
-     * @throws SQLException the sql exception
-     */
     public void supprimerExemplaire(Exemplaire exemplaire) throws SQLException {
         if (exemplaire == null || exemplaire.getId() == 0) {
             throw new IllegalArgumentException("L'exemplaire à supprimer n'est pas valide.");
@@ -260,15 +170,7 @@ public class StockService {
         exemplaireDAO.deleteExemplaire(exemplaire);
     }
 
-    /**
-     * Search produit list.
-     *
-     * @param searchbar   the searchbar
-     * @param typeProduit the type produit
-     * @return the list
-     * @throws SQLException the sql exception
-     */
-// --- RECHERCHER PRODUITS ---
+    // --- RECHERCHER PRODUITS ---
     public List<Produit> SearchProduit(String searchbar, String typeProduit) throws SQLException {
         List<Produit> produits = new ArrayList<>();
         List<? extends Produit> Allproducts = new ArrayList<>();
@@ -289,24 +191,13 @@ public class StockService {
         return produits;
     }
 
-    /**
-     * Get exemplaire from product list.
-     *
-     * @param produit the produit
-     * @return the list
-     */
-// --- LISTE EXEMPLAIRES PRODUITS
+    // --- LISTE EXEMPLAIRES PRODUITS
     public List<Exemplaire> getExemplaireFromProduct(Produit produit) {
         return produit.getExemplaires();
     }
 
     // --- STATISTIQUES ---
 
-    /**
-     * Gets nombre total livres.
-     *
-     * @return the nombre total livres
-     */
     public int getNombreTotalLivres() {
         try {
             LivreDAO livreDAO = new LivreDAO();
@@ -316,11 +207,6 @@ public class StockService {
         }
     }
 
-    /**
-     * Gets nombre total dv ds.
-     *
-     * @return the nombre total dv ds
-     */
     public int getNombreTotalDVDs() {
         try {
             DvdDAO dvdDAO = new DvdDAO();
@@ -330,11 +216,6 @@ public class StockService {
         }
     }
 
-    /**
-     * Gets nombre total jeux.
-     *
-     * @return the nombre total jeux
-     */
     public int getNombreTotalJeux() {
         try {
             JeuSocieteDAO jeuxDAO = new JeuSocieteDAO();
@@ -344,13 +225,6 @@ public class StockService {
         }
     }
 
-    /**
-     * Gets exemplaire par code barre.
-     *
-     * @param codeBarre the code barre
-     * @return the exemplaire par code barre
-     * @throws SQLException the sql exception
-     */
     public Exemplaire getExemplaireParCodeBarre(String codeBarre) throws SQLException {
         return exemplaireDAO.findByCodeBarre(codeBarre);
     }
