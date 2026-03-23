@@ -8,9 +8,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Service de gestion des comptes adhérents.
- * Assure la validation des données d'inscription et centralise les actions
- * liées au cycle de vie des membres au sein de l'application.
+ * Service métier dédié à la gestion des adhérents.
+ * <p>
+ * Fait le pont entre les contrôleurs (IHM) et {@link com.eseo.mediastock.dao.AdherentDAO}.
+ * Intègre la logique métier comme la vérification de l'unicité d'un email ou la
+ * validation des numéros de téléphone avant la sauvegarde en base.
+ * </p>
  */
 public class AdherentService {
 

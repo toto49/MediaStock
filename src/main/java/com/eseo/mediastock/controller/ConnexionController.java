@@ -22,9 +22,12 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * Contrôleur gérant l'authentification sécurisée.
- * Assure l'interface de login et communique avec les services de sécurité
- * pour valider les accès administrateurs.
+ * Contrôleur de la vue d'authentification des administrateurs.
+ * <p>
+ * Récupère les identifiants saisis par l'utilisateur, demande la vérification
+ * au service d'authentification et, en cas de succès, initialise la session globale
+ * de l'application avant de rediriger vers l'interface principale.
+ * </p>
  */
 public class ConnexionController {
     /**

@@ -1,7 +1,8 @@
 package com.eseo.mediastock.model.Enum;
 
 /**
- * The enum Enum etat.
+ * Énumération qualifiant l'état physique et la détérioration d'un {@link com.eseo.mediastock.model.Exemplaire}.
+ * <p>Valeurs possibles : NEUF, BON_ETAT, ABIME, PERDU, etc.</p>
  */
 public enum EnumEtat {
     /**

@@ -8,9 +8,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
 /**
- * Contrôleur de la vue principale (Tableau de bord).
- * Gère l'affichage des statistiques globales et la navigation
- * vers les différents modules de gestion de l'application.
+ * Contrôleur de la vue d'accueil (Dashboard principal).
+ * <p>
+ * Cette classe gère l'affichage des statistiques globales de la médiathèque (nombre total
+ * de documents, emprunts en cours, utilisateurs actifs) et propose des raccourcis vers
+ * les fonctionnalités les plus utilisées (nouvel emprunt, ajout de produit).
+ * </p>
  */
 public class AccueilController {
     private static int cacheLivres = -1;

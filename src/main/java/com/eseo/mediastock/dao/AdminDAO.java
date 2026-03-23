@@ -8,7 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The type Admin dao.
+ * Data Access Object gérant l'accès aux données des administrateurs.
+ * <p>
+ * Permet notamment la récupération d'un utilisateur par son email pour les processus
+ * d'authentification, ainsi que l'insertion de nouveaux comptes.
+ * </p>
  */
 public class AdminDAO {
 

@@ -13,9 +13,12 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Data Access Object pour la gestion des DVD.
- * Permet l'interaction avec la base de données pour l'enregistrement,
- * la modification et la récupération des métadonnées spécifiques aux supports vidéo.
+ * Data Access Object dédié aux produits de type Produit (DVD/).
+ * <p>
+ * Gère l'insertion et la récupération des spécificités liées à ce type de média
+ * en base de données, souvent en manipulant des jointures entre la table parente 'Produit'
+ * et la table enfant correspondante.
+ * </p>
  */
 public class DvdDAO {
 

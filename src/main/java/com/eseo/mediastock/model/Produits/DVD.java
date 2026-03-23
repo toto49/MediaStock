@@ -5,7 +5,13 @@ import com.eseo.mediastock.model.Exemplaire;
 import java.util.List;
 
 /**
- * The type Dvd.
+ * Entité représentant un DVD héritant de Produit
+ * Classe abstraite définissant la structure de base de tout média stocké dans la base.
+ * <p>
+ * Factorise les attributs communs : identifiant global, titre, description, éditeur
+ * et année de sortie. Elle est héritée par les entités spécifiques comme {@link Livre},
+ * {@link DVD} et {@link JeuSociete}.
+ * </p>
  */
 public class DVD extends Produit {
     private String realisateur;

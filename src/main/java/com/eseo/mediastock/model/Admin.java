@@ -1,7 +1,11 @@
 package com.eseo.mediastock.model;
 
 /**
- * The type Admin.
+ * Entité représentant un utilisateur ayant des droits de gestion sur l'application.
+ * <p>
+ * Contient les identifiants de connexion (email, mot de passe haché) et les
+ * autorisations de l'administrateur.
+ * </p>
  */
 public class Admin {
     private int id;

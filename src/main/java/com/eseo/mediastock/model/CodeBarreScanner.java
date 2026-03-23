@@ -28,7 +28,11 @@ import java.awt.image.BufferedImage;
 import java.util.function.Consumer;
 
 /**
- * The type Code barre scanner.
+ * Entité ou classe utilitaire permettant de mapper la lecture d'une douchette laser
+ * (Scanner de code-barres) vers les flux de données de l'application.
+ * <p>
+ * Gère les événements d'écoute au clavier simulés par le scanner matériel.
+ * </p>
  */
 public class CodeBarreScanner {
 

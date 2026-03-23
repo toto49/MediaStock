@@ -17,7 +17,12 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * The type Create account controller.
+ * Contrôleur de la vue de création de compte administrateur.
+ * <p>
+ * Gère la validation des champs du formulaire d'inscription (vérification des mots de passe,
+ * présence de caractères spéciaux) et communique avec le service pour insérer le nouvel
+ * administrateur de manière sécurisée en base de données.
+ * </p>
  */
 public class CreateAccountController {
 

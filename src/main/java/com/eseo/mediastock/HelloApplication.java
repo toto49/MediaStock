@@ -23,7 +23,13 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * The type Hello application.
+ * Classe principale de l'application JavaFX héritant de {@link javafx.application.Application}.
+ * <p>
+ * Elle est responsable du démarrage de l'interface graphique, de l'initialisation du
+ * {@link javafx.stage.Stage} principal (fenêtre), de l'application des paramètres de base
+ * (titre, icône, dimensions) et du chargement de la toute première vue, généralement
+ * la page de connexion ({@code connexion-view.fxml}).
+ * </p>
  */
 public class HelloApplication extends Application {
 

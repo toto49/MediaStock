@@ -11,7 +11,11 @@ import javafx.scene.control.Label;
 import java.io.IOException;
 
 /**
- * The type Bienvenue controller.
+ * Contrôleur de la page de bienvenue affichée immédiatement après une connexion réussie.
+ * <p>
+ * Gère les animations d'entrée et le message de salutation personnalisé basé sur
+ * les informations contenues dans {@link com.eseo.mediastock.service.UserSession}.
+ * </p>
  */
 public class BienvenueController {
 

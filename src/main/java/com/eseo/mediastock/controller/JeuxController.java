@@ -7,7 +7,16 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 /**
- * The type Jeux controller.
+ * Contrôleur responsable de la vue de gestion des emprunts et des retours.
+ * <p>
+ * Ce contrôleur est au cœur de l'activité quotidienne de la médiathèque. Il gère :
+ * <ul>
+ * <li>La recherche et la sélection d'un adhérent.</li>
+ * <li>Le scan (ou la saisie) du code-barres d'un exemplaire physique.</li>
+ * <li>La validation des transactions d'emprunt (vérification des limites) et de retour.</li>
+ * <li>L'affichage de l'historique et des retards éventuels.</li>
+ * </ul>
+ * </p>
  */
 public class JeuxController extends AbstractProduitController<JeuSociete> {
 

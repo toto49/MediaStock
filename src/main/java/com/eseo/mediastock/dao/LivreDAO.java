@@ -12,9 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Data Access Object dédié aux livres.
- * Fournit les méthodes nécessaires pour manipuler les données relatives aux ouvrages
- * (ISBN, auteur, pagination) et assurer leur persistance en base MySQL.
+ * Data Access Object dédié aux produits de type Produit (Livre).
+ * <p>
+ * Gère l'insertion et la récupération des spécificités liées à ce type de média
+ * en base de données, souvent en manipulant des jointures entre la table parente 'Produit'
+ * et la table enfant correspondante.
+ * </p>
  */
 public class LivreDAO {
 

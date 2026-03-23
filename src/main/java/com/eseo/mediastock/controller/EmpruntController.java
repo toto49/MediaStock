@@ -22,12 +22,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Contrôleur gérant les opérations d'emprunt et de retour.
- * Il permet également d'afficher et de gérer la liste des emprunts
- * actuellement en retard.
- * * @author tom
- *
- * @date 2026/03/23
+ * Contrôleur responsable de la vue de gestion des emprunts et des retours.
+ * <p>
+ * Ce contrôleur est au cœur de l'activité quotidienne de la médiathèque. Il gère :
+ * <ul>
+ * <li>La recherche et la sélection d'un adhérent.</li>
+ * <li>Le scan (ou la saisie) du code-barres d'un exemplaire physique.</li>
+ * <li>La validation des transactions d'emprunt (vérification des limites) et de retour.</li>
+ * <li>L'affichage de l'historique et des retards éventuels.</li>
+ * </ul>
+ * </p>
  */
 public class EmpruntController {
 

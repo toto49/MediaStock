@@ -12,7 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The type Jeu societe dao.
+ * Data Access Object dédié aux produits de type Produit (Jeu).
+ * <p>
+ * Gère l'insertion et la récupération des spécificités liées à ce type de média
+ * en base de données, souvent en manipulant des jointures entre la table parente 'Produit'
+ * et la table enfant correspondante.
+ * </p>
  */
 public class JeuSocieteDAO {
 

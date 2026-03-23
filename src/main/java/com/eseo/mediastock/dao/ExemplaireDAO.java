@@ -13,9 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * DAO gérant les exemplaires physiques des produits.
- * Assure le suivi individuel de chaque objet (code-barres, état, disponibilité)
- * indépendamment de sa référence générique.
+ * Data Access Object gérant les copies physiques uniques des produits.
+ * <p>
+ * Permet de rechercher un exemplaire spécifique par son code-barres unique,
+ * de mettre à jour son état de détérioration, et de modifier son statut de disponibilité
+ * (Disponible, Emprunté, Retiré).
+ * </p>
  */
 public class ExemplaireDAO {
 

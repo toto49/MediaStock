@@ -3,7 +3,12 @@ package com.eseo.mediastock.service;
 import org.mindrot.jbcrypt.BCrypt;
 
 /**
- * The type Password util service.
+ * Service utilitaire dédié à la sécurité et au cryptage.
+ * <p>
+ * Fournit des algorithmes de hachage (par exemple BCrypt ou SHA) pour chiffrer
+ * les mots de passe avant insertion en base, et des méthodes pour vérifier
+ * un mot de passe en clair par rapport à un hash stocké.
+ * </p>
  */
 public class PasswordUtilService {
 

@@ -12,9 +12,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Service gérant les flux de prêt et de retour.
- * Implémente les règles métier critiques : vérification des quotas d'adhérents,
- * contrôle de disponibilité des exemplaires et calcul des dates de retour.
+ * Service métier orchestrant le processus complexe des prêts et retours.
+ * <p>
+ * S'assure de l'intégrité des données avant un prêt : l'adhérent a-t-il atteint son quota max ?
+ * l'exemplaire est-il physiquement disponible ?
+ * Lors de la création d'un emprunt, ce service met à jour l'état de l'exemplaire à "EMPRUNTE".
+ * </p>
  */
 public class EmpruntService {
 

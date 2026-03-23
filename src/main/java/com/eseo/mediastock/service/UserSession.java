@@ -3,7 +3,12 @@ package com.eseo.mediastock.service;
 import com.eseo.mediastock.model.Admin;
 
 /**
- * The type User session.
+ * Classe gérant la session utilisateur (Pattern Singleton).
+ * <p>
+ * Permet de stocker et de conserver l'instance de l'administrateur connecté
+ * tout au long du cycle de vie de l'application. Elle est consultable par n'importe
+ * quel contrôleur pour adapter l'interface (affichage du nom, vérification des permissions).
+ * </p>
  */
 public class UserSession {
     private static Admin adminConnecte;

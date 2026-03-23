@@ -7,7 +7,11 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 /**
- * The type Livres controller.
+ * Contrôleur spécifique à la vue d'inventaire des Livres.
+ * <p>
+ * Hérite de {@link AbstractProduitController} et lie les données métier d'un
+ * {@link com.eseo.mediastock.model.Produits.Livre} (auteur, ISBN, format) au tableau JavaFX.
+ * </p>
  */
 public class LivresController extends AbstractProduitController<Livre> {
 

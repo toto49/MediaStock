@@ -4,7 +4,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 /**
- * The type Liste view controller.
+ * Contrôleur de la vue intermédiaire de sélection du catalogue.
+ * <p>
+ * Affiche des cartes ou des boutons permettant à l'utilisateur de choisir quelle
+ * catégorie de produits il souhaite consulter (Livres, DVD, ou Jeux de société),
+ * et demande au {@link MenuController} de charger la vue correspondante.
+ * </p>
  */
 public class ListeViewController {
 

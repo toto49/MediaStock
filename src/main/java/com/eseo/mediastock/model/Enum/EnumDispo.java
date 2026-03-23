@@ -1,7 +1,8 @@
 package com.eseo.mediastock.model.Enum;
 
 /**
- * The enum Enum dispo.
+ * Énumération définissant les états de disponibilité d'un {@link com.eseo.mediastock.model.Exemplaire}.
+ * <p>Valeurs possibles : DISPONIBLE, EMPRUNTE, RESERVE, RETIRE, etc.</p>
  */
 public enum EnumDispo {
     /**

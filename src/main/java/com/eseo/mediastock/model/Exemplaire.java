@@ -5,9 +5,12 @@ import com.eseo.mediastock.model.Enum.EnumEtat;
 import com.eseo.mediastock.model.Produits.Produit;
 
 /**
- * Représentation d'une unité physique stockée en médiathèque.
- * Contient les informations de traçabilité unique (code-barres) et
- * l'état actuel (neuf, usagé, perdu) ainsi que le statut de prêt.
+ * Entité représentant une copie physique (matérielle) d'un Produit.
+ * <p>
+ * Un même produit (ex: le livre "Les Misérables") peut posséder plusieurs exemplaires.
+ * Chaque exemplaire est identifié par un code-barres unique et possède son propre état
+ * de conservation et statut de disponibilité.
+ * </p>
  */
 public class Exemplaire {
     // Déclaration des variables

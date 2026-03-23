@@ -13,7 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The type Emprunt dao.
+ * Data Access Object dédié à la gestion des transactions d'emprunt.
+ * <p>
+ * Gère l'historique des prêts, met à jour les dates de retour, et permet de récupérer
+ * la liste des emprunts actifs ou en retard pour un adhérent spécifique.
+ * </p>
  */
 public class EmpruntDAO {
 

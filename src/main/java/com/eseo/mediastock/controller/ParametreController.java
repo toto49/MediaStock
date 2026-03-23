@@ -17,7 +17,11 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * The type Parametre controller.
+ * Contrôleur de la vue des paramètres de l'application.
+ * <p>
+ * Gère les préférences de l'utilisateur ou de l'application (comme le basculement
+ * de thème clair/sombre, la configuration des délais d'emprunt, etc.).
+ * </p>
  */
 public class ParametreController {
 

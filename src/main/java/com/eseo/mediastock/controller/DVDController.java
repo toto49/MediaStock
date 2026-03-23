@@ -7,7 +7,11 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
 /**
- * The type Dvd controller.
+ * Contrôleur spécifique à la vue d'inventaire des DVD.
+ * <p>
+ * Hérite de {@link AbstractProduitController} et définit les colonnes spécifiques
+ * au tableau des DVD (réalisateur, durée, langues, etc.) ainsi que le type d'entité à manipuler.
+ * </p>
  */
 public class DVDController extends AbstractProduitController<DVD> {
 

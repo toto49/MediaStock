@@ -29,12 +29,12 @@ import javafx.util.Callback;
 import java.util.List;
 
 /**
- * Contrôleur gérant la vue des adhérents.
- * Permet l'affichage, la création, la suppression et la consultation de l'historique
- * des emprunts pour les adhérents de la bibliothèque.
- *
- * @author tom
- * @date 2026/03/23
+ * Contrôleur de la vue de gestion des adhérents.
+ * <p>
+ * Il permet à l'administrateur de lister l'ensemble des membres inscrits à la médiathèque
+ * dans un tableau interactif, et gère les actions associées telles que la création,
+ * la modification, ou la suppression d'un compte adhérent via l'interface utilisateur.
+ * </p>
  */
 public class AdherentController {
 

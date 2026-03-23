@@ -19,9 +19,12 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /**
- * Service central pour la gestion opérationnelle du stock.
- * Cette classe orchestre la création des produits, la génération automatique
- * des codes-barres EAN-13 et la gestion des exemplaires physiques.
+ * Service métier centralisant la logique de gestion du catalogue et du stock.
+ * <p>
+ * Gère la création, la modification et la suppression de {@link com.eseo.mediastock.model.Produits.Produit}
+ * (Livres, DVD, Jeux) ainsi que la génération et la gestion de leurs {@link com.eseo.mediastock.model.Exemplaire} respectifs.
+ * Dispatche les opérations vers les DAO appropriés selon le type d'objet manipulé.
+ * </p>
  */
 public class StockService {
 

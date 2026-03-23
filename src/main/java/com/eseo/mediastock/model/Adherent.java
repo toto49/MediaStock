@@ -5,8 +5,10 @@ import java.util.List;
 
 /**
  * Entité représentant un membre inscrit à la médiathèque.
- * Stocke les informations de contact et l'identifiant unique permettant
- * d'associer des emprunts et des historiques de prêt.
+ * <p>
+ * Contient les informations personnelles (nom, prénom, contact, date d'inscription)
+ * et sert d'objet de transfert (DTO) pour la manipulation des données en mémoire.
+ * </p>
  */
 public class Adherent {
     private final List<Emprunt> empruntsEnCours;

@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Data Access Object (DAO) pour l'entité Adherent.
- * Cette classe gère toutes les opérations CRUD (Create, Read, Update, Delete)
- * en base de données pour les membres de la médiathèque en utilisant JDBC.
+ * Data Access Object dédié aux opérations sur la table des adhérents.
+ * <p>
+ * Contient les requêtes SQL (INSERT, SELECT, UPDATE, DELETE) permettant de lire
+ * et sauvegarder les objets {@link com.eseo.mediastock.model.Adherent} en base de données.
+ * </p>
  */
 public class AdherentDAO {
 

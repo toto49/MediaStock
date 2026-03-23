@@ -5,9 +5,12 @@ import com.eseo.mediastock.model.Exemplaire;
 import java.util.List;
 
 /**
- * Classe de base abstraite représentant une référence du catalogue.
- * Regroupe les propriétés communes (titre, éditeur, année) et définit
- * la structure polymorphique utilisée par les Livres, DVD et Jeux de Société.
+ * Classe abstraite définissant la structure de base de tout média stocké dans la base.
+ * <p>
+ * Factorise les attributs communs : identifiant global, titre, description, éditeur
+ * et année de sortie. Elle est héritée par les entités spécifiques comme {@link Livre},
+ * {@link DVD} et {@link JeuSociete}.
+ * </p>
  */
 public abstract class Produit {
     // Variables de classes

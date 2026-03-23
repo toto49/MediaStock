@@ -7,7 +7,11 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * The type Admin service.
+ * Service métier responsable de l'authentification et de la gestion des administrateurs.
+ * <p>
+ * Interagit avec {@link com.eseo.mediastock.dao.AdminDAO} pour retrouver un compte,
+ * et utilise {@link PasswordUtilService} pour vérifier la concordance des mots de passe.
+ * </p>
  */
 public class AdminService {
 

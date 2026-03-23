@@ -5,7 +5,11 @@ import com.eseo.mediastock.model.Enum.EnumDispo;
 import java.time.LocalDate;
 
 /**
- * The type Emprunt.
+ * Entité représentant la liaison temporaire entre un {@link Adherent} et un {@link Exemplaire}.
+ * <p>
+ * Permet de tracer qui a emprunté quoi, la date du prêt, la date d'échéance attendue,
+ * et la date réelle du retour du document.
+ * </p>
  */
 public class Emprunt {
     private final LocalDate dateDebut;

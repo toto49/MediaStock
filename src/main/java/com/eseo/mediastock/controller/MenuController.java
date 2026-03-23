@@ -13,7 +13,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 /**
- * The type Menu controller.
+ * Contrôleur principal de l'architecture de navigation de l'application (Layout parent).
+ * <p>
+ * Il gère la barre de menu latérale (Sidebar) et agit comme un conteneur principal
+ * (généralement un {@link javafx.scene.layout.BorderPane}). Il expose des méthodes publiques
+ * permettant de charger dynamiquement d'autres fichiers FXML dans sa zone centrale
+ * sans avoir à recharger toute la fenêtre.
+ * </p>
  */
 public class MenuController {
 

@@ -30,9 +30,19 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Le controlleur qui gère le produit abstract donc l'affichage de l'inventaire pour les livres les dvd et les jeux.
+ * Contrôleur parent générique et abstrait gérant l'affichage et les actions des produits.
+ * <p>
+ * Cette classe factorise la logique commune à toutes les vues d'inventaire (Livres, DVD, Jeux).
+ * Elle prend en charge :
+ * <ul>
+ * <li>La pagination des résultats (via un système d'affichage par lots).</li>
+ * <li>Le chargement asynchrone des données depuis la base via {@link com.eseo.mediastock.service.StockService}.</li>
+ * <li>La configuration dynamique de la colonne "Actions" (boutons Modifier, Supprimer, Voir les exemplaires).</li>
+ * <li>L'affichage des fenêtres pop-up (dialogues modaux) pour la modification et la création de produits.</li>
+ * </ul>
+ * </p>
  *
- * @param <T> the type parameter
+ * @param <T> Le type de produit géré par le contrôleur (héritant de {@link com.eseo.mediastock.model.Produits.Produit}).
  */
 public abstract class AbstractProduitController<T extends Produit> {
 

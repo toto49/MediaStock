@@ -7,7 +7,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * The type Database connection.
+ * Classe utilitaire gérant la connexion unique à la base de données (Pattern Singleton).
+ * <p>
+ * Initialise le driver JDBC, lit les variables d'environnement (ou de configuration),
+ * et fournit un objet {@link java.sql.Connection} persistant aux différents DAO pour
+ * exécuter leurs requêtes SQL.
+ * </p>
  */
 public class DatabaseConnection {
     /**
