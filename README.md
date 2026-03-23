@@ -99,15 +99,17 @@ mvn javafx:run
 
 ## 📸 Aperçu de l'interface
 
-\<div align="center"\>
-\<img src="docs/images/dashboard.png" alt="Tableau de bord" width="800"/\>
-<br>
-\<em\>Tableau de bord et suivi des retards\</em\>
-<br><br>
-\<img src="docs/images/inventaire.png" alt="Inventaire" width="800"/\>
-<br>
-\<em\>Gestion de l'inventaire multimédia\</em\>
-\</div\>
+### Tableau de bord
+
+![Tableau de bord](docs/images/dashboard.png)
+
+### Gestion des retards
+
+![Gestion des retards](docs/images/emprunts.png)
+
+### Inventaire
+
+![Inventaire](docs/images/inventaire.png)
 
 -----
 
