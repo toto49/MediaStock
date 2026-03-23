@@ -12,9 +12,15 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * The type Menu controller.
+ */
 public class MenuController {
 
     private static MenuController instance;
+    /**
+     * The Btn list view.
+     */
     @FXML
     public Button btnListView;
     @FXML
@@ -33,10 +39,18 @@ public class MenuController {
     private Stage mainStage;
     private Label lblTitreHeader;
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static MenuController getInstance() {
         return instance;
     }
 
+    /**
+     * Initialize.
+     */
     @FXML
     public void initialize() {
         instance = this;
@@ -44,11 +58,22 @@ public class MenuController {
         if (btnAccueil != null) updateButtonStyles(btnAccueil);
     }
 
+    /**
+     * Sets composants fenetre.
+     *
+     * @param stage      the stage
+     * @param labelTitre the label titre
+     */
     public void setComposantsFenetre(Stage stage, Label labelTitre) {
         this.mainStage = stage;
         this.lblTitreHeader = labelTitre;
     }
 
+    /**
+     * Charger page.
+     *
+     * @param nomFichier the nom fichier
+     */
     public void chargerPage(String nomFichier) {
         try {
             String chemin = "/com/eseo/mediastock/view/" + nomFichier + "-view.fxml";
@@ -69,6 +94,11 @@ public class MenuController {
         }
     }
 
+    /**
+     * Afficher accueil.
+     *
+     * @param event the event
+     */
     @FXML
     void afficherAccueil(ActionEvent event) {
         chargerPage("accueil");
@@ -76,6 +106,11 @@ public class MenuController {
         changerTitre("Accueil");
     }
 
+    /**
+     * Afficher emprunt.
+     *
+     * @param event the event
+     */
     @FXML
     void afficherEmprunt(ActionEvent event) {
         chargerPage("emprunt");
@@ -83,6 +118,11 @@ public class MenuController {
         changerTitre("Emprunter");
     }
 
+    /**
+     * Afficheradherent.
+     *
+     * @param event the event
+     */
     @FXML
     void afficheradherent(ActionEvent event) {
         chargerPage("adherent");
@@ -90,6 +130,11 @@ public class MenuController {
         changerTitre("Gestion Adhérent");
     }
 
+    /**
+     * Afficher add produit.
+     *
+     * @param event the event
+     */
     @FXML
     void afficherAddProduit(ActionEvent event) {
         chargerPage("ajouter-produit");
@@ -97,6 +142,11 @@ public class MenuController {
         changerTitre("Ajouter Produit");
     }
 
+    /**
+     * Afficher parametres.
+     *
+     * @param event the event
+     */
     @FXML
     void afficherParametres(ActionEvent event) {
         chargerPage("parametre");
@@ -104,6 +154,11 @@ public class MenuController {
         changerTitre("Paramètres");
     }
 
+    /**
+     * Afficher liste view.
+     *
+     * @param event the event
+     */
     @FXML
     void afficherListeView(ActionEvent event) {
         chargerPage("liste");
@@ -125,6 +180,11 @@ public class MenuController {
         if (boutonActif != null) boutonActif.setStyle(STYLE_ACTIF);
     }
 
+    /**
+     * Changer titre.
+     *
+     * @param nouveauTitre the nouveau titre
+     */
     public void changerTitre(String nouveauTitre) {
         HelloApplication.changerTitreGlobal(nouveauTitre);
     }

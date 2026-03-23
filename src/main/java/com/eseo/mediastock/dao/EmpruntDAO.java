@@ -12,8 +12,17 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Emprunt dao.
+ */
 public class EmpruntDAO {
 
+    /**
+     * Find all emprunts list.
+     *
+     * @return the list
+     * @throws SQLException the sql exception
+     */
     public List<Emprunt> findAllEmprunts() throws SQLException {
         // Ajout de pr.type_produit à la fin du SELECT
         String sql = "SELECT " +
@@ -39,6 +48,13 @@ public class EmpruntDAO {
         return emprunts;
     }
 
+    /**
+     * Trouver retards list.
+     *
+     * @param date the date
+     * @return the list
+     * @throws SQLException the sql exception
+     */
     public List<Emprunt> trouverRetards(LocalDate date) throws SQLException {
         // Ajout de pr.type_produit à la fin du SELECT
         String sql = "SELECT " +
@@ -69,6 +85,13 @@ public class EmpruntDAO {
         return retards;
     }
 
+    /**
+     * Gets emprunts by adherent.
+     *
+     * @param adherent the adherent
+     * @return the emprunts by adherent
+     * @throws SQLException the sql exception
+     */
     public List<Emprunt> getEmpruntsByAdherent(Adherent adherent) throws SQLException {
         // Ajout de pr.type_produit dans le SELECT
         String sql = "SELECT " +
@@ -137,6 +160,13 @@ public class EmpruntDAO {
         return emprunts;
     }
 
+    /**
+     * Add emprunt.
+     *
+     * @param adherent   the adherent
+     * @param exemplaire the exemplaire
+     * @throws SQLException the sql exception
+     */
     public void addEmprunt(Adherent adherent, Exemplaire exemplaire) throws SQLException {
         String sql = "INSERT INTO EMPRUNT (date_debut, date_retour, id_adherent, id_exemplaire, statut) VALUES (?, ?, ?, ?, ?)";
 
@@ -153,6 +183,13 @@ public class EmpruntDAO {
         }
     }
 
+    /**
+     * Trouver emprunt en cours emprunt.
+     *
+     * @param codeBarre the code barre
+     * @return the emprunt
+     * @throws SQLException the sql exception
+     */
     public Emprunt trouverEmpruntEnCours(String codeBarre) throws SQLException {
         // Ajout de pr.type_produit à la fin du SELECT
         String sql = "SELECT " +
@@ -181,6 +218,12 @@ public class EmpruntDAO {
         return null;
     }
 
+    /**
+     * Save retour.
+     *
+     * @param emprunt the emprunt
+     * @throws SQLException the sql exception
+     */
     public void saveRetour(Emprunt emprunt) throws SQLException {
         String sql = "UPDATE EMPRUNT SET statut = ? WHERE id = ?";
 

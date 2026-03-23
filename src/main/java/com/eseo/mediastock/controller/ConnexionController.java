@@ -21,12 +21,24 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * The type Connexion controller.
+ */
 public class ConnexionController {
+    /**
+     * The Field mail co.
+     */
     @FXML
     public TextField field_mail_co;
+    /**
+     * The Field password co.
+     */
     @FXML
     public PasswordField field_password_co;
 
+    /**
+     * Initialize.
+     */
     @FXML
     public void initialize() {
         field_password_co.setOnKeyPressed(event -> {
@@ -42,6 +54,12 @@ public class ConnexionController {
 
     }
 
+    /**
+     * Buttonreturnco.
+     *
+     * @param actionEvent the action event
+     * @throws IOException the io exception
+     */
     public void Buttonreturnco(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(
                 Launcher.class.getResource("view/bienvenue-view.fxml"));
@@ -49,6 +67,12 @@ public class ConnexionController {
         HelloApplication.changerPageGlobale(root, "Bienvenue");
     }
 
+    /**
+     * Buttonsend.
+     *
+     * @param actionEvent the action event
+     * @throws IOException the io exception
+     */
     public void Buttonsend(ActionEvent actionEvent) throws IOException {
         lancerConnexion();
     }

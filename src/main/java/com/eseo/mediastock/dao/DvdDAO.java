@@ -12,8 +12,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The type Dvd dao.
+ */
 public class DvdDAO {
 
+    /**
+     * Add produit.
+     *
+     * @param p the p
+     * @throws SQLException the sql exception
+     */
     public static void addProduit(Produit p) throws SQLException {
         DVD d = (DVD) p;
         String sql = "INSERT INTO PRODUIT (type_produit, titre, description, editeur, annee_sortie, realisateur, duree_minutes, audio_langues, sous_titres) VALUES (?,?,?,?,?,?,?,?,?)";
@@ -43,6 +52,13 @@ public class DvdDAO {
         }
     }
 
+    /**
+     * Get by id dvd.
+     *
+     * @param id the id
+     * @return the dvd
+     * @throws SQLException the sql exception
+     */
     public static DVD GetByID(int id) throws SQLException {
         DVD dvd = null;
         String sql = "SELECT * FROM PRODUIT WHERE id = ?";
@@ -64,6 +80,12 @@ public class DvdDAO {
         return dvd;
     }
 
+    /**
+     * Produit object list list.
+     *
+     * @return the list
+     * @throws SQLException the sql exception
+     */
     public static List<DVD> ProduitObjectList() throws SQLException {
         String sql = "SELECT * FROM PRODUIT WHERE type_produit = ?";
         List<DVD> dvds;
@@ -102,6 +124,12 @@ public class DvdDAO {
         return dvds;
     }
 
+    /**
+     * Update produit.
+     *
+     * @param p the p
+     * @throws SQLException the sql exception
+     */
     public static void updateProduit(Produit p) throws SQLException {
         DVD d = (DVD) p;
         String sql = "UPDATE PRODUIT SET titre = ?, description = ?, editeur = ?, annee_sortie = ?, realisateur = ?, duree_minutes = ?, audio_langues = ?, sous_titres = ? WHERE id = ? AND type_produit = 'DVD'";
@@ -120,6 +148,12 @@ public class DvdDAO {
         }
     }
 
+    /**
+     * Delete produit.
+     *
+     * @param p the p
+     * @throws SQLException the sql exception
+     */
     public static void deleteProduit(Produit p) throws SQLException {
         String sql = "UPDATE EXEMPLAIRE SET statut = 'RETIRE' WHERE id_produit = ?";
 
@@ -130,6 +164,12 @@ public class DvdDAO {
         }
     }
 
+    /**
+     * Count dv ds int.
+     *
+     * @return the int
+     * @throws SQLException the sql exception
+     */
     public int countDVDs() throws SQLException {
         String sql = "SELECT COUNT(*) FROM PRODUIT WHERE type_produit = 'DVD'";
         int count = 0;

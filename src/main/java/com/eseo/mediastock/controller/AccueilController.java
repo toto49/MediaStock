@@ -7,6 +7,9 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
+/**
+ * The type Accueil controller.
+ */
 public class AccueilController {
     private static int cacheLivres = -1;
     private static int cacheDVDs = -1;
@@ -21,6 +24,9 @@ public class AccueilController {
     private Label labelNombrejeux;
     private StockService stockService;
 
+    /**
+     * Initialize.
+     */
     @FXML
     public void initialize() {
         stockService = new StockService();

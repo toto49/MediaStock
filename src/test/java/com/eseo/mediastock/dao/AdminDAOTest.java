@@ -7,6 +7,9 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * The type Admin dao test.
+ */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdminDAOTest {
 
@@ -19,12 +22,18 @@ public class AdminDAOTest {
     private static AdminDAO adminDAO;
     private static int idAdminTest = 0;
 
+    /**
+     * Sets .
+     */
     @BeforeAll
     static void setup() {
         adminDAO = new AdminDAO();
         System.out.println("DÉMARRAGE DES TESTS ADMIN DAO ");
     }
 
+    /**
+     * Cleanup.
+     */
     @AfterAll
     static void cleanup() {
         System.out.println("NETTOYAGE ");
@@ -38,6 +47,11 @@ public class AdminDAOTest {
         }
     }
 
+    /**
+     * Test create.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(1)
     void testCreate() throws SQLException {
@@ -55,6 +69,11 @@ public class AdminDAOTest {
         System.out.println("Admin créé avec ID: " + idAdminTest);
     }
 
+    /**
+     * Test find by email.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(2)
     void testFindByEmail() throws SQLException {
@@ -71,6 +90,11 @@ public class AdminDAOTest {
         System.out.println("Admin trouvé: " + admin.getEmail());
     }
 
+    /**
+     * Test authenticate.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(3)
     void testAuthenticate() throws SQLException {
@@ -88,6 +112,11 @@ public class AdminDAOTest {
         System.out.println("Échec authentification avec mauvais mdp");
     }
 
+    /**
+     * Test find all.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(4)
     void testFindAll() throws SQLException {
@@ -104,6 +133,11 @@ public class AdminDAOTest {
         System.out.println("✅ " + admins.size() + " admin(s) trouvé(s)");
     }
 
+    /**
+     * Test change password.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(5)
     void testChangePassword() throws SQLException {
@@ -121,6 +155,11 @@ public class AdminDAOTest {
         System.out.println("Authentification avec nouveau mdp réussie");
     }
 
+    /**
+     * Test update.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(6)
     void testUpdate() throws SQLException {
@@ -156,6 +195,11 @@ public class AdminDAOTest {
         System.out.println("Vérifications réussies");
     }
 
+    /**
+     * Test email existant.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(7)
     void testEmailExistant() throws SQLException {
@@ -170,6 +214,11 @@ public class AdminDAOTest {
         System.out.println("Vérification email existant OK");
     }
 
+    /**
+     * Test delete.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(8)
     void testDelete() throws SQLException {

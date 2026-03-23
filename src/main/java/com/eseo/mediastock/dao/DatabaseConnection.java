@@ -6,13 +6,25 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * The type Database connection.
+ */
 public class DatabaseConnection {
+    /**
+     * The Dotenv.
+     */
     static Dotenv dotenv = Dotenv.configure().directory("./").load();
 
     private static final String URL = dotenv.get("DB_URL");
     private static final String USER = dotenv.get("DB_USER");
     private static final String PASS = dotenv.get("DB_PASSWORD");
 
+    /**
+     * Gets connection.
+     *
+     * @return the connection
+     * @throws SQLException the sql exception
+     */
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASS);
     }

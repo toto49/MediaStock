@@ -11,6 +11,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * The type Stock service test.
+ */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class StockServiceTest {
 
@@ -19,6 +22,9 @@ public class StockServiceTest {
     private static DvdDAO dvdDAO;
     private static JeuSocieteDAO jeuDAO;
 
+    /**
+     * Sets .
+     */
     @BeforeAll
     static void setup() {
         stockService = new StockService();
@@ -28,6 +34,9 @@ public class StockServiceTest {
         System.out.println("TESTS STOCK SERVICE");
     }
 
+    /**
+     * Nettoyage final.
+     */
     @AfterAll
     static void nettoyageFinal() {
         try {
@@ -41,6 +50,9 @@ public class StockServiceTest {
         }
     }
 
+    /**
+     * Test ajouter livre.
+     */
     @Test
     @Order(1)
     void testAjouterLivre() {
@@ -62,6 +74,9 @@ public class StockServiceTest {
         System.out.println("Livre ajouté avec 2 exemplaires");
     }
 
+    /**
+     * Test ajouter dvd.
+     */
     @Test
     @Order(2)
     void testAjouterDVD() {
@@ -83,6 +98,9 @@ public class StockServiceTest {
         System.out.println("DVD ajouté");
     }
 
+    /**
+     * Test ajouter jeu.
+     */
     @Test
     @Order(3)
     void testAjouterJeu() {
@@ -100,6 +118,9 @@ public class StockServiceTest {
         System.out.println("Jeu ajouté");
     }
 
+    /**
+     * Test get code type.
+     */
     @Test
     @Order(4)
     void testGetCodeType() {
@@ -112,6 +133,9 @@ public class StockServiceTest {
         System.out.println("Code type: " + code);
     }
 
+    /**
+     * Test get nombre total livres.
+     */
     @Test
     @Order(5)
     void testGetNombreTotalLivres() {
@@ -122,6 +146,11 @@ public class StockServiceTest {
         assertTrue(nbLivres >= 0);
     }
 
+    /**
+     * Test search.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(6)
     void testSearch() throws SQLException {

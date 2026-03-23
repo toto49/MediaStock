@@ -12,6 +12,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * The type Adherent service test.
+ */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdherentServiceTest {
 
@@ -23,6 +26,9 @@ public class AdherentServiceTest {
     private static AdherentDAO adherentDAO;
     private static String idTest;
 
+    /**
+     * Sets .
+     */
     @BeforeAll
     static void setup() {
         adherentService = new AdherentService();
@@ -30,6 +36,11 @@ public class AdherentServiceTest {
         System.out.println("=== INITIALISATION DES TESTS ===");
     }
 
+    /**
+     * Nettoyage.
+     *
+     * @throws SQLException the sql exception
+     */
     @AfterAll
     static void nettoyage() throws SQLException {
         System.out.println(" NETTOYAGE AUTOMATIQUE");
@@ -65,6 +76,9 @@ public class AdherentServiceTest {
         return "test" + compteur.getAndIncrement() + "@email.com";
     }
 
+    /**
+     * Test generate num adherent.
+     */
     @Test
     @Order(1)
     void testGenerateNumAdherent() {
@@ -89,6 +103,11 @@ public class AdherentServiceTest {
         System.out.println("Numéro généré: " + numAdherent);
     }
 
+    /**
+     * Test inscrire adherent.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(2)
     void testInscrireAdherent() throws SQLException {
@@ -131,6 +150,11 @@ public class AdherentServiceTest {
         System.out.println(" Email: " + trouve.getEmailContact());
     }
 
+    /**
+     * Test inscrire adherent donnees speciales.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(3)
     void testInscrireAdherentDonneesSpeciales() throws SQLException {
@@ -164,6 +188,11 @@ public class AdherentServiceTest {
         System.out.println(" Adhérent avec données spéciales créé: " + trouve.getId());
     }
 
+    /**
+     * Test inscriptions multiples.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(4)
     void testInscriptionsMultiples() throws SQLException {
@@ -200,6 +229,11 @@ public class AdherentServiceTest {
         System.out.println("  ✓ " + noms.length + " adhérents créés avec succès");
     }
 
+    /**
+     * Test numeros uniques.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(5)
     void testNumerosUniques() throws SQLException {
@@ -242,6 +276,11 @@ public class AdherentServiceTest {
         }
     }
 
+    /**
+     * Test recuperation apres creation.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(6)
     void testRecuperationApresCreation() throws SQLException {

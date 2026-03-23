@@ -16,19 +16,46 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * The type Create account controller.
+ */
 public class CreateAccountController {
 
     private final AdherentService adherentService = new AdherentService();
+    /**
+     * The Field nom co.
+     */
     public TextField field_nom_co;
+    /**
+     * The Field prenom co.
+     */
     public TextField field_prenom_co;
+    /**
+     * The Field email co.
+     */
     public TextField field_email_co;
+    /**
+     * The Field telephone co.
+     */
     public TextField field_telephone_co;
+    /**
+     * The Field password co.
+     */
     public PasswordField field_password_co;
+    /**
+     * The Field copassword co.
+     */
     public PasswordField field_copassword_co;
     @FXML
     private Label error_label;
 
-    // bouton retour de tom
+    /**
+     * Buttonreturnco.
+     *
+     * @param actionEvent the action event
+     * @throws IOException the io exception
+     */
+// bouton retour de tom
     public void Buttonreturnco(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(
                 Launcher.class.getResource("view/bienvenue-view.fxml"));
@@ -38,6 +65,12 @@ public class CreateAccountController {
     }
 
 
+    /**
+     * Buttonsend.
+     *
+     * @param actionEvent the action event
+     * @throws IOException the io exception
+     */
     public void Buttonsend(ActionEvent actionEvent) throws IOException {
         if (field_prenom_co.getText().isEmpty() || field_telephone_co.getText().isEmpty() || field_email_co.getText().isEmpty() || field_nom_co.getText().isEmpty() || field_copassword_co.getText().isEmpty() || field_password_co.getText().isEmpty()) {
             showErrorAlert("Erreur", "Veuillez remplir tous les champs ");

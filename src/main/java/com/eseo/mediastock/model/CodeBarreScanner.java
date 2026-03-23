@@ -27,6 +27,9 @@ import org.bytedeco.javacv.OpenCVFrameGrabber;
 import java.awt.image.BufferedImage;
 import java.util.function.Consumer;
 
+/**
+ * The type Code barre scanner.
+ */
 public class CodeBarreScanner {
 
     private OpenCVFrameGrabber grabber;
@@ -39,6 +42,11 @@ public class CodeBarreScanner {
     // Pour renvoyer le résultat à la fenêtre principale
     private Consumer<String> onCodeScanned;
 
+    /**
+     * Ouvrir fenetre.
+     *
+     * @param onCodeScanned the on code scanned
+     */
     public void ouvrirFenetre(Consumer<String> onCodeScanned) {
         this.onCodeScanned = onCodeScanned;
         this.stage = new Stage();
@@ -161,6 +169,9 @@ public class CodeBarreScanner {
         }
     }
 
+    /**
+     * Stop webcam.
+     */
     public void stopWebcam() {
         isRunning = false;
         if (grabber != null) {

@@ -9,6 +9,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * The type Adherent dao test.
+ */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdherentDAOTest {
 
@@ -17,11 +20,19 @@ public class AdherentDAOTest {
     private static AdherentDAO dao;
     private static String idTest;
 
+    /**
+     * Sets .
+     */
     @BeforeAll
     static void setup() {
         dao = new AdherentDAO();
     }
 
+    /**
+     * Nettoyage.
+     *
+     * @throws SQLException the sql exception
+     */
     @AfterAll
     static void nettoyage() throws SQLException {
         System.out.println("NETTOYAGE AUTOMATIQUE");
@@ -52,16 +63,27 @@ public class AdherentDAOTest {
         idsACleaner.clear();
     }
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     void setUp() {
         System.out.println(" Nouveau test");
     }
 
+    /**
+     * Tear down.
+     */
     @AfterEach
     void tearDown() {
         System.out.println("Test terminé ");
     }
 
+    /**
+     * Test create adherent.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(1)
     void testCreateAdherent() throws SQLException {
@@ -88,6 +110,11 @@ public class AdherentDAOTest {
         System.out.println(" Tél : " + a.getNumTel());
     }
 
+    /**
+     * Test get by id.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(2)
     void testGetByID() throws SQLException {
@@ -110,6 +137,11 @@ public class AdherentDAOTest {
         System.out.println(" Nom : " + trouve.getNom());
     }
 
+    /**
+     * Test get by id inexistant.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(3)
     void testGetByIDInexistant() throws SQLException {
@@ -122,6 +154,11 @@ public class AdherentDAOTest {
         System.out.println(" ID inexistant retourne null (normal)");
     }
 
+    /**
+     * Test update adherent.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(4)
     void testUpdateAdherent() throws SQLException {
@@ -151,6 +188,11 @@ public class AdherentDAOTest {
         System.out.println(" Nouveau nom : " + modifie.getNom());
     }
 
+    /**
+     * Test valeurs speciales.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(5)
     void testValeursSpeciales() throws SQLException {
@@ -183,6 +225,11 @@ public class AdherentDAOTest {
         System.out.println(" Adhérent avec email long créé : " + longEmail.getId());
     }
 
+    /**
+     * Test creations multiples.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(6)
     void testCreationsMultiples() throws SQLException {
@@ -226,6 +273,11 @@ public class AdherentDAOTest {
         System.out.println(" Tous retrouvés individuellement");
     }
 
+    /**
+     * Test delete adherent.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(7)
     void testDeleteAdherent() throws SQLException {
@@ -254,6 +306,11 @@ public class AdherentDAOTest {
         System.out.println("Adhérent " + aSupprimer.getId() + " supprimé avec succès");
     }
 
+    /**
+     * Test find all.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     @Order(8)
     void testFindAll() throws SQLException {

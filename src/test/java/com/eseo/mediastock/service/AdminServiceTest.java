@@ -5,6 +5,9 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * The type Admin service test.
+ */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AdminServiceTest {
 
@@ -16,12 +19,18 @@ public class AdminServiceTest {
     private static AdminService adminService;
     private static int idAdminTest = 0;
 
+    /**
+     * Sets .
+     */
     @BeforeAll
     static void setup() {
         adminService = new AdminService();
         System.out.println("DÉMARRAGE DES TESTS ADMIN SERVICE");
     }
 
+    /**
+     * Cleanup.
+     */
     @AfterAll
     static void cleanup() {
         System.out.println("NETTOYAGE ");
@@ -35,6 +44,9 @@ public class AdminServiceTest {
         }
     }
 
+    /**
+     * Test creer admin.
+     */
     @Test
     @Order(1)
     void testCreerAdmin() {
@@ -57,6 +69,9 @@ public class AdminServiceTest {
         System.out.println("ID généré: " + idAdminTest);
     }
 
+    /**
+     * Test login.
+     */
     @Test
     @Order(2)
     void testLogin() {
@@ -74,6 +89,9 @@ public class AdminServiceTest {
         System.out.println("Échec avec mauvais mot de passe");
     }
 
+    /**
+     * Test get admin par id.
+     */
     @Test
     @Order(3)
     void testGetAdminParId() {
@@ -90,6 +108,9 @@ public class AdminServiceTest {
         System.out.println("Admin trouvé avec ID: " + idAdminTest);
     }
 
+    /**
+     * Test changer mot de passe.
+     */
     @Test
     @Order(4)
     void testChangerMotDePasse() {
@@ -118,6 +139,9 @@ public class AdminServiceTest {
         System.out.println("Mot de passe remis à l'original");
     }
 
+    /**
+     * Test email existant.
+     */
     @Test
     @Order(5)
     void testEmailExistant() {
@@ -132,6 +156,9 @@ public class AdminServiceTest {
         System.out.println("Email existant détecté: " + exception.getMessage());
     }
 
+    /**
+     * Test donnees invalides.
+     */
     @Test
     @Order(6)
     void testDonneesInvalides() {
@@ -162,6 +189,9 @@ public class AdminServiceTest {
         System.out.println("Prénom vide détecté: " + e5.getMessage());
     }
 
+    /**
+     * Test mettre a jour admin.
+     */
     @Test
     @Order(7)
     void testMettreAJourAdmin() {
@@ -205,6 +235,9 @@ public class AdminServiceTest {
 
     }
 
+    /**
+     * Test supprimer admin.
+     */
     @Test
     @Order(8)
     void testSupprimerAdmin() {

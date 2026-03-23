@@ -16,6 +16,9 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * The type Emprunt service test.
+ */
 public class EmpruntServiceTest {
 
     // Constante pour le nombre max d'emprunts
@@ -31,6 +34,9 @@ public class EmpruntServiceTest {
     private ExemplaireMock exemplaire;
     private Emprunt emprunt;
 
+    /**
+     * Sets up.
+     */
     @BeforeEach
     void setUp() {
         System.out.println(" Préparation du test");
@@ -64,6 +70,9 @@ public class EmpruntServiceTest {
         System.out.println("Test prêt à s'exécuter");
     }
 
+    /**
+     * Test peut emprunter cas normal.
+     */
     @Test
     void testPeutEmprunter_CasNormal() {
         System.out.println(" TEST : peutEmprunter - Cas normal");
@@ -81,6 +90,9 @@ public class EmpruntServiceTest {
         System.out.println("Résultat: " + resultat);
     }
 
+    /**
+     * Test peut emprunter max atteint.
+     */
     @Test
     void testPeutEmprunter_MaxAtteint() {
         System.out.println("TEST : peutEmprunter - Max atteint");
@@ -99,6 +111,9 @@ public class EmpruntServiceTest {
         System.out.println("Résultat: " + resultat);
     }
 
+    /**
+     * Test peut emprunter emprunt en retard.
+     */
     @Test
     void testPeutEmprunter_EmpruntEnRetard() {
         System.out.println("TEST : peutEmprunter - Emprunt en retard");
@@ -115,6 +130,9 @@ public class EmpruntServiceTest {
         System.out.println("Résultat: " + resultat);
     }
 
+    /**
+     * Test peut emprunter exemplaire non disponible.
+     */
     @Test
     void testPeutEmprunter_ExemplaireNonDisponible() {
         System.out.println("TEST : peutEmprunter - Exemplaire non disponible");
@@ -130,6 +148,9 @@ public class EmpruntServiceTest {
         System.out.println("Résultat: " + resultat);
     }
 
+    /**
+     * Test peut emprunter exemplaire mauvais etat.
+     */
     @Test
     void testPeutEmprunter_ExemplaireMauvaisEtat() {
         System.out.println("TEST : peutEmprunter - Exemplaire en mauvais état");
@@ -145,6 +166,11 @@ public class EmpruntServiceTest {
         System.out.println("Résultat: " + resultat);
     }
 
+    /**
+     * Test enregistrer emprunt succes.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     void testEnregistrerEmprunt_Succes() throws SQLException {
         System.out.println("TEST : enregistrerEmprunt - Succès");
@@ -180,6 +206,11 @@ public class EmpruntServiceTest {
         System.out.println("Emprunt enregistré avec succès");
     }
 
+    /**
+     * Test enregistrer emprunt non autorise.
+     *
+     * @throws SQLException the sql exception
+     */
     @Test
     void testEnregistrerEmprunt_NonAutorise() throws SQLException {
         System.out.println("TEST : enregistrerEmprunt - Non autorisé");
@@ -207,12 +238,18 @@ public class EmpruntServiceTest {
 
     // ================ MOCKS ================
 
+    /**
+     * The type Exemplaire mock.
+     */
     class ExemplaireMock extends Exemplaire {
         private boolean dispo = true;
         private boolean bonEtat = true;
         private EnumDispo statut = EnumDispo.DISPONIBLE;
         private int id = 1;
 
+        /**
+         * Instantiates a new Exemplaire mock.
+         */
         public ExemplaireMock() {
             super(0, new Produit() {
             }, "codeBarre", EnumEtat.BON, EnumDispo.DISPONIBLE);
@@ -243,35 +280,78 @@ public class EmpruntServiceTest {
             return id;
         }
 
+        /**
+         * Sets id.
+         *
+         * @param i the
+         */
         public void setId(int i) {
             this.id = i;
         }
 
-        // Méthodes pour configurer le mock
+        /**
+         * Sets dispo.
+         *
+         * @param d the d
+         */
+// Méthodes pour configurer le mock
         public void setDispo(boolean d) {
             this.dispo = d;
         }
 
+        /**
+         * Sets bon etat.
+         *
+         * @param b the b
+         */
         public void setBonEtat(boolean b) {
             this.bonEtat = b;
         }
 
+        /**
+         * Gets statut.
+         *
+         * @return the statut
+         */
         public EnumDispo getStatut() {
             return statut;
         }
 
+        /**
+         * Sets statut.
+         *
+         * @param s the s
+         */
         public void setStatut(EnumDispo s) {
             this.statut = s;
         }
     }
 
+    /**
+     * The type Emprunt dao mock.
+     */
     class EmpruntDAOMock extends EmpruntDAO {
+        /**
+         * The Add emprunt appele.
+         */
         boolean addEmpruntAppele = false;
+        /**
+         * The Save retour appele.
+         */
         boolean saveRetourAppele = false;
 
-        // Pour vérifier les paramètres
+        /**
+         * The Last adherent.
+         */
+// Pour vérifier les paramètres
         Adherent lastAdherent = null;
+        /**
+         * The Last exemplaire.
+         */
         Exemplaire lastExemplaire = null;
+        /**
+         * The Last emprunt.
+         */
         Emprunt lastEmprunt = null;
 
         @Override
@@ -291,8 +371,17 @@ public class EmpruntServiceTest {
         }
     }
 
+    /**
+     * The type Exemplaire dao mock.
+     */
     class ExemplaireDAOMock extends ExemplaireDAO {
+        /**
+         * The Update appele.
+         */
         boolean updateAppele = false;
+        /**
+         * The Last exemplaire.
+         */
         Exemplaire lastExemplaire = null;
 
         @Override

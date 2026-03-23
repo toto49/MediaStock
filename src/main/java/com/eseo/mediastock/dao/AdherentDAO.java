@@ -6,8 +6,17 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Adherent dao.
+ */
 public class AdherentDAO {
 
+    /**
+     * Create adherent.
+     *
+     * @param adherent the adherent
+     * @throws SQLException the sql exception
+     */
     public void createAdherent(Adherent adherent) throws SQLException {
         String sql = "INSERT INTO ADHERENT (id, num_tel, nom, prenom, email) VALUES (?, ?, ?, ?, ?)";
 
@@ -25,6 +34,12 @@ public class AdherentDAO {
         }
     }
 
+    /**
+     * Update adherent.
+     *
+     * @param adherent the adherent
+     * @throws SQLException the sql exception
+     */
     public void updateAdherent(Adherent adherent) throws SQLException {
         String sql = "UPDATE ADHERENT SET num_tel = ?, nom = ?, prenom =?, email=? WHERE id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -40,6 +55,13 @@ public class AdherentDAO {
         }
     }
 
+    /**
+     * Count adherents int.
+     *
+     * @param annee the annee
+     * @return the int
+     * @throws SQLException the sql exception
+     */
     public int countAdherents(int annee) throws SQLException {
         String sql = "SELECT COUNT(*) FROM ADHERENT WHERE id LIKE ?";
 
@@ -56,6 +78,13 @@ public class AdherentDAO {
         return 0;
     }
 
+    /**
+     * Delete adherent boolean.
+     *
+     * @param id the id
+     * @return the boolean
+     * @throws SQLException the sql exception
+     */
     public boolean deleteAdherent(String id) throws SQLException {
         String sql = "DELETE FROM ADHERENT WHERE id = ?";
 
@@ -69,6 +98,13 @@ public class AdherentDAO {
         }
     }
 
+    /**
+     * Get by id adherent.
+     *
+     * @param id the id
+     * @return the adherent
+     * @throws SQLException the sql exception
+     */
     public Adherent GetByID(String id) throws SQLException {
         String sql = "SELECT * FROM ADHERENT WHERE id = ?";
 
@@ -91,6 +127,12 @@ public class AdherentDAO {
         }
     }
 
+    /**
+     * Find all list.
+     *
+     * @return the list
+     * @throws SQLException the sql exception
+     */
     public List<Adherent> findAll() throws SQLException {
         //liste pour stocker les resultats
         List<Adherent> adherents = new ArrayList<>();
