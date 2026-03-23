@@ -1,162 +1,119 @@
 # 📚 MediaStock
 
-**MediaStock** est un logiciel de bureau moderne conçu pour la gestion complète d'une médiathèque : bibliothèque,
-ludothèque et vidéothèque.  
-Développée en **Java 25** avec **JavaFX**, l'application propose une interface fluide, intuitive et pensée pour les
-bibliothécaires.
+[![Java](https://img.shields.io/badge/Java-25-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](#)
+[![JavaFX](https://img.shields.io/badge/JavaFX-GUI-4780bc?style=for-the-badge&logo=java&logoColor=white)](#)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](#)
+[![Maven](https://img.shields.io/badge/Maven-Build-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)](#)
+
+**MediaStock** est un logiciel de bureau moderne conçu pour la gestion complète d'une médiathèque : bibliothèque, ludothèque et vidéothèque.  
+Développé en **Java 25** avec **JavaFX**, l'application propose une interface fluide, intuitive et pensée pour faciliter le travail quotidien des bibliothécaires.
 
 ---
 
-## ✨ Fonctionnalités principales (v1)
+## ✨ Fonctionnalités principales
 
 ### 📊 Tableau de bord
-
-- Statistiques en temps réel sur les ressources enregistrées
-- Nombre total de **Livres**, **DVD** et **Jeux de société**
-- Suivi des exemplaires en retard
+* **Vue d'ensemble :** Statistiques en temps réel sur les ressources enregistrées (Livres, DVD, Jeux de société).
+* **Alertes :** Suivi automatisé et affichage direct des exemplaires en retard.
 
 ### 📦 Gestion de l'inventaire
+* **Multi-médias :** CRUD complet (Ajout, modification, suppression) pour les différents types de médias.
+* **Efficacité :** Recherche dynamique, tri et pagination fluide des données.
+* **Technologie :** Génération automatique de **codes-barres EAN-13** pour faciliter le suivi physique des exemplaires.
 
-- Ajout, modification et suppression de produits
-- Gestion de plusieurs types de médias : **Livres**, **DVD**, **Jeux de société**
-- Recherche dynamique et pagination fluide
-- Génération automatique de **codes-barres EAN-13** pour chaque exemplaire physique
-
-### 👥 Gestion des adhérents
-
-- Inscription et modification des membres
-- Consultation de l'historique complet des emprunts
-- Fenêtre dédiée avec pagination
-
-### 🔄 Emprunts & retours
-
-- Système de scan par **code-barres** pour accélérer les opérations
-- Vérification automatique des règles métiers :
-    - quota maximum d'emprunts
-    - disponibilité de l'exemplaire
-    - état du produit
-- Détection des retards depuis le tableau de bord
+### 👥 Gestion des adhérents & Emprunts
+* **Suivi complet :** Inscription, modification des membres et consultation de l'historique de prêt.
+* **Scan Rapide :** Système de scan par **webcam intégrée** (lecture de codes-barres) pour accélérer les retours et les emprunts.
+* **Sécurité métier :** Vérification automatique des règles (quota maximum d'emprunts, disponibilité de l'exemplaire).
 
 ---
 
-## 🏗️ Architecture du projet
+## 🛠️ Stack Technique & Architecture
 
-Le projet repose sur une architecture en couches de type **MVC étendu** afin de garantir une base de code claire,
-maintenable et évolutive.
+Le projet repose sur une architecture en couches de type **MVC (Modèle-Vue-Contrôleur)** afin de garantir une base de code claire, sécurisée et maintenable.
+
+* **Langage :** Java 25
+* **Interface Graphique :** JavaFX (avec Scene Builder & FXML)
+* **Base de données :** MySQL (JDBC direct)
+* **Outils externes :** ZXing (Lecture/Génération de codes-barres), JavaCV (Webcam), JBCrypt (Sécurité des mots de passe), Dotenv (Variables d'environnement).
 
 ```text
-/model       → Entités métiers (Livre, DVD, JeuSociete, Adherent, Emprunt, Exemplaire)
-/dao         → Accès aux données (requêtes SQL / MySQL)
-/service     → Logique métier (règles d'emprunt, génération EAN13, orchestration)
+/model       → Entités métiers (Livre, DVD, Adherent, Emprunt...)
+/dao         → Accès aux données sécurisé (PreparedStatement)
+/service     → Logique métier (règles d'emprunt, orchestration)
 /controller  → Interface JavaFX et gestion des événements utilisateur
-```
+````
 
-### Objectifs de cette architecture
+-----
 
-- Séparation claire des responsabilités
-- Maintenance facilitée
-- Évolutivité du projet
-- Meilleure lisibilité du code
-
----
-
-## 🚀 Installation & démarrage
+## 🚀 Installation & Démarrage
 
 ### Prérequis
 
-- **Java JDK 25+**
-- **JavaFX** (si non inclus dans la distribution)
-- **MySQL 8.0+**
-- **Maven**
-- Un IDE recommandé :
-    - **IntelliJ IDEA**
-    - **Eclipse**
-    - **VS Code**
+  * **Java JDK 25+** installé
+  * **MySQL 8.0+** fonctionnel
+  * **Maven** (inclus via le wrapper `mvnw` du projet)
 
-### 1. Cloner le dépôt
+### 1\. Préparation de la base de données
 
-```bash
-git clone https://github.com/toto49/mediastock.git
-cd mediastock
-```
-
-### 2. Configurer la base de données
-
-Lance ton serveur MySQL puis crée la base de données :
+Connectez-vous à votre serveur MySQL et créez la base de données :
 
 ```sql
-CREATE
-DATABASE mediastock;
+CREATE DATABASE mediastock;
 ```
 
-Ensuite, importe le script SQL de structure situé dans le dossier `/sql`.
+Ensuite, importez la structure des tables en exécutant le script fourni : `sql/mediastock_Vierge.sql`.
 
-### 3. Configurer les variables d'environnement
+### 2\. Configuration sécurisée
 
-Crée un fichier `.env` à la racine du projet avec le contenu suivant :
+Créez un fichier nommé exactement `.env` à la racine du projet (au même niveau que le fichier `pom.xml`) et ajoutez-y vos identifiants MySQL :
 
 ```env
-DB_URL=jdbc:mysql://ip:port/mediastock
+DB_URL=jdbc:mysql://localhost:3306/mediastock
 DB_USER=root
-DB_PASSWORD=VotreMotDePasse
+DB_PASSWORD=votre_mot_de_passe_ici
 ```
 
-### 4. Compiler et exécuter
+### 3\. Compilation et Lancement
 
-#### Avec Maven
+Ouvrez un terminal à la racine du projet et exécutez les commandes suivantes :
 
 ```bash
+# Compiler le projet et télécharger les dépendances
 mvn clean install
+
+# Lancer l'application JavaFX
 mvn javafx:run
 ```
 
----
+-----
 
 ## 📸 Aperçu de l'interface
 
-### Tableau de bord
+\<div align="center"\>
+\<img src="docs/images/dashboard.png" alt="Tableau de bord" width="800"/\>
+<br>
+\<em\>Tableau de bord et suivi des retards\</em\>
+<br><br>
+\<img src="docs/images/inventaire.png" alt="Inventaire" width="800"/\>
+<br>
+\<em\>Gestion de l'inventaire multimédia\</em\>
+\</div\>
 
-![Tableau de bord](docs/images/dashboard.png)
+-----
 
-### Gestion des retards
+## 🤝 Contribuer & Documentation
 
-![Gestion des retards](docs/images/emprunts.png)
+Les contributions sont les bienvenues \! Merci de consulter les fichiers suivants avant toute Pull Request :
 
-### Inventaire
+  * [`CONTRIBUTING.md`](https://www.google.com/search?q=CONTRIBUTING.md) : Règles de contribution
+  * [`CODE_OF_CONDUCT.md`](https://www.google.com/search?q=CODE_OF_CONDUCT.md) : Code de conduite
+  * [`SECURITY.md`](SECURITY.md) : Signalement de failles
 
-![Inventaire](docs/images/inventaire.png)
+Retrouvez la [documentation complète dans le dossier `/docs`](https://www.google.com/search?q=docs/README-DOCS.md).
 
----
-
-## 📚 Documentation détaillée
-
-- [Objectifs de cette architecture](docs/01-objectifs-architecture.md)
-- [Prérequis](docs/02-prerequis.md)
-- [1. Cloner le dépôt](docs/03-cloner-le-depot.md)
-- [2. Configurer la base de données](docs/04-configurer-la-base-de-donnees.md)
-- [3. Configurer les variables d'environnement](docs/05-configurer-le-fichier-env.md)
-- [4. Compiler et exécuter](docs/06-compiler-et-executer.md)
-- [5. Aperçu de l'interface](docs/07-apercu-interface.md)
-- [6. Contribuer](docs/08-contribuer.md)
-- [7. Licence](docs/09-licence.md)
-
----
-
-## 🤝 Contribuer
-
-Les contributions sont les bienvenues.
-
-Merci de consulter les fichiers suivants avant toute contribution :
-
-- `CONTRIBUTING.md`
-- `CODE_OF_CONDUCT.md`
-- `SECURITY.md`
-
-Pour signaler une faille de sécurité, merci de suivre les instructions indiquées dans `SECURITY.md`.
-
----
+-----
 
 ## 📄 Licence
 
-Ce projet est distribué sous licence **MIT**.  
-Voir le fichier [`LICENSE`](LICENSE) pour plus de détails.
+Ce projet est distribué sous licence **MIT**. Voir le fichier [`LICENSE`](https://www.google.com/search?q=LICENSE) pour plus de détails.
