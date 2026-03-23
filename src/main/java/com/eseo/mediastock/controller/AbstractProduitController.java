@@ -29,18 +29,64 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The type Abstract produit controller.
+ *
+ * @param <T> the type parameter
+ */
 public abstract class AbstractProduitController<T extends Produit> {
 
+    /**
+     * The Lignes par page.
+     */
     protected final int LIGNES_PAR_PAGE = 50;
+    /**
+     * The Master data.
+     */
     protected final ObservableList<T> masterData = FXCollections.observableArrayList();
+    /**
+     * The Stock service.
+     */
     protected StockService stockService;
 
+    /**
+     * Gets table.
+     *
+     * @return the table
+     */
     protected abstract TableView<T> getTable();
+
+    /**
+     * Gets pagination.
+     *
+     * @return the pagination
+     */
     protected abstract Pagination getPagination();
+
+    /**
+     * Gets col action.
+     *
+     * @return the col action
+     */
     protected abstract TableColumn<T, Void> getColAction();
+
+    /**
+     * Gets categorie produit.
+     *
+     * @return the categorie produit
+     */
     protected abstract String getCategorieProduit();
+
+    /**
+     * Gets produit class.
+     *
+     * @return the produit class
+     */
     protected abstract Class<T> getProduitClass();
 
+    /**
+     * Init common.
+     */
     protected void initCommon() {
         stockService = new StockService();
         if (getTable() != null) {
@@ -83,6 +129,9 @@ public abstract class AbstractProduitController<T extends Produit> {
         }
     }
 
+    /**
+     * Charger donnees dans tableau.
+     */
     protected void chargerDonneesDansTableau() {
         afficherPlaceholderChargement();
 
@@ -136,6 +185,11 @@ public abstract class AbstractProduitController<T extends Produit> {
         getTable().setPlaceholder(emptyLabel);
     }
 
+    /**
+     * Button return.
+     *
+     * @param actionEvent the action event
+     */
     @FXML
     public void ButtonReturn(ActionEvent actionEvent) {
         if (MenuController.getInstance() != null) {
@@ -212,18 +266,19 @@ public abstract class AbstractProduitController<T extends Produit> {
                             T produitSelectionne = getTableView().getItems().get(getIndex());
 
                             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                            alert.setTitle("Confirmation de suppression");
+                            alert.setTitle("Confirmation de retrait");
                             alert.setHeaderText("Retirer le " + getCategorieProduit().toLowerCase() + " : " + produitSelectionne.getTitre());
-                            alert.setContentText("Attention : Ce produit n'apparaîtra plus dans la liste, et tous ses exemplaires passeront en statut 'RETIRE'. Continuer ?");
+                            alert.setContentText("Attention : Ce produit n'est plus actif, et tous ses exemplaires passeront en statut 'RETIRE'. Continuer ?");
 
                             if (alert.showAndWait().get() == ButtonType.OK) {
                                 try {
                                     stockService.supprimerProduit(produitSelectionne);
-                                    masterData.remove(produitSelectionne);
-                                    mettreAJourPagination();
+                                    // On ne retire plus l'élément de la liste pour le garder affiché
+                                    // On rafraîchit simplement le tableau
+                                    getTable().refresh();
                                 } catch (SQLException sqlException) {
                                     Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                                    errorAlert.setTitle("Erreur de suppression");
+                                    errorAlert.setTitle("Erreur de retrait");
                                     errorAlert.setHeaderText("Impossible de retirer le produit");
                                     errorAlert.setContentText(sqlException.getMessage());
                                     errorAlert.showAndWait();
@@ -249,6 +304,11 @@ public abstract class AbstractProduitController<T extends Produit> {
         getColAction().setCellFactory(cellFactory);
     }
 
+    /**
+     * Modifier produit.
+     *
+     * @param produit the produit
+     */
     protected void modifierProduit(T produit) {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
@@ -503,20 +563,21 @@ public abstract class AbstractProduitController<T extends Produit> {
                         Exemplaire ex = getTableView().getItems().get(getIndex());
 
                         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                        alert.setTitle("Confirmation de suppression");
-                        alert.setHeaderText("Supprimer l'exemplaire : " + ex.getCodeBarre() + " ?");
-                        alert.setContentText("Êtes-vous sûr de vouloir supprimer définitivement cet exemplaire ?");
+                        alert.setTitle("Confirmation de retrait");
+                        alert.setHeaderText("Retirer l'exemplaire : " + ex.getCodeBarre() + " ?");
+                        alert.setContentText("Êtes-vous sûr de vouloir passer cet exemplaire en statut 'RETIRE' ?");
 
                         if (alert.showAndWait().get() == ButtonType.OK) {
                             try {
                                 stockService.supprimerExemplaire(ex);
-                                donneesExemplaires.remove(ex);
-                                tablePage.getItems().remove(ex);
+                                // On ne supprime plus la ligne du tableau
+                                // On met à jour l'état local pour refléter la base de données
+                                ex.setStatusDispo(EnumDispo.RETIRE);
                                 tablePage.refresh();
                             } catch (SQLException sqlException) {
                                 Alert errorAlert = new Alert(Alert.AlertType.ERROR);
                                 errorAlert.setTitle("Erreur");
-                                errorAlert.setHeaderText("Échec de la suppression");
+                                errorAlert.setHeaderText("Échec du retrait");
                                 errorAlert.setContentText(sqlException.getMessage());
                                 errorAlert.showAndWait();
                             }
