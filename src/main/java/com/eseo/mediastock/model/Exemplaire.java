@@ -5,7 +5,9 @@ import com.eseo.mediastock.model.Enum.EnumEtat;
 import com.eseo.mediastock.model.Produits.Produit;
 
 /**
- * The type Exemplaire.
+ * Représentation d'une unité physique stockée en médiathèque.
+ * Contient les informations de traçabilité unique (code-barres) et
+ * l'état actuel (neuf, usagé, perdu) ainsi que le statut de prêt.
  */
 public class Exemplaire {
     // Déclaration des variables

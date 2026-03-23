@@ -12,7 +12,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * The type Emprunt service.
+ * Service gérant les flux de prêt et de retour.
+ * Implémente les règles métier critiques : vérification des quotas d'adhérents,
+ * contrôle de disponibilité des exemplaires et calcul des dates de retour.
  */
 public class EmpruntService {
 

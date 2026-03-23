@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The type Exemplaire dao.
+ * DAO gérant les exemplaires physiques des produits.
+ * Assure le suivi individuel de chaque objet (code-barres, état, disponibilité)
+ * indépendamment de sa référence générique.
  */
 public class ExemplaireDAO {
 

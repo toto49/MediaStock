@@ -8,7 +8,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * The type Adherent service.
+ * Service de gestion des comptes adhérents.
+ * Assure la validation des données d'inscription et centralise les actions
+ * liées au cycle de vie des membres au sein de l'application.
  */
 public class AdherentService {
 

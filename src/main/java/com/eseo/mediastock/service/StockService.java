@@ -19,7 +19,9 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /**
- * The type Stock service.
+ * Service central pour la gestion opérationnelle du stock.
+ * Cette classe orchestre la création des produits, la génération automatique
+ * des codes-barres EAN-13 et la gestion des exemplaires physiques.
  */
 public class StockService {
 

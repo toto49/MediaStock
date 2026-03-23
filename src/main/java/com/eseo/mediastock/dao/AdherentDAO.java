@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The type Adherent dao.
+ * Data Access Object (DAO) pour l'entité Adherent.
+ * Cette classe gère toutes les opérations CRUD (Create, Read, Update, Delete)
+ * en base de données pour les membres de la médiathèque en utilisant JDBC.
  */
 public class AdherentDAO {
 

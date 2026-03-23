@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The type Adherent.
+ * Entité représentant un membre inscrit à la médiathèque.
+ * Stocke les informations de contact et l'identifiant unique permettant
+ * d'associer des emprunts et des historiques de prêt.
  */
 public class Adherent {
     private final List<Emprunt> empruntsEnCours;

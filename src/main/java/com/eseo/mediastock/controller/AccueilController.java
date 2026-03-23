@@ -8,7 +8,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
 /**
- * The type Accueil controller.
+ * Contrôleur de la vue principale (Tableau de bord).
+ * Gère l'affichage des statistiques globales et la navigation
+ * vers les différents modules de gestion de l'application.
  */
 public class AccueilController {
     private static int cacheLivres = -1;

@@ -5,7 +5,9 @@ import com.eseo.mediastock.model.Exemplaire;
 import java.util.List;
 
 /**
- * The type Produit.
+ * Classe de base abstraite représentant une référence du catalogue.
+ * Regroupe les propriétés communes (titre, éditeur, année) et définit
+ * la structure polymorphique utilisée par les Livres, DVD et Jeux de Société.
  */
 public abstract class Produit {
     // Variables de classes

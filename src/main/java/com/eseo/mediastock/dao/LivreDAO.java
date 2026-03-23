@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The type Livre dao.
+ * Data Access Object dédié aux livres.
+ * Fournit les méthodes nécessaires pour manipuler les données relatives aux ouvrages
+ * (ISBN, auteur, pagination) et assurer leur persistance en base MySQL.
  */
 public class LivreDAO {
 

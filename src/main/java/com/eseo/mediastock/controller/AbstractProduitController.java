@@ -30,7 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * The type Abstract produit controller.
+ * Le controlleur qui gère le produit abstract donc l'affichage de l'inventaire pour les livres les dvd et les jeux.
  *
  * @param <T> the type parameter
  */

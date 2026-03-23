@@ -13,7 +13,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * The type Dvd dao.
+ * Data Access Object pour la gestion des DVD.
+ * Permet l'interaction avec la base de données pour l'enregistrement,
+ * la modification et la récupération des métadonnées spécifiques aux supports vidéo.
  */
 public class DvdDAO {
 

@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * The type Connexion controller.
+ * Contrôleur gérant l'authentification sécurisée.
+ * Assure l'interface de login et communique avec les services de sécurité
+ * pour valider les accès administrateurs.
  */
 public class ConnexionController {
     /**
