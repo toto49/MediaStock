@@ -3,10 +3,14 @@ package com.eseo.mediastock.service;
 import com.eseo.mediastock.dao.DvdDAO;
 import com.eseo.mediastock.dao.JeuSocieteDAO;
 import com.eseo.mediastock.dao.LivreDAO;
+import com.eseo.mediastock.model.Produits.DVD;
+import com.eseo.mediastock.model.Produits.JeuSociete;
 import com.eseo.mediastock.model.Produits.Livre;
+import com.eseo.mediastock.model.Produits.Produit;
 import org.junit.jupiter.api.*;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,6 +26,11 @@ public class StockServiceTest {
     private static DvdDAO dvdDAO;
     private static JeuSocieteDAO jeuDAO;
 
+    // Listes pour stocker les produits créés
+    private static List<Livre> livresCrees = new ArrayList<>();
+    private static List<DVD> dvdsCrees = new ArrayList<>();
+    private static List<JeuSociete> jeuxCrees = new ArrayList<>();
+
     /**
      * Sets .
      */
@@ -35,15 +44,53 @@ public class StockServiceTest {
     }
 
     /**
-     * Nettoyage final.
+     * Nettoyage final - Supprime tous les produits créés pendant les tests.
      */
     @AfterAll
     static void nettoyageFinal() {
         try {
-            // Supprime TOUS les produits de test
-            System.out.println("NETTOYAGE FINAL");
+            System.out.println("\nNETTOYAGE FINAL");
+            int compteurSuppression = 0;
 
-            System.out.println("Base nettoyée");
+            // Supprimer tous les livres créés
+            for (Livre livre : livresCrees) {
+                try {
+                    LivreDAO.deleteProduit(livre);
+                    System.out.println("✓ Livre supprimé (ID: " + livre.getId() + ", Titre: " + livre.getTitre() + ")");
+                    compteurSuppression++;
+                } catch (Exception e) {
+                    System.out.println("✗ Erreur suppression livre ID " + livre.getId() + ": " + e.getMessage());
+                }
+            }
+
+            // Supprimer tous les DVDs créés
+            for (DVD dvd : dvdsCrees) {
+                try {
+                    DvdDAO.deleteProduit(dvd);
+                    System.out.println("✓ DVD supprimé (ID: " + dvd.getId() + ", Titre: " + dvd.getTitre() + ")");
+                    compteurSuppression++;
+                } catch (Exception e) {
+                    System.out.println("✗ Erreur suppression DVD ID " + dvd.getId() + ": " + e.getMessage());
+                }
+            }
+
+            // Supprimer tous les jeux créés
+            for (JeuSociete jeu : jeuxCrees) {
+                try {
+                    JeuSocieteDAO.deleteProduit(jeu);
+                    System.out.println("✓ Jeu supprimé (ID: " + jeu.getId() + ", Titre: " + jeu.getTitre() + ")");
+                    compteurSuppression++;
+                } catch (Exception e) {
+                    System.out.println("✗ Erreur suppression jeu ID " + jeu.getId() + ": " + e.getMessage());
+                }
+            }
+
+            System.out.println("Base nettoyée - " + compteurSuppression + " produit(s) supprimé(s)");
+
+            // Vider les listes après nettoyage
+            livresCrees.clear();
+            dvdsCrees.clear();
+            jeuxCrees.clear();
 
         } catch (Exception e) {
             System.out.println("Erreur nettoyage: " + e.getMessage());
@@ -70,8 +117,17 @@ public class StockServiceTest {
                     "Poche",
                     2
             );
+
+            // Récupérer le livre fraîchement ajouté
+            List<Livre> livres = LivreDAO.ProduitObjectList();
+            for (Livre livre : livres) {
+                if ("Le Petit Prince".equals(livre.getTitre())) {
+                    livresCrees.add(livre);
+                    System.out.println("Livre ajouté avec 2 exemplaires (ID: " + livre.getId() + ")");
+                    break;
+                }
+            }
         });
-        System.out.println("Livre ajouté avec 2 exemplaires");
     }
 
     /**
@@ -94,8 +150,17 @@ public class StockServiceTest {
                     List.of("Français"),
                     1
             );
+
+            // Récupérer le DVD fraîchement ajouté
+            List<DVD> dvds = DvdDAO.ProduitObjectList();
+            for (DVD dvd : dvds) {
+                if ("Inception".equals(dvd.getTitre())) {
+                    dvdsCrees.add(dvd);
+                    System.out.println("DVD ajouté (ID: " + dvd.getId() + ")");
+                    break;
+                }
+            }
         });
-        System.out.println("DVD ajouté");
     }
 
     /**
@@ -114,8 +179,17 @@ public class StockServiceTest {
                     1935,
                     2, 6, 8, 120, 1
             );
+
+            // Récupérer le jeu fraîchement ajouté
+            List<JeuSociete> jeux = JeuSocieteDAO.ProduitObjectList();
+            for (JeuSociete jeu : jeux) {
+                if ("Monopoly".equals(jeu.getTitre())) {
+                    jeuxCrees.add(jeu);
+                    System.out.println("Jeu ajouté (ID: " + jeu.getId() + ")");
+                    break;
+                }
+            }
         });
-        System.out.println("Jeu ajouté");
     }
 
     /**
