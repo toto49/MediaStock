@@ -98,14 +98,17 @@ Ensuite, importez la structure des tables en exécutant le script fourni : `sql/
 
 ### 3. Configuration sécurisée
 
-Créez un fichier nommé exactement `.env` à la racine du projet (au même niveau que le fichier `pom.xml`) et ajoutez-y
-vos identifiants MySQL :
+Pour que l'application puisse se connecter à la base de données, vous devez créer un fichier nommé exactement `.env` et y ajouter vos identifiants MySQL. Son emplacement dépend de votre utilisation :
+
+- **Si vous lancez le projet depuis les sources :** Placez le fichier `.env` à la racine du projet (au même niveau que le fichier `pom.xml`).
+- **Si vous avez téléchargé l'application compilée (.exe, .jar, etc.) :** Placez le fichier `.env` dans le même dossier que l'exécutable.
+
+Contenu à ajouter dans le fichier `.env` :
 
 ```env
 DB_URL=jdbc:mysql://localhost:3306/mediastock
 DB_USER=root
 DB_PASSWORD=votre_mot_de_passe_ici
-```
 
 ### 4. Compilation et lancement
 
