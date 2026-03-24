@@ -22,10 +22,13 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.SVGPath;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -71,7 +74,7 @@ public class AdherentController {
     @FXML
     private TableColumn<Adherent, String> colEmailAdherent;
     @FXML
-    private TableColumn<Adherent, Void> colAction;
+    private TableColumn<Adherent, Adherent> colAction;
     private AdherentService adherentService;
     private FilteredList<Adherent> filteredData;
 
@@ -117,8 +120,8 @@ public class AdherentController {
             );
             return row;
         });
-        tableRetard.setOnMouseClicked(event -> {
 
+        tableRetard.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
                 Adherent adherentSelectionne = tableRetard.getSelectionModel().getSelectedItem();
                 if (adherentSelectionne != null) {
@@ -126,6 +129,7 @@ public class AdherentController {
                 }
             }
         });
+
         tableRetard.setOnKeyPressed(event -> {
             if (event.isShortcutDown() && event.getCode() == KeyCode.C) {
                 Adherent selectedItem = tableRetard.getSelectionModel().getSelectedItem();
@@ -140,27 +144,66 @@ public class AdherentController {
     }
 
     private void configurerColonneAction() {
-        Callback<TableColumn<Adherent, Void>, TableCell<Adherent, Void>> cellFactory = new Callback<>() {
+        colAction.setCellValueFactory(param -> new javafx.beans.property.ReadOnlyObjectWrapper<>(param.getValue()));
+
+        Callback<TableColumn<Adherent, Adherent>, TableCell<Adherent, Adherent>> cellFactory = new Callback<>() {
             @Override
-            public TableCell<Adherent, Void> call(final TableColumn<Adherent, Void> param) {
+            public TableCell<Adherent, Adherent> call(final TableColumn<Adherent, Adherent> param) {
                 return new TableCell<>() {
-                    private final Button btn = new Button("Détails");
+                    private final Button btnEmprunts = new Button();
+                    private final Button btnModifier = new Button();
 
                     {
-                        btn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand;");
-                        btn.setOnAction((ActionEvent event) -> {
-                            Adherent adherentSelectionne = getTableView().getItems().get(getIndex());
-                            afficherPopupHistorique(adherentSelectionne);
+                        // Icône Emprunts (Livre)
+                        SVGPath iconBook = new SVGPath();
+                        iconBook.setContent("M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H9V9h10v2zm-4 4H9v-2h6v2zm4-8H9V5h10v2z");
+                        iconBook.setFill(Color.WHITE);
+
+                        // Icône Modifier (Crayon)
+                        SVGPath iconEdit = new SVGPath();
+                        iconEdit.setContent("M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z");
+                        iconEdit.setFill(Color.WHITE);
+
+
+                        btnEmprunts.setGraphic(iconBook);
+                        btnModifier.setGraphic(iconEdit);
+
+
+                        btnEmprunts.setTooltip(new Tooltip("Voir les emprunts"));
+                        btnModifier.setTooltip(new Tooltip("Modifier l'adhérent"));
+
+
+                        String baseStyle = "-fx-cursor: hand; -fx-background-radius: 4; -fx-min-width: 30px; -fx-min-height: 30px; -fx-max-width: 30px; -fx-max-height: 30px; -fx-padding: 0;";
+                        btnEmprunts.setStyle("-fx-background-color: #3498db; " + baseStyle);
+                        btnModifier.setStyle("-fx-background-color: #f39c12; " + baseStyle);
+
+
+                        btnEmprunts.setOnAction(event -> {
+                            event.consume();
+                            Adherent adherent = getItem();
+                            if (adherent != null) {
+                                afficherPopupHistorique(adherent);
+                            }
                         });
+
+                        btnModifier.setOnAction(event -> {
+                            event.consume();
+                            Adherent adherent = getItem();
+                            if (adherent != null) {
+                                afficherPopupModifierAdherent(adherent);
+                            }
+                        });
+
+
                     }
 
                     @Override
-                    public void updateItem(Void item, boolean empty) {
+                    public void updateItem(Adherent item, boolean empty) {
                         super.updateItem(item, empty);
-                        if (empty) {
+                        if (empty || item == null) {
                             setGraphic(null);
                         } else {
-                            HBox box = new HBox(btn);
+                            HBox box = new HBox(8, btnModifier, btnEmprunts);
                             box.setAlignment(Pos.CENTER);
                             setGraphic(box);
                         }
@@ -169,6 +212,71 @@ public class AdherentController {
             }
         };
         colAction.setCellFactory(cellFactory);
+    }
+
+    private void afficherPopupModifierAdherent(Adherent adherent) {
+        Stage popup = new Stage();
+        popup.initModality(Modality.APPLICATION_MODAL);
+        popup.setTitle("Modifier l'adhérent : " + adherent.getId());
+
+        VBox root = new VBox(15);
+        root.setPadding(new Insets(20));
+        root.setStyle("-fx-background-color: #2b2b2b; -fx-text-fill: white;");
+
+        Label lblTitre = new Label("Modification de l'adhérent");
+        lblTitre.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #ffcc00;");
+
+        TextField txtNom = new TextField(adherent.getNom());
+        TextField txtPrenom = new TextField(adherent.getPrenom());
+        TextField txtEmail = new TextField(adherent.getEmailContact());
+        TextField txtTel = new TextField(adherent.getNumTel());
+
+        VBox formBox = new VBox(10);
+        formBox.getChildren().addAll(
+                new Label("Nom :"), txtNom,
+                new Label("Prénom :"), txtPrenom,
+                new Label("Email :"), txtEmail,
+                new Label("Téléphone :"), txtTel
+        );
+
+        Button btnEnregistrer = new Button("Enregistrer les modifications");
+        btnEnregistrer.setStyle("-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-cursor: hand; -fx-font-weight: bold;");
+
+        btnEnregistrer.setOnAction(event -> {
+            try {
+                adherent.setNom(txtNom.getText());
+                adherent.setPrenom(txtPrenom.getText());
+                adherent.setEmailContact(txtEmail.getText());
+                adherent.setNumTel(txtTel.getText());
+
+                adherentService.mettreAJourAdherent(adherent);
+
+                tableRetard.refresh(); // Rafraîchit la ligne modifiée
+                afficherMessage("L'adhérent a été mis à jour.", false);
+                popup.close();
+
+            } catch (SQLException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erreur BDD");
+                alert.setHeaderText("Impossible de sauvegarder les modifications.");
+                alert.setContentText(e.getMessage());
+                alert.showAndWait();
+            }
+        });
+
+        Button btnAnnuler = new Button("Annuler");
+        btnAnnuler.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-cursor: hand;");
+        btnAnnuler.setOnAction(event -> popup.close());
+
+        HBox boutonsBox = new HBox(15, btnEnregistrer, btnAnnuler);
+        boutonsBox.setAlignment(Pos.CENTER);
+        boutonsBox.setPadding(new Insets(15, 0, 0, 0));
+
+        root.getChildren().addAll(lblTitre, formBox, boutonsBox);
+
+        Scene scene = new Scene(root, 400, 450);
+        popup.setScene(scene);
+        popup.showAndWait();
     }
 
     private void afficherPopupHistorique(Adherent adherent) {
@@ -250,6 +358,7 @@ public class AdherentController {
                             );
                             return row;
                         });
+
                         tablePage.setOnMouseClicked(event -> {
                             if (event.getClickCount() == 2) {
                                 EmpruntHistorique selectedItem = tablePage.getSelectionModel().getSelectedItem();
@@ -261,6 +370,7 @@ public class AdherentController {
                                 }
                             }
                         });
+
                         tablePage.setOnKeyPressed(event -> {
                             if (event.isShortcutDown() && event.getCode() == KeyCode.C) {
                                 EmpruntHistorique selectedItem = tablePage.getSelectionModel().getSelectedItem();
@@ -440,7 +550,7 @@ public class AdherentController {
     }
 
     /**
-     * Gère l'action de suppression d'un adhérent.
+     * Gère l'action de suppression d'un adhérent (via le bouton du haut).
      * Récupère l'adhérent sélectionné dans le tableau et le supprime via le service.
      *
      * @param event L'événement déclenché par le clic sur le bouton de suppression.
