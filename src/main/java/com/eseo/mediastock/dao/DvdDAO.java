@@ -43,7 +43,7 @@ public class DvdDAO {
             stmt.setString(6, d.getRealisateur());
             stmt.setInt(7, d.getDureeMinutes());
             stmt.setString(8, String.join(",", d.getAudioLangues()));
-            stmt.setString(9, d.getSousTitres() == null ? null : String.join(",", d.getSousTitres()));
+            stmt.setString(9, String.join(",", d.getSousTitres()));
 
             stmt.executeUpdate();
 
@@ -147,7 +147,7 @@ public class DvdDAO {
             stmt.setString(5, d.getRealisateur());
             stmt.setInt(6, d.getDureeMinutes());
             stmt.setString(7, String.join(",", d.getAudioLangues()));
-            stmt.setString(8, d.getSousTitres() == null ? null : String.join(",", d.getSousTitres()));
+            stmt.setString(9, d.getSousTitres() == null ? null : String.join(",", d.getSousTitres()));
             stmt.setInt(9, d.getId());
             stmt.executeUpdate();
         }

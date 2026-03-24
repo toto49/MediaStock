@@ -93,6 +93,7 @@ public class StockService {
         dvd.setRealisateur(realisateur);
         dvd.setDureeMinutes(duree);
         dvd.setAudioLangues(audio);
+        dvd.setSousTitres(sousTitres);
 
         DvdDAO.addProduit(dvd);
         for (int i = 0; i < nbExemplaires; i++) {
