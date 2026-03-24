@@ -150,7 +150,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>com.eseo.mediastock/com.eseo.mediastock.HelloApplication</mainClass>
+                    <mainClass>com.eseo.mediastock.HelloApplication</mainClass>
                 </configuration>
             </plugin>
 
@@ -218,8 +218,6 @@
                     <mainClass>com.eseo.mediastock.Launcher</mainClass>
 
                     <winConsole>true</winConsole>
-                    <icon>${app.icon}</icon>
-
                     <javaOptions>
                         <option>-Dfile.encoding=UTF-8</option>
                     </javaOptions>
