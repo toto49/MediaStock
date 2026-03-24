@@ -1,0 +1,14 @@
+CREER, 11 PRODUIT, 1N EXEMPLAIRE
+PRODUIT: id, type_produit, titre, description, editeur, annee_sortie, isbn, auteur, nb_pages, format, realisateur, duree_minutes, audio_langues, sous_titres, nb_joueurs_min, nb_joueurs_max, age_min, duree_partie
+:
+:
+
+EXEMPLAIRE: id, code_barre, etat, statut
+RESERVER, 11 EXEMPLAIRE,  0N EMPRUNT
+EMPRUNT: id, date_debut, date_retour, statut
+EMPRUNTER, 11 ADHERENT, 0N EMPRUNT
+
+:
+ADMINISTRATEUR: id, email, mdp, prenom, nom, num_tel
+:
+ADHERENT: id, num_tel, nom, prenom, email
