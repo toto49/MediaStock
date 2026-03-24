@@ -190,7 +190,7 @@ public class ExemplaireDAO {
                 case "DVD":
                     produit = DvdDAO.GetByID(idProduit);
                     break;
-                case "JeuSociete":
+                case "Jeu":
                     produit = JeuSocieteDAO.GetByID(idProduit);
                     break;
                 default:

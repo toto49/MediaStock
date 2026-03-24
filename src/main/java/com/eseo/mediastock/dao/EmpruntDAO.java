@@ -128,7 +128,7 @@ public class EmpruntDAO {
                         case "DVD":
                             produit = DvdDAO.GetByID(idProduit);
                             break;
-                        case "JeuSociete":
+                        case "Jeu":
                             produit = JeuSocieteDAO.GetByID(idProduit);
                             break;
                         default:
@@ -264,7 +264,7 @@ public class EmpruntDAO {
             case "DVD":
                 produit = DvdDAO.GetByID(idProduit);
                 break;
-            case "JeuSociete":
+            case "Jeu":
                 produit = JeuSocieteDAO.GetByID(idProduit);
                 break;
             default:
